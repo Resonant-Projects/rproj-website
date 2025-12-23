@@ -16,7 +16,10 @@ import {
 } from '../../utils/api-responses';
 
 const resend = new Resend(import.meta.env.RESEND_API_KEY);
-const notion = new Client({ auth: import.meta.env.NOTION_TOKEN });
+const notion = new Client({
+  auth: import.meta.env.NOTION_TOKEN,
+  notionVersion: '2025-09-03',
+});
 
 const ALLOWED_SERVICES = ['Design', 'Rhythm', 'Color', 'Motion'] as const;
 const schema = z.object({
@@ -104,9 +107,33 @@ export const POST: APIRoute = async ({ request }) => {
       );
     }
 
+    // Resolve data_source_id from database_id (API 2025-09-03)
+    console.debug('[submit-to-notion] 🔍 Resolving data source ID');
+    const databaseId = import.meta.env.NOTION_DATABASE_ID;
+    let dataSourceId: string | null = null;
+    try {
+      const db = await notion.databases.retrieve({ database_id: databaseId });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const dataSources = (db as any).data_sources;
+      if (dataSources?.[0]?.id) {
+        dataSourceId = dataSources[0].id;
+        console.debug('[submit-to-notion] ✅ Resolved data_source_id:', dataSourceId!.slice(0, 8) + '...');
+      } else {
+        console.warn('[submit-to-notion] ⚠️ No data_sources found, using database_id fallback');
+      }
+    } catch (e) {
+      console.warn('[submit-to-notion] ⚠️ Failed to resolve data_source_id:', e);
+    }
+
+    // Dynamically choose parent type based on resolution result
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const parent: any = dataSourceId
+      ? { type: 'data_source_id', data_source_id: dataSourceId }
+      : { database_id: databaseId };
+
     console.debug('[submit-to-notion] 📝 Creating Notion page with submission data');
     const notionResponse = await notion.pages.create({
-      parent: { database_id: import.meta.env.NOTION_DATABASE_ID },
+      parent,
       properties: {
         Name: {
           title: [{ text: { content: name } }],

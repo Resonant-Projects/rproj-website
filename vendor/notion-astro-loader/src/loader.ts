@@ -86,7 +86,11 @@ export function notionLoader({
   experimentalRootSourceAlias = 'src',
   ...clientOptions
 }: NotionLoaderOptions): Loader {
-  const notionClient = new Client(clientOptions);
+  // Use API version 2025-09-03 for multi-source database support
+  const notionClient = new Client({
+    ...clientOptions,
+    notionVersion: clientOptions.notionVersion ?? '2025-09-03',
+  });
 
   const resolvedRehypePlugins = Promise.all(
     rehypePlugins.map(async (config) => {
@@ -121,6 +125,22 @@ export function notionLoader({
       const existingPageIds = new Set<string>(store.keys());
       const renderPromises: Promise<void>[] = [];
 
+      // Resolve data_source_id from database_id (API 2025-09-03)
+      let data_source_id: string = database_id;
+      try {
+        const db = await notionClient.databases.retrieve({ database_id });
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const dataSources = (db as any).data_sources;
+        if (dataSources?.[0]?.id) {
+          data_source_id = dataSources[0].id;
+          log_db.debug(`Resolved data_source_id: ${data_source_id.slice(0, 8)}...`);
+        } else {
+          log_db.warn(`No data_sources found, falling back to database_id`);
+        }
+      } catch (e) {
+        log_db.warn(`Failed to resolve data_source_id, using database_id: ${e}`);
+      }
+
       log_db.info(`Loading database ${dim(`found ${existingPageIds.size} pages in store`)}`);
 
       async function* queryWithBackoff() {
@@ -129,8 +149,10 @@ export function notionLoader({
         const maxAttempts = 6;
         while (true) {
           try {
-            const res = await notionClient.databases.query({
-              database_id,
+            // Use dataSources.query for API 2025-09-03+
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const res = await (notionClient as any).dataSources.query({
+              data_source_id,
               filter_properties,
               sorts,
               filter,

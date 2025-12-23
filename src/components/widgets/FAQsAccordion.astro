@@ -1,0 +1,48 @@
+---
+import Headline from '~/components/ui/Headline.astro';
+import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '~/components/starwind/accordion';
+import type { Faqs as Props } from '~/types';
+
+const {
+  title = '',
+  subtitle = '',
+  tagline = '',
+  items = [],
+
+  id,
+  isDark = false,
+  classes = {},
+  bg = await Astro.slots.render('bg'),
+} = Astro.props;
+
+// Generate a unique value for each item based on index
+const itemsWithValues = items.map((item, index) => ({
+  ...item,
+  value: `faq-${index}`,
+}));
+---
+
+<WidgetWrapper id={id} isDark={isDark} containerClass={`max-w-4xl mx-auto ${classes?.container ?? ''}`} bg={bg}>
+  <Headline title={title} subtitle={subtitle} tagline={tagline} />
+
+  <Accordion type="single" defaultValue="faq-0" class="w-full">
+    {
+      itemsWithValues.map((item) => (
+        <AccordionItem value={item.value} class="border-border">
+          <AccordionTrigger class="text-foreground hover:text-primary text-lg font-semibold">
+            {item.title}
+          </AccordionTrigger>
+          <AccordionContent class="text-muted-foreground">
+            {item.description && <Fragment set:html={item.description} />}
+          </AccordionContent>
+        </AccordionItem>
+      ))
+    }
+  </Accordion>
+</WidgetWrapper>

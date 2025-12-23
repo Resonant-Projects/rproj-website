@@ -91,20 +91,15 @@ const initialState: FormState = { data: undefined, error: undefined };
 /**
  * Determines if a form field has a validation error.
  * Used to set aria-invalid attribute for accessibility.
+ * Only returns true for explicit per-field errors, not general form errors.
  * @param state - Current form state from useActionState
  * @param fieldName - Name of the field to check
- * @returns True if the field has an error
+ * @returns True if the field has an explicit error
  */
 const hasFieldError = (state: FormState, fieldName: string): boolean => {
-  // Check for per-field errors from action response
-  if (state.data?.errors?.[fieldName]) {
-    return true;
-  }
-  // If there's a general form error after submission, all required fields may be invalid
-  if (state.error?.message) {
-    return true;
-  }
-  return false;
+  // Only check for explicit per-field errors from action response
+  // General form errors (state.error?.message) should not mark individual fields invalid
+  return Boolean(state.data?.errors?.[fieldName]);
 };
 
 /**
@@ -279,40 +274,44 @@ export function ContactFormReact({ title, subtitle, inputs, textarea, button, de
         ))}
 
         {/* Textarea */}
-        {textarea && (
-          <div className="mb-6">
-            <label htmlFor="textarea" className="mb-2 block text-sm font-medium text-foreground">
-              {textarea.label}
-              {textarea.required && (
-                <span className="ml-1 text-red-500" aria-label="required">
-                  *
-                </span>
-              )}
-            </label>
-            <textarea
-              id="textarea"
-              name={textarea.name || 'message'}
-              rows={textarea.rows || 4}
-              placeholder={textarea.placeholder}
-              required={textarea.required}
-              aria-required={textarea.required ? 'true' : 'false'}
-              aria-invalid={hasFieldError(state, textarea.name || 'message')}
-              aria-describedby="textarea-error textarea-help"
-              disabled={isPending}
-              className="input-field text-md resize-vertical bg-muted/50 placeholder:text-muted-foreground block w-full rounded-lg border border-border px-4 py-3 text-foreground transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary disabled:cursor-not-allowed disabled:opacity-50"
-            />
-            <div
-              id="textarea-error"
-              className="field-error-message"
-              role="alert"
-              aria-live="assertive"
-              style={{ display: 'none' }}
-            />
-            <div id="textarea-help" className="field-help-text sr-only">
-              {textarea.required ? `${textarea.label} is required` : `${textarea.label} is optional`}
-            </div>
-          </div>
-        )}
+        {textarea &&
+          (() => {
+            const textareaId = textarea.name || 'message';
+            return (
+              <div className="mb-6">
+                <label htmlFor={textareaId} className="mb-2 block text-sm font-medium text-foreground">
+                  {textarea.label}
+                  {textarea.required && (
+                    <span className="ml-1 text-red-500" aria-label="required">
+                      *
+                    </span>
+                  )}
+                </label>
+                <textarea
+                  id={textareaId}
+                  name={textareaId}
+                  rows={textarea.rows || 4}
+                  placeholder={textarea.placeholder}
+                  required={textarea.required}
+                  aria-required={textarea.required ? 'true' : 'false'}
+                  aria-invalid={hasFieldError(state, textareaId)}
+                  aria-describedby={`${textareaId}-error ${textareaId}-help`}
+                  disabled={isPending}
+                  className="input-field text-md resize-vertical bg-muted/50 placeholder:text-muted-foreground block w-full rounded-lg border border-border px-4 py-3 text-foreground transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary disabled:cursor-not-allowed disabled:opacity-50"
+                />
+                <div
+                  id={`${textareaId}-error`}
+                  className="field-error-message"
+                  role="alert"
+                  aria-live="assertive"
+                  style={{ display: 'none' }}
+                />
+                <div id={`${textareaId}-help`} className="field-help-text sr-only">
+                  {textarea.required ? `${textarea.label} is required` : `${textarea.label} is optional`}
+                </div>
+              </div>
+            );
+          })()}
 
         {/* Submit Button */}
         <div className="mt-10 grid">

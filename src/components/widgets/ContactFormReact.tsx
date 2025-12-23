@@ -217,7 +217,7 @@ export function ContactFormReact({ title, subtitle, inputs, textarea, button, de
                 id={input.name}
                 required={input.required}
                 aria-required={input.required ? 'true' : 'false'}
-                aria-invalid={hasFieldError(state, input.name)}
+                aria-invalid={hasFieldError(state, input.name) ? 'true' : 'false'}
                 aria-describedby={`${input.name}-error ${input.name}-help`}
                 defaultValue={input.defaultValue || ''}
                 disabled={isPending}
@@ -238,20 +238,18 @@ export function ContactFormReact({ title, subtitle, inputs, textarea, button, de
                 placeholder={input.placeholder}
                 required={input.required}
                 aria-required={input.required ? 'true' : 'false'}
-                aria-invalid={hasFieldError(state, input.name)}
+                aria-invalid={hasFieldError(state, input.name) ? 'true' : 'false'}
                 aria-describedby={`${input.name}-error ${input.name}-help`}
                 disabled={isPending}
                 className="input-field text-md bg-muted/50 placeholder:text-muted-foreground block w-full rounded-lg border border-border px-4 py-3 text-foreground transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary disabled:cursor-not-allowed disabled:opacity-50"
               />
             )}
 
-            <div
-              id={`${input.name}-error`}
-              className="field-error-message"
-              role="alert"
-              aria-live="assertive"
-              style={{ display: 'none' }}
-            />
+            {state.data?.errors?.[input.name] && (
+              <div id={`${input.name}-error`} className="mt-1 text-sm text-red-600" role="alert" aria-live="assertive">
+                {state.data.errors[input.name]}
+              </div>
+            )}
             <div id={`${input.name}-help`} className="field-help-text sr-only">
               {input.required ? `${input.label} is required` : `${input.label} is optional`}
             </div>
@@ -279,18 +277,21 @@ export function ContactFormReact({ title, subtitle, inputs, textarea, button, de
                   placeholder={textarea.placeholder}
                   required={textarea.required}
                   aria-required={textarea.required ? 'true' : 'false'}
-                  aria-invalid={hasFieldError(state, textareaId)}
+                  aria-invalid={hasFieldError(state, textareaId) ? 'true' : 'false'}
                   aria-describedby={`${textareaId}-error ${textareaId}-help`}
                   disabled={isPending}
                   className="input-field text-md resize-vertical bg-muted/50 placeholder:text-muted-foreground block w-full rounded-lg border border-border px-4 py-3 text-foreground transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary disabled:cursor-not-allowed disabled:opacity-50"
                 />
-                <div
-                  id={`${textareaId}-error`}
-                  className="field-error-message"
-                  role="alert"
-                  aria-live="assertive"
-                  style={{ display: 'none' }}
-                />
+                {state.data?.errors?.[textareaId] && (
+                  <div
+                    id={`${textareaId}-error`}
+                    className="mt-1 text-sm text-red-600"
+                    role="alert"
+                    aria-live="assertive"
+                  >
+                    {state.data.errors[textareaId]}
+                  </div>
+                )}
                 <div id={`${textareaId}-help`} className="field-help-text sr-only">
                   {textarea.required ? `${textarea.label} is required` : `${textarea.label} is optional`}
                 </div>

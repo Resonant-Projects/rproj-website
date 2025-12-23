@@ -280,7 +280,7 @@ export function ContactFormReact({ title, subtitle, inputs, textarea, button, de
                   aria-invalid={hasFieldError(state, textareaId) ? 'true' : 'false'}
                   aria-describedby={`${textareaId}-error ${textareaId}-help`}
                   disabled={isPending}
-                  className="input-field text-md resize-vertical bg-muted/50 placeholder:text-muted-foreground block w-full rounded-lg border border-border px-4 py-3 text-foreground transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary disabled:cursor-not-allowed disabled:opacity-50"
+                  className="input-field text-md bg-muted/50 placeholder:text-muted-foreground block w-full resize-y rounded-lg border border-border px-4 py-3 text-foreground transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary disabled:cursor-not-allowed disabled:opacity-50"
                 />
                 {state.data?.errors?.[textareaId] && (
                   <div

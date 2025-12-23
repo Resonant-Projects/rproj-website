@@ -27,34 +27,34 @@ const baseUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : '
 
 export const ResonantWelcomeEmail = ({ steps }: ResonantWelcomeEmailProps) => {
   return (
-    <Html>
-      <Head />
-      <Tailwind
-        config={{
-          theme: {
-            extend: {
-              colors: {
-                primary: '#6e2765',
-                secondary: '#42173d',
-                accent: '#c5a9c1',
-                heading: '#160814',
-                text: '#2c1028',
-                muted: 'rgb(16 16 16 / 66%)',
-                bg: '#f1e9f0',
-                white: '#fff',
-              },
-              fontFamily: {
-                sans: ['Raleway Variable', 'sans-serif'],
-              },
-              spacing: {
-                0: '0px',
-                20: '20px',
-                45: '45px',
-              },
+    <Tailwind
+      config={{
+        theme: {
+          extend: {
+            colors: {
+              primary: '#6e2765',
+              secondary: '#42173d',
+              accent: '#c5a9c1',
+              heading: '#160814',
+              text: '#2c1028',
+              muted: 'rgb(16 16 16 / 66%)',
+              bg: '#f1e9f0',
+              white: '#fff',
+            },
+            fontFamily: {
+              sans: ['Raleway Variable', 'sans-serif'],
+            },
+            spacing: {
+              0: '0px',
+              20: '20px',
+              45: '45px',
             },
           },
-        }}
-      >
+        },
+      }}
+    >
+      <Html>
+        <Head />
         <Preview>Welcome to Resonant Projects.art</Preview>
         <Body className="bg-bg font-sans text-base">
           <Img
@@ -125,8 +125,8 @@ export const ResonantWelcomeEmail = ({ steps }: ResonantWelcomeEmailProps) => {
             <Text className="mb-45 text-center text-xs text-muted">Resonant Projects.art</Text>
           </Container>
         </Body>
-      </Tailwind>
-    </Html>
+      </Html>
+    </Tailwind>
   );
 };
 

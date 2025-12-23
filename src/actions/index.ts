@@ -1,0 +1,239 @@
+/**
+ * Astro Actions for form handling
+ * Uses React useActionState integration for enhanced form experiences
+ */
+import { defineAction, ActionError } from 'astro:actions';
+import { z } from 'astro:schema';
+import { Client } from '@notionhq/client';
+import { Resend } from 'resend';
+import { render } from '@react-email/render';
+import React from 'react';
+import ResonantWelcomeEmail from '~/utils/welcome-email';
+
+const resend = new Resend(import.meta.env.RESEND_API_KEY);
+const notion = new Client({
+  auth: import.meta.env.NOTION_TOKEN,
+  notionVersion: '2025-09-03',
+});
+
+/** Valid service options for the contact form */
+const ALLOWED_SERVICES = ['Design', 'Rhythm', 'Color', 'Motion'] as const;
+
+/**
+ * State interface returned from the contact form action.
+ * Used with React's useActionState for seamless form state management.
+ * @property success - Whether the submission succeeded
+ * @property message - User-facing status message
+ * @property redirect - Optional URL to redirect to on success
+ * @property errors - Optional field-level validation errors
+ */
+export interface ContactFormState {
+  success: boolean;
+  message: string;
+  redirect?: string;
+  errors?: Record<string, string>;
+}
+
+export const server = {
+  /**
+   * Contact form submission action.
+   * Validates input, creates a Notion page, and sends a welcome email.
+   *
+   * @description Designed to work with React's useActionState via `withState(actions.contact)`.
+   * Uses Zod validation for type-safe input handling.
+   *
+   * @example
+   * // In a React component with useActionState:
+   * const [state, formAction, isPending] = useActionState(
+   *   withState(actions.contact),
+   *   initialState
+   * );
+   *
+   * @returns {Promise<ContactFormState>} Result with success status, message, and optional redirect
+   * @throws {ActionError} On validation failure or prohibited content
+   */
+  contact: defineAction({
+    accept: 'form',
+    input: z.object({
+      name: z.string().min(1, 'Name is required').max(100, 'Name is too long'),
+      email: z.string().email('Invalid email address'),
+      service: z.enum(ALLOWED_SERVICES, {
+        errorMap: () => ({ message: 'Please select a valid service' }),
+      }),
+      message: z.string().min(1, 'Message is required').max(5000, 'Message is too long (5000 characters max)'),
+    }),
+    handler: async ({ name, email, service, message }): Promise<ContactFormState> => {
+      console.debug('[action:contact] Processing form submission for:', name);
+
+      // Business logic validation
+      const prohibitedWords = ['spam', 'test123', 'dummy'];
+      for (const word of prohibitedWords) {
+        if (message.toLowerCase().includes(word) || name.toLowerCase().includes(word)) {
+          throw new ActionError({
+            code: 'BAD_REQUEST',
+            message: 'Your submission contains content that cannot be processed. Please revise and try again.',
+          });
+        }
+      }
+
+      try {
+        // Resolve data_source_id from database_id (API 2025-09-03)
+        const databaseId = import.meta.env.NOTION_DATABASE_ID;
+        let dataSourceId: string | null = null;
+
+        try {
+          const db = await notion.databases.retrieve({ database_id: databaseId });
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const dataSources = (db as any).data_sources;
+          if (dataSources?.[0]?.id) {
+            dataSourceId = dataSources[0].id;
+            console.debug('[action:contact] Resolved data_source_id');
+          }
+        } catch (e) {
+          console.warn('[action:contact] Failed to resolve data_source_id:', e);
+        }
+
+        // Dynamically choose parent type based on resolution result
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const parent: any = dataSourceId
+          ? { type: 'data_source_id', data_source_id: dataSourceId }
+          : { database_id: databaseId };
+
+        // Create Notion page
+        console.debug('[action:contact] Creating Notion page');
+        await notion.pages.create({
+          parent,
+          properties: {
+            Name: {
+              title: [{ text: { content: name } }],
+            },
+            Email: { email },
+            Service: {
+              select: { name: service },
+            },
+            Message: {
+              rich_text: [{ text: { content: message } }],
+            },
+          },
+        });
+
+        // Compose and send welcome email
+        const steps = [
+          {
+            id: 1,
+            description: `Thank you, ${name}! I'll review your message about ${service} and respond with tailored insights or next steps.`,
+          },
+          {
+            id: 2,
+            description: `Project exploration. We'll discuss your goals, inspirations, and how Resonant Projects.art can support your vision.`,
+          },
+          {
+            id: 3,
+            description: `Resource sharing. You'll receive curated resources, ideas, and opportunities to collaborate or learn more.`,
+          },
+        ];
+
+        const html = await render(React.createElement(ResonantWelcomeEmail, { steps }));
+
+        await resend.emails.send({
+          from: 'info@rproj.art',
+          to: email,
+          subject: 'Welcome to Resonant Projects.art!',
+          html,
+        });
+
+        console.debug('[action:contact] Form submitted and email sent successfully');
+
+        return {
+          success: true,
+          message: 'Form submitted successfully!',
+          redirect: '/thank-you',
+        };
+      } catch (error) {
+        console.error('[action:contact] Error processing form:', error);
+
+        // Re-throw ActionErrors as-is
+        if (error instanceof ActionError) {
+          throw error;
+        }
+
+        // Type-safe error classification using error properties
+        const isNotionError = (err: unknown): boolean => {
+          if (err && typeof err === 'object') {
+            // Notion SDK errors have a 'code' property with specific values
+            if ('code' in err && typeof (err as { code: unknown }).code === 'string') {
+              const code = (err as { code: string }).code;
+              // Notion API error codes: https://developers.notion.com/reference/status-codes
+              return [
+                'unauthorized',
+                'restricted_resource',
+                'object_not_found',
+                'rate_limited',
+                'internal_server_error',
+                'service_unavailable',
+                'database_connection_unavailable',
+                'gateway_timeout',
+                'validation_error',
+                'conflict_error',
+              ].includes(code);
+            }
+            // Check for Notion client error name
+            if ('name' in err && (err as { name: unknown }).name === 'APIResponseError') {
+              return true;
+            }
+          }
+          return false;
+        };
+
+        const isResendError = (err: unknown): boolean => {
+          if (err && typeof err === 'object') {
+            // Resend SDK errors have a 'name' property
+            if ('name' in err) {
+              const name = (err as { name: unknown }).name;
+              return name === 'ResendError' || name === 'Resend_Error';
+            }
+            // Resend errors also have 'statusCode' property from API responses
+            if ('statusCode' in err && typeof (err as { statusCode: unknown }).statusCode === 'number') {
+              return true;
+            }
+          }
+          return false;
+        };
+
+        if (isNotionError(error)) {
+          console.error('[action:contact] Notion API error:', error);
+          throw new ActionError({
+            code: 'INTERNAL_SERVER_ERROR',
+            message: 'External service temporarily unavailable. Please try again.',
+          });
+        }
+
+        if (isResendError(error)) {
+          // Log for observability - email failures should be tracked
+          console.warn('[action:contact] Email delivery failed:', {
+            errorName: (error as { name?: string }).name,
+            errorMessage: (error as { message?: string }).message,
+          });
+          // Return partial success - form was submitted but email failed
+          return {
+            success: true,
+            message: 'Form submitted! Confirmation email may be delayed.',
+            redirect: '/thank-you',
+          };
+        }
+
+        // Unknown error - log full details for debugging
+        console.error('[action:contact] Unknown error type:', {
+          errorName: (error as { name?: string })?.name,
+          errorMessage: (error as { message?: string })?.message,
+          errorCode: (error as { code?: string })?.code,
+        });
+
+        throw new ActionError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'An error occurred. Please try again later.',
+        });
+      }
+    },
+  }),
+};

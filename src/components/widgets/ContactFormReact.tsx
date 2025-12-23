@@ -74,31 +74,22 @@ interface ContactFormProps {
   description?: string;
 }
 
-/**
- * Internal state type for the form.
- * Represents the result from useActionState after action execution.
- * @property data - Successful action response data
- * @property error - Error response if action failed
- */
-type FormState = {
-  data: ContactFormState | undefined;
-  error: { message: string } | undefined;
+/** Initial state before any form submission - matches SafeResult success variant */
+const initialState = {
+  data: { success: false, message: '' } as ContactFormState,
+  error: undefined,
 };
-
-/** Initial state before any form submission */
-const initialState: FormState = { data: undefined, error: undefined };
 
 /**
  * Determines if a form field has a validation error.
- * Used to set aria-invalid attribute for accessibility.
- * Only returns true for explicit per-field errors, not general form errors.
- * @param state - Current form state from useActionState
+ * @param state - Current form state from useActionState (SafeResult union)
  * @param fieldName - Name of the field to check
  * @returns True if the field has an explicit error
  */
-const hasFieldError = (state: FormState, fieldName: string): boolean => {
-  // Only check for explicit per-field errors from action response
-  // General form errors (state.error?.message) should not mark individual fields invalid
+const hasFieldError = (
+  state: { data?: ContactFormState | undefined; error?: { message: string } | undefined },
+  fieldName: string
+): boolean => {
   return Boolean(state.data?.errors?.[fieldName]);
 };
 
@@ -132,13 +123,7 @@ const hasFieldError = (state: FormState, fieldName: string): boolean => {
  * />
  */
 export function ContactFormReact({ title, subtitle, inputs, textarea, button, description }: ContactFormProps) {
-  // withState wraps the action for useActionState compatibility
-
-  const [state, formAction, isPending] = useActionState(withState(actions.contact), initialState as any) as [
-    FormState,
-    (payload: FormData) => void,
-    boolean,
-  ];
+  const [state, formAction, isPending] = useActionState(withState(actions.contact), initialState);
 
   // Handle redirect on successful submission
   useEffect(() => {

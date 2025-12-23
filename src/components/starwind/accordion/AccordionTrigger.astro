@@ -3,7 +3,12 @@ import ChevronDown from "@tabler/icons/outline/chevron-down.svg";
 import type { HTMLAttributes } from "astro/types";
 import { tv } from "tailwind-variants";
 
-type Props = HTMLAttributes<"button">;
+type Props = HTMLAttributes<"button"> & {
+  /**
+   * Whether this trigger's item is open by default (for SSR)
+   */
+  defaultOpen?: boolean;
+};
 
 export const accordionTrigger = tv({
   base: [
@@ -15,14 +20,15 @@ export const accordionTrigger = tv({
   ],
 });
 
-const { class: className, ...rest } = Astro.props;
+const { defaultOpen = false, class: className, ...rest } = Astro.props;
 ---
 
 <button
   type="button"
   class={accordionTrigger({ class: className })}
   data-slot="accordion-trigger"
-  aria-expanded="false"
+  data-state={defaultOpen ? "open" : "closed"}
+  aria-expanded={defaultOpen ? "true" : "false"}
   {...rest}
 >
   <slot />

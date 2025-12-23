@@ -26,11 +26,11 @@ const link = APP_BLOG?.post?.isEnabled ? getPermalink(post.permalink, 'post') : 
     image &&
       (link ? (
         <a class="group relative block" href={link}>
-          <div class="bg-muted relative h-0 overflow-hidden rounded-sm pb-[56.25%] shadow-lg md:h-72 md:pb-[75%] lg:pb-[56.25%]">
+          <div class="relative h-0 overflow-hidden rounded-sm bg-muted pb-[56.25%] shadow-lg md:h-72 md:pb-[75%] lg:pb-[56.25%]">
             {image && (
               <Image
                 src={image}
-                class="bg-muted absolute inset-0 mb-6 h-full w-full rounded-sm object-cover shadow-lg"
+                class="absolute inset-0 mb-6 h-full w-full rounded-sm bg-muted object-cover shadow-lg"
                 widths={[400, 900]}
                 width={900}
                 sizes="(max-width: 900px) 400px, 900px"
@@ -43,11 +43,11 @@ const link = APP_BLOG?.post?.isEnabled ? getPermalink(post.permalink, 'post') : 
           </div>
         </a>
       ) : (
-        <div class="bg-muted relative h-0 overflow-hidden rounded-sm pb-[56.25%] shadow-lg md:h-72 md:pb-[75%] lg:pb-[56.25%]">
+        <div class="relative h-0 overflow-hidden rounded-sm bg-muted pb-[56.25%] shadow-lg md:h-72 md:pb-[75%] lg:pb-[56.25%]">
           {image && (
             <Image
               src={image}
-              class="bg-muted absolute inset-0 mb-6 h-full w-full rounded-sm object-cover shadow-lg"
+              class="absolute inset-0 mb-6 h-full w-full rounded-sm bg-muted object-cover shadow-lg"
               widths={[400, 900]}
               width={900}
               sizes="(max-width: 900px) 400px, 900px"
@@ -88,10 +88,10 @@ const link = APP_BLOG?.post?.isEnabled ? getPermalink(post.permalink, 'post') : 
           }
         </span>
       </div>
-      <h2 class="font-heading text-foreground mb-2 text-xl leading-tight font-bold sm:text-2xl">
+      <h2 class="mb-2 font-heading text-xl font-bold leading-tight text-foreground sm:text-2xl">
         {
           link ? (
-            <a class="hover:text-primary inline-block transition duration-200 ease-in" href={link}>
+            <a class="inline-block transition duration-200 ease-in hover:text-primary" href={link}>
               {post.title}
             </a>
           ) : (

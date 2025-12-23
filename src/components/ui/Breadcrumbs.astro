@@ -34,14 +34,14 @@ breadcrumbItems.push(...items);
           {item.href ? (
             <a
               href={item.href}
-              class="text-muted-foreground hover:text-primary flex items-center gap-1 font-medium transition-colors duration-200"
+              class="text-muted-foreground flex items-center gap-1 font-medium transition-colors duration-200 hover:text-primary"
               {...(index === breadcrumbItems.length - 1 ? { 'aria-current': 'page' } : {})}
             >
               {item.icon && <Icon name={item.icon} class="h-4 w-4" aria-hidden="true" />}
               <span>{item.text}</span>
             </a>
           ) : (
-            <span class="text-foreground flex items-center gap-1 font-semibold" aria-current="page">
+            <span class="flex items-center gap-1 font-semibold text-foreground" aria-current="page">
               {item.icon && <Icon name={item.icon} class="h-4 w-4" aria-hidden="true" />}
               <span>{item.text}</span>
             </span>

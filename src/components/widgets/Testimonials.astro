@@ -27,15 +27,15 @@ const {
       testimonials &&
         testimonials.map(({ title, testimonial, name, job, image }) => (
           <div class="flex h-auto">
-            <div class="flex flex-col rounded-md p-4 shadow-xl md:p-6 dark:border dark:border-gray-600 dark:shadow-none">
-              {title && <h2 class="pb-4 text-lg leading-6 font-medium">{title}</h2>}
+            <div class="flex flex-col rounded-md p-4 shadow-xl dark:border dark:border-gray-600 dark:shadow-none md:p-6">
+              {title && <h2 class="pb-4 text-lg font-medium leading-6">{title}</h2>}
               {testimonial && (
                 <blockquote class="flex-auto">
                   <p class="text-muted">" {testimonial} "</p>
                 </blockquote>
               )}
 
-              <hr class="border-accent my-4" />
+              <hr class="my-4 border-accent" />
 
               <div class="flex items-center">
                 {image && (
@@ -55,9 +55,9 @@ const {
                   </div>
                 )}
 
-                <div class="ml-3 grow rtl:mr-3 rtl:ml-0">
+                <div class="ml-3 grow rtl:ml-0 rtl:mr-3">
                   {name && <p class="text-base font-semibold">{name}</p>}
-                  {job && <p class="text-muted text-xs">{job}</p>}
+                  {job && <p class="text-xs text-muted">{job}</p>}
                 </div>
               </div>
             </div>

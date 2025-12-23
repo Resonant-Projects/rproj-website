@@ -55,8 +55,8 @@ const classes = getVariantClasses();
 {
   pages.length > 0 && (
     <section class={`related-pages ${className}`}>
-      <h3 class="text-foreground mb-6 flex items-center gap-2 text-xl font-bold">
-        <Icon name="tabler:link" class="text-primary h-5 w-5" aria-hidden="true" />
+      <h3 class="mb-6 flex items-center gap-2 text-xl font-bold text-foreground">
+        <Icon name="tabler:link" class="h-5 w-5 text-primary" aria-hidden="true" />
         {title}
       </h3>
 
@@ -67,7 +67,7 @@ const classes = getVariantClasses();
               <div class={`flex items-start gap-3 ${classes.content}`}>
                 {showIcon && page.icon && (
                   <div class="mt-1 flex-shrink-0">
-                    <Icon name={page.icon} class="text-primary h-5 w-5" aria-hidden="true" />
+                    <Icon name={page.icon} class="h-5 w-5 text-primary" aria-hidden="true" />
                   </div>
                 )}
 
@@ -77,7 +77,7 @@ const classes = getVariantClasses();
                   {page.description && <p class={classes.description}>{page.description}</p>}
 
                   {page.category && variant === 'cards' && (
-                    <span class="bg-primary/10 text-primary mt-2 inline-block rounded-full px-2 py-1 text-xs">
+                    <span class="bg-primary/10 mt-2 inline-block rounded-full px-2 py-1 text-xs text-primary">
                       {page.category}
                     </span>
                   )}

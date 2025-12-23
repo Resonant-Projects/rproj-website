@@ -82,7 +82,7 @@ const classes = getVariantClasses();
         <a
           href={service.href}
           class={`${classes.item} ${
-            service.isActive ? 'bg-primary text-primary-foreground border-primary' : 'hover:border-primary/20'
+            service.isActive ? 'text-primary-foreground border-primary bg-primary' : 'hover:border-primary/20'
           }`}
           aria-current={service.isActive ? 'page' : undefined}
           title={`${service.title}: ${service.description}`}

@@ -65,7 +65,7 @@ const blogContextualLinks = [
         {title && (
           <div class="md:max-w-sm">
             <div
-              class="group font-heading mb-2 text-3xl font-bold tracking-tight sm:text-4xl sm:leading-none"
+              class="group mb-2 font-heading text-3xl font-bold tracking-tight sm:text-4xl sm:leading-none"
               set:html={title}
             />
             {APP_BLOG.list.isEnabled && linkText && linkUrl && (
@@ -83,7 +83,7 @@ const blogContextualLinks = [
       <Grid posts={posts} />
 
       {showContextualLinks && (
-        <div class="border-border mt-8 border-t pt-6">
+        <div class="mt-8 border-t border-border pt-6">
           <ContextualLinks links={blogContextualLinks} title="Interested in Our Services?" inline={true} />
         </div>
       )}

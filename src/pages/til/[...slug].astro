@@ -54,12 +54,12 @@ const metadata = {
 <Layout metadata={metadata}>
   <section class="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
     <div class="mb-8">
-      <a href="/til" class="text-primary hover:text-accent mb-6 inline-flex items-center gap-2 transition-colors">
+      <a href="/til" class="mb-6 inline-flex items-center gap-2 text-primary transition-colors hover:text-accent">
         <Icon name="tabler:arrow-left" class="h-5 w-5" />
         <span>Back to TIL</span>
       </a>
 
-      <h1 class="mb-4 text-3xl leading-tight font-bold tracking-tighter md:text-4xl">{title}</h1>
+      <h1 class="mb-4 text-3xl font-bold leading-tight tracking-tighter md:text-4xl">{title}</h1>
 
       <div class="flex flex-wrap items-center gap-4 text-sm">
         <span class="text-muted-foreground inline-flex items-center">
@@ -72,7 +72,7 @@ const metadata = {
             tags.map(tag => (
               <a
                 href={`/til?tag=${tag.toLowerCase().replace(/\s+/g, '-')}`}
-                class="bg-primary/10 dark:bg-primary/20 text-primary hover:bg-primary/20 dark:hover:bg-primary/30 rounded-md px-2 py-1 text-xs font-medium transition-colors"
+                class="bg-primary/10 dark:bg-primary/20 hover:bg-primary/20 dark:hover:bg-primary/30 rounded-md px-2 py-1 text-xs font-medium text-primary transition-colors"
               >
                 #{tag}
               </a>
@@ -82,16 +82,16 @@ const metadata = {
       </div>
     </div>
 
-    <div class="bg-card border-border overflow-hidden rounded-lg border shadow-sm">
+    <div class="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
       <div class="p-6 sm:p-8">
-        <div class="prose-enhanced dark:prose-invert max-w-none">
+        <div class="prose-enhanced max-w-none dark:prose-invert">
           <Content />
         </div>
       </div>
     </div>
 
     <div class="mt-8 text-center">
-      <a href="/til" class="text-primary hover:text-accent inline-flex items-center gap-2 transition-colors">
+      <a href="/til" class="inline-flex items-center gap-2 text-primary transition-colors hover:text-accent">
         <Icon name="tabler:arrow-left" class="h-5 w-5" />
         <span>Back to all TIL entries</span>
       </a>

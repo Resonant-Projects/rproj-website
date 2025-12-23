@@ -39,12 +39,12 @@ const posts = APP_BLOG.isEnabled ? await findPostsByIds(postIds) : [];
         {title && (
           <div class="md:max-w-sm">
             <h2
-              class="group font-heading mb-2 text-3xl font-bold tracking-tight sm:text-4xl sm:leading-none"
+              class="group mb-2 font-heading text-3xl font-bold tracking-tight sm:text-4xl sm:leading-none"
               set:html={title}
             />
             {APP_BLOG.list.isEnabled && linkText && linkUrl && (
               <a
-                class="text-muted dark:text-muted-foreground hover:text-primary mb-6 block transition duration-200 ease-in lg:mb-0"
+                class="dark:text-muted-foreground mb-6 block text-muted transition duration-200 ease-in hover:text-primary lg:mb-0"
                 href={linkUrl}
               >
                 {linkText} »
@@ -54,7 +54,7 @@ const posts = APP_BLOG.isEnabled ? await findPostsByIds(postIds) : [];
         )}
 
         {information && (
-          <p class="text-muted dark:text-muted-foreground lg:max-w-md lg:text-sm" set:html={information} />
+          <p class="dark:text-muted-foreground text-muted lg:max-w-md lg:text-sm" set:html={information} />
         )}
       </div>
 

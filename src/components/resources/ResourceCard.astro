@@ -29,8 +29,8 @@ const href = `/resources/${canonicalSlug}`;
   class={`resource-card group rounded-lg border bg-card border-border p-6 shadow-sm transition-all hover:shadow-lg ${className}`}
 >
   <div class="mb-3">
-    <h3 class="mb-2 text-lg leading-tight font-semibold">
-      <a href={href} class="text-card-foreground hover:text-primary transition-colors group-hover:underline">
+    <h3 class="mb-2 text-lg font-semibold leading-tight">
+      <a href={href} class="text-card-foreground transition-colors hover:text-primary group-hover:underline">
         {title}
       </a>
     </h3>
@@ -39,8 +39,8 @@ const href = `/resources/${canonicalSlug}`;
   </div>
 
   <div class="mb-3 flex flex-wrap gap-2">
-    {category && <span class="bg-primary/10 text-primary rounded-full px-3 py-1 text-xs font-medium">{category}</span>}
-    {type && <span class="bg-muted text-muted-foreground rounded-full px-3 py-1 text-xs font-medium">{type}</span>}
+    {category && <span class="bg-primary/10 rounded-full px-3 py-1 text-xs font-medium text-primary">{category}</span>}
+    {type && <span class="text-muted-foreground rounded-full bg-muted px-3 py-1 text-xs font-medium">{type}</span>}
   </div>
 
   <div class="flex items-center justify-between">
@@ -62,7 +62,7 @@ const href = `/resources/${canonicalSlug}`;
           href={source}
           target="_blank"
           rel="noopener noreferrer"
-          class="text-primary hover:text-accent text-xs font-medium transition-colors"
+          class="text-xs font-medium text-primary transition-colors hover:text-accent"
         >
           View Source →
         </a>

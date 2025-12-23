@@ -65,8 +65,8 @@ export const ResonantWelcomeEmail = ({ steps }: ResonantWelcomeEmailProps) => {
             className="mx-auto my-20"
             style={{ borderRadius: '12px' }}
           />
-          <Container className="rounded-lg bg-white p-45 shadow-md">
-            <Heading className="text-primary my-0 text-center text-2xl leading-8 font-bold">
+          <Container className="p-45 rounded-lg bg-white shadow-md">
+            <Heading className="my-0 text-center text-2xl font-bold leading-8 text-primary">
               Welcome to Resonant Projects.art
             </Heading>
 
@@ -83,7 +83,7 @@ export const ResonantWelcomeEmail = ({ steps }: ResonantWelcomeEmailProps) => {
               </Row>
             </Section>
 
-            <ul className="text-text mt-4 mb-8 list-inside list-disc">
+            <ul className="text-text mb-8 mt-4 list-inside list-disc">
               {steps?.map(({ id, description }) => (
                 <li className="mb-20" key={id}>
                   {description}
@@ -93,7 +93,7 @@ export const ResonantWelcomeEmail = ({ steps }: ResonantWelcomeEmailProps) => {
 
             <Section className="mt-8 text-center">
               <Button
-                className="bg-primary hover:bg-secondary rounded-lg px-[18px] py-3 font-semibold text-white transition-colors"
+                className="rounded-lg bg-primary px-[18px] py-3 font-semibold text-white transition-colors hover:bg-secondary"
                 href="https://cal.com/resonantprojects/30min"
               >
                 Book a 30-Minute Call
@@ -103,7 +103,7 @@ export const ResonantWelcomeEmail = ({ steps }: ResonantWelcomeEmailProps) => {
             <Section className="mt-6 text-center">
               <Text className="text-text text-base">
                 Want to follow my journey?&nbsp;
-                <Link href="https://newsletter.resonantprojects.art/" className="text-accent font-medium underline">
+                <Link href="https://newsletter.resonantprojects.art/" className="font-medium text-accent underline">
                   Sign up for the Resonant Projects newsletter
                 </Link>
                 .
@@ -122,7 +122,7 @@ export const ResonantWelcomeEmail = ({ steps }: ResonantWelcomeEmailProps) => {
                 </Column>
               </Row>
             </Section>
-            <Text className="text-muted mb-45 text-center text-xs">Resonant Projects.art</Text>
+            <Text className="mb-45 text-center text-xs text-muted">Resonant Projects.art</Text>
           </Container>
         </Body>
       </Tailwind>

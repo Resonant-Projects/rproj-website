@@ -41,7 +41,7 @@ const searchQuery = urlParams.get('search');
     </SheetTrigger>
 
     <SheetContent side="top" class="h-auto max-h-[80vh] w-full overflow-y-auto">
-      <SheetHeader class="border-border border-b pb-6">
+      <SheetHeader class="border-b border-border pb-6">
         <SheetTitle class="text-2xl font-bold">Filter TIL Posts</SheetTitle>
         <p class="text-muted-foreground mt-2 text-sm">Narrow down your TIL search by tag</p>
       </SheetHeader>
@@ -51,14 +51,14 @@ const searchQuery = urlParams.get('search');
         <div class="bg-muted/30 rounded-lg p-6">
           <div class="mb-6 flex items-center justify-between">
             <div>
-              <h2 class="text-foreground mb-1 text-xl font-semibold">Filter by Tag</h2>
+              <h2 class="mb-1 text-xl font-semibold text-foreground">Filter by Tag</h2>
               <p class="text-muted-foreground text-sm">Choose a tag to filter TIL posts</p>
             </div>
             {
               selectedTag && (
                 <a
                   href={createFilterUrl(undefined, searchQuery || undefined)}
-                  class="text-primary hover:text-accent hover:bg-primary/10 rounded-md px-3 py-1 text-sm font-medium transition-colors"
+                  class="hover:bg-primary/10 rounded-md px-3 py-1 text-sm font-medium text-primary transition-colors hover:text-accent"
                 >
                   Clear tag
                 </a>
@@ -73,8 +73,8 @@ const searchQuery = urlParams.get('search');
                   href={createFilterUrl(tag.slug, searchQuery || undefined)}
                   class={`rounded-full px-4 py-2.5 text-sm font-medium transition-all duration-200 ${
                     selectedTag === tag.slug
-                      ? 'bg-primary hover:bg-primary/90 text-white shadow-md'
-                      : 'bg-background border-border text-foreground hover:bg-muted hover:border-primary/50 border shadow-sm'
+                      ? 'hover:bg-primary/90 bg-primary text-white shadow-md'
+                      : 'hover:border-primary/50 border border-border bg-background text-foreground shadow-sm hover:bg-muted'
                   }`}
                 >
                   #{tag.title}
@@ -90,12 +90,12 @@ const searchQuery = urlParams.get('search');
             <div class="bg-destructive/10 border-destructive/20 rounded-lg border p-4">
               <div class="flex items-center justify-between">
                 <div>
-                  <h3 class="text-foreground mb-1 text-sm font-medium">Active Filters</h3>
+                  <h3 class="mb-1 text-sm font-medium text-foreground">Active Filters</h3>
                   <p class="text-muted-foreground text-xs">Clear all applied filters</p>
                 </div>
                 <a
                   href={createFilterUrl(undefined, searchQuery || undefined)}
-                  class="text-destructive bg-background border-destructive/20 hover:bg-destructive/10 hover:border-destructive/30 inline-flex items-center rounded-md border px-4 py-2 text-sm font-medium transition-all duration-200"
+                  class="text-destructive border-destructive/20 hover:bg-destructive/10 hover:border-destructive/30 inline-flex items-center rounded-md border bg-background px-4 py-2 text-sm font-medium transition-all duration-200"
                 >
                   Clear all filters
                 </a>

@@ -47,7 +47,7 @@ const searchQuery = urlParams.get('q');
     </SheetTrigger>
 
     <SheetContent side="top" class="h-auto max-h-[80vh] w-full overflow-y-auto">
-      <SheetHeader class="border-border border-b pb-6">
+      <SheetHeader class="border-b border-border pb-6">
         <SheetTitle class="text-2xl font-bold">Filter Resources</SheetTitle>
         <p class="text-muted-foreground mt-2 text-sm">Narrow down your resource search by category and type</p>
       </SheetHeader>
@@ -57,14 +57,14 @@ const searchQuery = urlParams.get('q');
         <div class="bg-muted/30 rounded-lg p-6">
           <div class="mb-6 flex items-center justify-between">
             <div>
-              <h2 class="text-foreground mb-1 text-xl font-semibold">Filter by Category</h2>
+              <h2 class="mb-1 text-xl font-semibold text-foreground">Filter by Category</h2>
               <p class="text-muted-foreground text-sm">Choose a category to filter resources</p>
             </div>
             {
               selectedCategory && (
                 <a
                   href={createFilterUrl(undefined, selectedType, searchQuery || undefined)}
-                  class="text-primary hover:text-accent hover:bg-primary/10 rounded-md px-3 py-1 text-sm font-medium transition-colors"
+                  class="hover:bg-primary/10 rounded-md px-3 py-1 text-sm font-medium text-primary transition-colors hover:text-accent"
                 >
                   Clear category
                 </a>
@@ -79,8 +79,8 @@ const searchQuery = urlParams.get('q');
                   href={createFilterUrl(category, selectedType, searchQuery || undefined)}
                   class={`rounded-full px-4 py-2.5 text-sm font-medium transition-all duration-200 ${
                     selectedCategory === category
-                      ? 'bg-primary hover:bg-primary/90 text-white shadow-md'
-                      : 'bg-background border-border text-foreground hover:bg-muted hover:border-primary/50 border shadow-sm'
+                      ? 'hover:bg-primary/90 bg-primary text-white shadow-md'
+                      : 'hover:border-primary/50 border border-border bg-background text-foreground shadow-sm hover:bg-muted'
                   }`}
                 >
                   {category}
@@ -94,14 +94,14 @@ const searchQuery = urlParams.get('q');
         <div class="bg-muted/30 rounded-lg p-6">
           <div class="mb-6 flex items-center justify-between">
             <div>
-              <h2 class="text-foreground mb-1 text-xl font-semibold">Filter by Type</h2>
+              <h2 class="mb-1 text-xl font-semibold text-foreground">Filter by Type</h2>
               <p class="text-muted-foreground text-sm">Select a resource type to filter by</p>
             </div>
             {
               selectedType && (
                 <a
                   href={createFilterUrl(selectedCategory || undefined, undefined, searchQuery || undefined)}
-                  class="text-primary hover:text-accent hover:bg-primary/10 rounded-md px-3 py-1 text-sm font-medium transition-colors"
+                  class="hover:bg-primary/10 rounded-md px-3 py-1 text-sm font-medium text-primary transition-colors hover:text-accent"
                 >
                   Clear type
                 </a>
@@ -116,8 +116,8 @@ const searchQuery = urlParams.get('q');
                   href={createFilterUrl(selectedCategory, type, searchQuery || undefined)}
                   class={`rounded-full px-4 py-2.5 text-sm font-medium transition-all duration-200 ${
                     selectedType === type
-                      ? 'bg-primary hover:bg-primary/90 text-white shadow-md'
-                      : 'bg-background border-border text-foreground hover:bg-muted hover:border-primary/50 border shadow-sm'
+                      ? 'hover:bg-primary/90 bg-primary text-white shadow-md'
+                      : 'hover:border-primary/50 border border-border bg-background text-foreground shadow-sm hover:bg-muted'
                   }`}
                 >
                   {type}
@@ -133,12 +133,12 @@ const searchQuery = urlParams.get('q');
             <div class="bg-destructive/10 border-destructive/20 rounded-lg border p-4">
               <div class="flex items-center justify-between">
                 <div>
-                  <h3 class="text-foreground mb-1 text-sm font-medium">Active Filters</h3>
+                  <h3 class="mb-1 text-sm font-medium text-foreground">Active Filters</h3>
                   <p class="text-muted-foreground text-xs">Clear all applied filters</p>
                 </div>
                 <a
                   href={createFilterUrl(undefined, undefined, searchQuery || undefined)}
-                  class="text-destructive bg-background border-destructive/20 hover:bg-destructive/10 hover:border-destructive/30 inline-flex items-center rounded-md border px-4 py-2 text-sm font-medium transition-all duration-200"
+                  class="text-destructive border-destructive/20 hover:bg-destructive/10 hover:border-destructive/30 inline-flex items-center rounded-md border bg-background px-4 py-2 text-sm font-medium transition-all duration-200"
                 >
                   Clear all filters
                 </a>

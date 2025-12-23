@@ -46,7 +46,7 @@
   .btn-tertiary,
   .btn-outline,
   .btn-ghost {
-    @apply inline-flex items-center justify-center rounded-xl px-5 py-3 text-sm font-medium transition-colors duration-200 focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50;
+    @apply inline-flex items-center justify-center rounded-xl px-5 py-3 text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50;
   }
 
   /* Button variants using design system colors */
@@ -137,7 +137,7 @@
   }
 
   .btn-loading .loading-spinner {
-    @apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transform;
+    @apply absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform;
     transform: translate(-50%, -50%) translateZ(0);
     will-change: transform;
   }
@@ -176,7 +176,7 @@
   /* Loading state text transitions */
   .btn-loading::before {
     content: attr(data-loading-text);
-    @apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transform opacity-0 transition-opacity duration-200;
+    @apply absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform opacity-0 transition-opacity duration-200;
     color: currentColor;
   }
 
@@ -185,7 +185,7 @@
   }
 
   .btn-loading.show-loading-text .loading-spinner {
-    @apply relative top-auto left-auto ml-2 transform-none;
+    @apply relative left-auto top-auto ml-2 transform-none;
   }
 
   /* Button loading size variants */
@@ -264,7 +264,7 @@
   }
 
   .input-field {
-    @apply w-full rounded-md px-3 py-2 shadow-sm transition-colors duration-200 focus:ring-2 focus:outline-none disabled:cursor-not-allowed;
+    @apply w-full rounded-md px-3 py-2 shadow-sm transition-colors duration-200 focus:outline-none focus:ring-2 disabled:cursor-not-allowed;
     border: 1px solid var(--color-input);
     background-color: var(--color-background);
     color: var(--color-foreground);
@@ -282,7 +282,7 @@
   }
 
   .input-error {
-    @apply w-full rounded-md px-3 py-2 shadow-sm transition-colors duration-200 focus:ring-2 focus:outline-none disabled:cursor-not-allowed;
+    @apply w-full rounded-md px-3 py-2 shadow-sm transition-colors duration-200 focus:outline-none focus:ring-2 disabled:cursor-not-allowed;
     border: 1px solid var(--color-error);
     background-color: var(--color-background);
     color: var(--color-foreground);

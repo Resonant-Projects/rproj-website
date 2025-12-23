@@ -55,7 +55,7 @@ const relatedPages = showRelated ? getRelatedPages(Astro.url.pathname, 3) : [];
 
         {
           callToAction && (
-            <div class="text-primary mt-[-40px] mb-8">
+            <div class="mb-8 mt-[-40px] text-primary">
               <Button variant="link" {...callToAction} />
             </div>
           )
@@ -100,7 +100,7 @@ const relatedPages = showRelated ? getRelatedPages(Astro.url.pathname, 3) : [];
 
     {
       showRelated && relatedPages.length > 0 && (
-        <div class="border-border mt-12 border-t pt-8">
+        <div class="mt-12 border-t border-border pt-8">
           <RelatedPages pages={relatedPages} title={relatedTitle} variant="compact" />
         </div>
       )

@@ -16,7 +16,7 @@ const { title, subtitle, description, backgroundImage, className = '' } = Astro.
       backgroundImage && (
         <div class="absolute inset-0 z-0">
           <img src={backgroundImage} alt={title} class="h-full w-full object-cover opacity-20" />
-          <div class="absolute inset-0 bg-gradient-to-r from-[var(--aw-color-secondary)]/50 to-[var(--aw-color-primary)]/30" />
+          <div class="from-[var(--aw-color-secondary)]/50 to-[var(--aw-color-primary)]/30 absolute inset-0 bg-gradient-to-r" />
         </div>
       )
     }
@@ -24,14 +24,14 @@ const { title, subtitle, description, backgroundImage, className = '' } = Astro.
     <div class="relative z-10 mx-auto max-w-4xl px-4 py-16 text-center sm:py-20">
       <div class="mb-4">
         <span
-          class="inline-block rounded-full bg-[var(--aw-color-accent)]/20 px-4 py-2 text-sm font-medium text-[var(--aw-color-primary)] dark:bg-[var(--aw-color-accent)]/30 dark:text-[var(--aw-color-accent)]"
+          class="bg-[var(--aw-color-accent)]/20 dark:bg-[var(--aw-color-accent)]/30 inline-block rounded-full px-4 py-2 text-sm font-medium text-[var(--aw-color-primary)] dark:text-[var(--aw-color-accent)]"
         >
           {subtitle}
         </span>
       </div>
 
       <h2
-        class="mb-6 text-2xl font-bold text-[var(--aw-color-text-heading)] sm:text-3xl dark:text-[var(--aw-color-text-heading)]"
+        class="mb-6 text-2xl font-bold text-[var(--aw-color-text-heading)] dark:text-[var(--aw-color-text-heading)] sm:text-3xl"
       >
         {title}
       </h2>

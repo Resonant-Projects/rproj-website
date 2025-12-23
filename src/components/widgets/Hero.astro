@@ -29,7 +29,7 @@ const {
   {
     gradientBg && (
       <div class="pointer-events-none absolute inset-0 z-0 h-full w-full overflow-hidden" aria-hidden="true">
-        <div class="from-accent via-muted to-background dark:from-background dark:via-secondary dark:to-card h-full w-full bg-gradient-to-br" />
+        <div class="h-full w-full bg-gradient-to-br from-accent via-muted to-background dark:from-background dark:via-secondary dark:to-card" />
       </div>
     )
   }
@@ -86,7 +86,7 @@ const {
         {
           tagline && (
             <p
-              class={`text-base font-bold tracking-wide uppercase ${gradientBg ? 'text-accent' : 'text-secondary'}`}
+              class={`text-base font-bold uppercase tracking-wide ${gradientBg ? 'text-accent' : 'text-secondary'}`}
               set:html={tagline}
             />
           )
@@ -94,7 +94,7 @@ const {
         {
           title && (
             <h1
-              class={`font-heading text-foreground mb-4 leading-tight font-bold tracking-tighter break-words whitespace-normal ${
+              class={`mb-4 whitespace-normal break-words font-heading font-bold leading-tight tracking-tighter text-foreground ${
                 gradientBg ? 'text-5xl md:text-7xl' : 'text-xl sm:text-3xl md:text-5xl lg:text-6xl'
               }`}
               set:html={title}
@@ -135,7 +135,7 @@ const {
   {
     showScrollIndicator && (
       <div class="absolute bottom-8 left-1/2 z-20 -translate-x-1/2 transform animate-bounce">
-        <svg class={`text-foreground h-6 w-6`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class={`h-6 w-6 text-foreground`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
         </svg>
       </div>

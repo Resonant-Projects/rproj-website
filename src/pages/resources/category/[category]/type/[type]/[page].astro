@@ -182,7 +182,7 @@ const seoDescription = `Resources in the ${decodedCategory} category of type ${d
         <div class="py-16 text-center">
           <div class="mx-auto max-w-md">
             <div class="mb-6">
-              <div class="bg-muted mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full">
+              <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-muted">
                 <svg class="text-muted-foreground h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     stroke-linecap="round"
@@ -192,7 +192,7 @@ const seoDescription = `Resources in the ${decodedCategory} category of type ${d
                   />
                 </svg>
               </div>
-              <h2 class="text-foreground mb-2 text-2xl font-semibold">
+              <h2 class="mb-2 text-2xl font-semibold text-foreground">
                 {searchQuery ? 'No search results found' : 'No resources in this combination'}
               </h2>
               <p class="text-muted-foreground mb-6">
@@ -206,23 +206,23 @@ const seoDescription = `Resources in the ${decodedCategory} category of type ${d
               <div class="flex flex-col justify-center gap-3 sm:flex-row">
                 <a
                   href={`/resources/category/${encodeURIComponent(decodedCategory)}/1`}
-                  class="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center justify-center rounded-md px-4 py-2 transition-colors"
+                  class="text-primary-foreground hover:bg-primary/90 inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 transition-colors"
                 >
                   View all {decodedCategory} resources
                 </a>
                 <a
                   href={`/resources/type/${encodeURIComponent(decodedType)}/1`}
-                  class="bg-secondary text-secondary-foreground hover:bg-secondary/90 inline-flex items-center justify-center rounded-md px-4 py-2 transition-colors"
+                  class="text-secondary-foreground hover:bg-secondary/90 inline-flex items-center justify-center rounded-md bg-secondary px-4 py-2 transition-colors"
                 >
                   View all {decodedType} resources
                 </a>
               </div>
 
-              <div class="border-border border-t pt-4">
+              <div class="border-t border-border pt-4">
                 <p class="text-muted-foreground mb-3 text-sm">Or explore our full collection:</p>
                 <a
                   href="/resources/all/1"
-                  class="text-primary hover:text-primary/80 inline-flex items-center transition-colors"
+                  class="hover:text-primary/80 inline-flex items-center text-primary transition-colors"
                 >
                   <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path

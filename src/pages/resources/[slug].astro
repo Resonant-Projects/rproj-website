@@ -153,13 +153,13 @@ const sourceUrl =
 ---
 
 <Layout metadata={{ title, description, canonical }}>
-  <article class="prose prose-gray dark:prose-invert container mx-auto max-w-3xl px-4 py-8" data-pagefind-body>
+  <article class="container prose prose-gray mx-auto max-w-3xl px-4 py-8 dark:prose-invert" data-pagefind-body>
     <h1 class="mb-4">{title}</h1>
 
     {
       aiSummary && (
         <details class="mb-6 rounded-lg border bg-white/60 p-4 dark:bg-gray-900/60">
-          <summary class="cursor-pointer text-base font-semibold select-none">AI summary</summary>
+          <summary class="cursor-pointer select-none text-base font-semibold">AI summary</summary>
           <div class="mt-3 text-base leading-relaxed">{aiSummary}</div>
         </details>
       )
@@ -168,8 +168,8 @@ const sourceUrl =
     {
       showDebug && (
         <details class="mt-6 rounded-lg border border-gray-200/60 bg-gray-50/60 dark:border-gray-700/60 dark:bg-gray-800/40">
-          <summary class="cursor-pointer px-3 py-2 text-sm font-medium select-none">Debug: Notion Properties</summary>
-          <div class="px-3 pt-2 pb-3 text-xs leading-relaxed">
+          <summary class="cursor-pointer select-none px-3 py-2 text-sm font-medium">Debug: Notion Properties</summary>
+          <div class="px-3 pb-3 pt-2 text-xs leading-relaxed">
             <p class="mb-2 text-gray-700 dark:text-gray-300">Flat data (flattened values):</p>
             <pre class="overflow-x-auto rounded-md bg-gray-100 p-3 text-gray-900 dark:bg-gray-900 dark:text-gray-100">
               {JSON.stringify(flatDataForDebug, null, 2)}
@@ -236,7 +236,7 @@ const sourceUrl =
         data.Keywords?.length && (
           <div class="flex flex-wrap gap-2">
             {data.Keywords.map((kw: string) => (
-              <span class="bg-brand-100 text-brand-800 dark:bg-brand-900/40 dark:text-brand-100 inline-flex items-center rounded-full px-3 py-1 text-xs font-medium">
+              <span class="inline-flex items-center rounded-full bg-brand-100 px-3 py-1 text-xs font-medium text-brand-800 dark:bg-brand-900/40 dark:text-brand-100">
                 {kw}
               </span>
             ))}

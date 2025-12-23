@@ -34,12 +34,12 @@ const searchQuery = urlParams.get('q');
   <!-- Category Filter -->
   <div class="mb-6">
     <div class="mb-4 flex items-center justify-between">
-      <h2 class="text-foreground text-xl font-bold">Filter by Category</h2>
+      <h2 class="text-xl font-bold text-foreground">Filter by Category</h2>
       {
         selectedCategory && (
           <a
             href={createFilterUrl(undefined, selectedType, searchQuery || undefined)}
-            class="text-primary hover:text-accent text-sm transition-colors"
+            class="text-sm text-primary transition-colors hover:text-accent"
           >
             Clear category
           </a>
@@ -55,7 +55,7 @@ const searchQuery = urlParams.get('q');
             class={`rounded-full px-3 py-2 text-sm font-medium transition-colors ${
               selectedCategory === category
                 ? 'bg-primary text-white'
-                : 'bg-muted hover:bg-muted-foreground/20 text-foreground'
+                : 'hover:bg-muted-foreground/20 bg-muted text-foreground'
             }`}
           >
             {category}
@@ -68,12 +68,12 @@ const searchQuery = urlParams.get('q');
   <!-- Type Filter -->
   <div class="mb-6">
     <div class="mb-4 flex items-center justify-between">
-      <h2 class="text-foreground text-xl font-bold">Filter by Type</h2>
+      <h2 class="text-xl font-bold text-foreground">Filter by Type</h2>
       {
         selectedType && (
           <a
             href={createFilterUrl(selectedCategory, undefined, searchQuery || undefined)}
-            class="text-primary hover:text-accent text-sm transition-colors"
+            class="text-sm text-primary transition-colors hover:text-accent"
           >
             Clear type
           </a>
@@ -87,7 +87,7 @@ const searchQuery = urlParams.get('q');
           <a
             href={createFilterUrl(selectedCategory, type, searchQuery || undefined)}
             class={`rounded-full px-3 py-2 text-sm font-medium transition-colors ${
-              selectedType === type ? 'bg-primary text-white' : 'bg-muted hover:bg-muted-foreground/20 text-foreground'
+              selectedType === type ? 'bg-primary text-white' : 'hover:bg-muted-foreground/20 bg-muted text-foreground'
             }`}
           >
             {type}
@@ -100,10 +100,10 @@ const searchQuery = urlParams.get('q');
   <!-- Clear All Filters -->
   {
     (selectedCategory || selectedType) && (
-      <div class="border-border border-t pt-4">
+      <div class="border-t border-border pt-4">
         <a
           href={createFilterUrl(undefined, undefined, searchQuery || undefined)}
-          class="text-primary hover:text-accent text-sm font-medium transition-colors"
+          class="text-sm font-medium text-primary transition-colors hover:text-accent"
         >
           Clear all filters
         </a>

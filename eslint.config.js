@@ -30,7 +30,6 @@ export default [
       ...eslintPluginAstro.configs['flat/recommended'].rules,
       'astro/no-conflict-set-directives': 'error',
       'astro/no-unused-define-vars-in-style': 'error',
-      'astro/no-set-html-directive': 'warn',
       'astro/semi': ['error', 'always'],
     },
   },

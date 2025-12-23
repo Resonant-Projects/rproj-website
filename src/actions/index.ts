@@ -16,9 +16,17 @@ const notion = new Client({
   notionVersion: '2025-09-03',
 });
 
+/** Valid service options for the contact form */
 const ALLOWED_SERVICES = ['Design', 'Rhythm', 'Color', 'Motion'] as const;
 
-// State type for useActionState integration
+/**
+ * State interface returned from the contact form action.
+ * Used with React's useActionState for seamless form state management.
+ * @property success - Whether the submission succeeded
+ * @property message - User-facing status message
+ * @property redirect - Optional URL to redirect to on success
+ * @property errors - Optional field-level validation errors
+ */
 export interface ContactFormState {
   success: boolean;
   message: string;
@@ -28,8 +36,21 @@ export interface ContactFormState {
 
 export const server = {
   /**
-   * Contact form submission action
-   * Designed to work with React's useActionState via actions.contact.withState
+   * Contact form submission action.
+   * Validates input, creates a Notion page, and sends a welcome email.
+   *
+   * @description Designed to work with React's useActionState via `withState(actions.contact)`.
+   * Uses Zod validation for type-safe input handling.
+   *
+   * @example
+   * // In a React component with useActionState:
+   * const [state, formAction, isPending] = useActionState(
+   *   withState(actions.contact),
+   *   initialState
+   * );
+   *
+   * @returns {Promise<ContactFormState>} Result with success status, message, and optional redirect
+   * @throws {ActionError} On validation failure or prohibited content
    */
   contact: defineAction({
     accept: 'form',

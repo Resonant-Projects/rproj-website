@@ -8,11 +8,27 @@ import { actions } from 'astro:actions';
 import { withState } from '@astrojs/react/actions';
 import type { ContactFormState } from '~/actions';
 
+/**
+ * Option for select/dropdown inputs
+ * @property value - The value submitted with the form
+ * @property label - Display text shown to users
+ */
 interface InputOption {
   value: string;
   label: string;
 }
 
+/**
+ * Configuration for a form input field
+ * @property name - Input name attribute (used as form data key)
+ * @property label - Optional label text displayed above the input
+ * @property type - Input type (text, email, select, etc.)
+ * @property required - Whether the field is required
+ * @property placeholder - Placeholder text shown when empty
+ * @property autocomplete - HTML autocomplete attribute value
+ * @property options - Options for select inputs
+ * @property defaultValue - Initial value for the input
+ */
 interface Input {
   name: string;
   label?: string;
@@ -24,6 +40,14 @@ interface Input {
   defaultValue?: string;
 }
 
+/**
+ * Configuration for the textarea field
+ * @property name - Textarea name attribute
+ * @property label - Label text displayed above the textarea
+ * @property required - Whether the field is required
+ * @property placeholder - Placeholder text shown when empty
+ * @property rows - Number of visible text rows
+ */
 interface Textarea {
   name: string;
   label: string;
@@ -32,6 +56,15 @@ interface Textarea {
   rows?: number;
 }
 
+/**
+ * Props for the ContactFormReact component
+ * @property title - Optional form title
+ * @property subtitle - Optional subtitle text
+ * @property inputs - Array of input field configurations
+ * @property textarea - Textarea field configuration
+ * @property button - Submit button text
+ * @property description - Optional description shown below the form
+ */
 interface ContactFormProps {
   title?: string;
   subtitle?: string;
@@ -41,16 +74,27 @@ interface ContactFormProps {
   description?: string;
 }
 
-// State type for the form - represents the result from the action
+/**
+ * Internal state type for the form.
+ * Represents the result from useActionState after action execution.
+ * @property data - Successful action response data
+ * @property error - Error response if action failed
+ */
 type FormState = {
   data: ContactFormState | undefined;
   error: { message: string } | undefined;
 };
 
-// Initial state: no submission yet (type assertion needed for discriminated union compatibility)
+/** Initial state before any form submission */
 const initialState: FormState = { data: undefined, error: undefined };
 
-// Helper to determine if a field has an error (for aria-invalid)
+/**
+ * Determines if a form field has a validation error.
+ * Used to set aria-invalid attribute for accessibility.
+ * @param state - Current form state from useActionState
+ * @param fieldName - Name of the field to check
+ * @returns True if the field has an error
+ */
 const hasFieldError = (state: FormState, fieldName: string): boolean => {
   // Check for per-field errors from action response
   if (state.data?.errors?.[fieldName]) {
@@ -63,6 +107,35 @@ const hasFieldError = (state: FormState, fieldName: string): boolean => {
   return false;
 };
 
+/**
+ * Contact form component using Astro Actions with React's useActionState.
+ *
+ * Features:
+ * - Server-side form handling via Astro Actions
+ * - Pending state indication during submission
+ * - Automatic redirect on successful submission
+ * - Per-field and global error display
+ * - Full ARIA accessibility support
+ *
+ * @param props - Form configuration props
+ * @param props.title - Optional title displayed above the form
+ * @param props.subtitle - Optional subtitle text
+ * @param props.inputs - Array of input field configurations
+ * @param props.textarea - Textarea configuration for the message field
+ * @param props.button - Text for the submit button
+ * @param props.description - Optional description shown below the submit button
+ *
+ * @example
+ * <ContactFormReact
+ *   title="Get in Touch"
+ *   inputs={[
+ *     { name: 'name', label: 'Name', type: 'text', required: true },
+ *     { name: 'email', label: 'Email', type: 'email', required: true },
+ *   ]}
+ *   textarea={{ name: 'message', label: 'Message', required: true }}
+ *   button="Send Message"
+ * />
+ */
 export function ContactFormReact({ title, subtitle, inputs, textarea, button, description }: ContactFormProps) {
   // withState wraps the action for useActionState compatibility
 

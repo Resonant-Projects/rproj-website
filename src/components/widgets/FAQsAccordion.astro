@@ -1,0 +1,51 @@
+---
+import Headline from '~/components/ui/Headline.astro';
+import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '~/components/starwind/accordion';
+import type { Faqs as Props } from '~/types';
+
+const {
+  title = '',
+  subtitle = '',
+  tagline = '',
+  items = [],
+
+  id,
+  isDark = false,
+  classes = {},
+  bg = await Astro.slots.render('bg'),
+} = Astro.props;
+
+// Generate a unique value for each item based on index
+// First item is open by default
+const defaultValue = 'faq-0';
+const itemsWithValues = items.map((item, index) => ({
+  ...item,
+  value: `faq-${index}`,
+  isDefaultOpen: `faq-${index}` === defaultValue,
+}));
+---
+
+<WidgetWrapper id={id} isDark={isDark} containerClass={`max-w-4xl mx-auto ${classes?.container ?? ''}`} bg={bg}>
+  <Headline title={title} subtitle={subtitle} tagline={tagline} />
+
+  <Accordion type="single" defaultValue={defaultValue} class="w-full">
+    {
+      itemsWithValues.map((item) => (
+        <AccordionItem value={item.value} defaultOpen={item.isDefaultOpen} class="border-border">
+          <AccordionTrigger defaultOpen={item.isDefaultOpen} class="text-foreground hover:text-primary text-lg font-semibold">
+            {item.title}
+          </AccordionTrigger>
+          <AccordionContent defaultOpen={item.isDefaultOpen} class="text-muted-foreground">
+            {item.description && <Fragment set:html={item.description} />}
+          </AccordionContent>
+        </AccordionItem>
+      ))
+    }
+  </Accordion>
+</WidgetWrapper>

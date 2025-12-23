@@ -1,0 +1,31 @@
+---
+import type { HTMLAttributes } from "astro/types";
+import { tv } from "tailwind-variants";
+
+type Props = HTMLAttributes<"div"> & {
+  /**
+   * The value of the item
+   */
+  value: string;
+  /**
+   * Whether this item should be open by default (for SSR)
+   */
+  defaultOpen?: boolean;
+};
+
+export const accordionItem = tv({
+  base: "starwind-accordion-item border-b last:border-b-0",
+});
+
+const { value, defaultOpen = false, class: className, ...rest } = Astro.props;
+---
+
+<div
+  class={accordionItem({ class: className })}
+  data-value={value}
+  data-state={defaultOpen ? "open" : "closed"}
+  data-slot="accordion-item"
+  {...rest}
+>
+  <slot />
+</div>

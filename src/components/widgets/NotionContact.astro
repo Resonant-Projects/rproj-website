@@ -1,8 +1,27 @@
 ---
+/**
+ * NotionContact - Contact form with Astro Actions + React useActionState
+ *
+ * Uses the modern pattern from: https://www.youtube.com/watch?v=-0pbaYcQJ-0
+ * - Astro Actions for type-safe server-side form handling
+ * - React useActionState for client-side state management
+ * - Built-in pending states and error handling
+ * - Progressive enhancement with graceful degradation
+ */
 import type { Input } from '~/types';
-import Contact from './Contact.astro';
+import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
+import Headline from '~/components/ui/Headline.astro';
+import { ContactFormReact } from './ContactFormReact';
 
-const { defaultService = '' } = Astro.props;
+interface Props {
+  defaultService?: string;
+  id?: string;
+  isDark?: boolean;
+  classes?: { container?: string };
+  bg?: string;
+}
+
+const { defaultService = '', id, isDark = false, classes = {}, bg } = Astro.props;
 
 const inputs: Array<Input> = [
   {
@@ -44,42 +63,36 @@ const textarea = {
 
 const button = 'Start the Conversation';
 
-// const description = "We love connecting with creative minds! Reach out and let's make something amazing together."; // Unused variable
+const title = 'Ready to Start Your Project?';
+const subtitle = "Tell us about your vision. We'll respond within 24 hours with next steps.";
+const description = "Share your goals and we'll show you exactly how we can help. No pressure, just honest advice.";
 ---
 
-<Contact
-  title="Ready to Start Your Project?"
-  subtitle="Tell us about your vision. We'll respond within 24 hours with next steps."
-  inputs={inputs}
-  textarea={textarea}
-  button={button}
-  description="Share your goals and we'll show you exactly how we can help. No pressure, just honest advice."
-  formAction="/api/submit-to-notion"
-  {...Astro.props}
-/>
+<WidgetWrapper id={id} isDark={isDark} containerClass={`max-w-7xl mx-auto ${classes?.container ?? ''}`} bg={bg}>
+  <Headline title={title} subtitle={subtitle} />
 
-<!-- Progressive Enhancement: Form works without JS, enhanced with JS -->
+  <!-- React component with client:load for immediate hydration -->
+  <ContactFormReact
+    client:load
+    title=""
+    subtitle=""
+    inputs={inputs}
+    textarea={textarea}
+    button={button}
+    description={description}
+  />
+</WidgetWrapper>
+
+<!-- Progressive Enhancement: Form works without JS via noscript fallback -->
 <noscript>
   <style>
-    /* Hide JS-only UI elements when JavaScript is disabled */
-    .js-only {
+    /* Hide React form when JS is disabled, show fallback */
+    [data-astro-cid-contact-form] {
       display: none !important;
     }
   </style>
+  <div class="mx-auto max-w-xl rounded-lg border border-amber-200 bg-amber-50 p-4 text-center text-amber-800">
+    <p class="mb-2 font-medium">JavaScript Required</p>
+    <p class="text-sm">Please enable JavaScript to use the contact form, or email us directly at <a href="mailto:info@rproj.art" class="underline">info@rproj.art</a></p>
+  </div>
 </noscript>
-
-<script is:inline src="/form-handler.js" type="module"></script>
-
-<script>
-  // Progressive enhancement marker - signals that JS is available
-  document.documentElement.classList.add('js-enabled');
-
-  // Verify form handler integration
-  document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('notion-contact-form');
-    if (form) {
-      // Add indicator that JavaScript enhancements are available
-      form.setAttribute('data-js-enhanced', 'true');
-    }
-  });
-</script>

@@ -86,13 +86,17 @@ const description = "Share your goals and we'll show you exactly how we can help
 <!-- Progressive Enhancement: Form works without JS via noscript fallback -->
 <noscript>
   <style>
-    /* Hide React form when JS is disabled, show fallback */
-    [data-astro-cid-contact-form] {
+    /* Hide React form container when JS is disabled, show fallback */
+    #notion-contact-form {
       display: none !important;
     }
   </style>
   <div class="mx-auto max-w-xl rounded-lg border border-amber-200 bg-amber-50 p-4 text-center text-amber-800">
     <p class="mb-2 font-medium">JavaScript Required</p>
-    <p class="text-sm">Please enable JavaScript to use the contact form, or email us directly at <a href="mailto:info@rproj.art" class="underline">info@rproj.art</a></p>
+    <p class="text-sm">
+      Please enable JavaScript to use the contact form, or email us directly at <a
+        href="mailto:info@rproj.art"
+        class="underline">info@rproj.art</a>
+    </p>
   </div>
 </noscript>

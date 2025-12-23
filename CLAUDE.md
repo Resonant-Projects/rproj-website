@@ -31,6 +31,7 @@ bun run validate:notion             # Notion config validation
 ## Architecture
 
 ### Content System
+
 - **Astro Content Collections** with three sources:
   - `post`: Local MDX files from `src/data/post/`
   - `til`: "Today I Learned" entries from `src/content/til/`
@@ -39,9 +40,11 @@ bun run validate:notion             # Notion config validation
 - Requires `NOTION_TOKEN` and `NOTION_RR_RESOURCES_ID` environment variables
 
 ### Path Aliases
+
 All imports use `~` prefix (e.g., `~/components/`, `~/utils/`). Configured in both `tsconfig.json` and `astro.config.ts`.
 
 ### Key Directories
+
 - `src/components/` - Organized by feature: `blog/`, `ui/`, `widgets/`, `resources/`, `til/`
 - `src/layouts/` - Page layout templates
 - `src/pages/` - File-based routing with dynamic `[...blog]/` for posts
@@ -49,11 +52,13 @@ All imports use `~` prefix (e.g., `~/components/`, `~/utils/`). Configured in bo
 - `vendor/` - Forked dependencies: `integration/` (astrowind), `notion-astro-loader/`
 
 ### Styling
+
 - Tailwind CSS v4 with `@tailwindcss/vite` plugin
 - Custom styles in `src/components/CustomStyles.astro`
 - Uses `tailwind-variants` for component variant styling
 
 ### Build & Deploy
+
 - Server-side rendering via `@astrojs/vercel` adapter
 - Experimental `liveContentCollections` enabled for Notion sync
 - Pagefind for client-side search (builds to `public/pagefind/`)

@@ -136,25 +136,77 @@ export const server = {
           throw error;
         }
 
-        // Classify and throw appropriate error
-        const errorString = String(error).toLowerCase();
+        // Type-safe error classification using error properties
+        const isNotionError = (err: unknown): boolean => {
+          if (err && typeof err === 'object') {
+            // Notion SDK errors have a 'code' property with specific values
+            if ('code' in err && typeof (err as { code: unknown }).code === 'string') {
+              const code = (err as { code: string }).code;
+              // Notion API error codes: https://developers.notion.com/reference/status-codes
+              return [
+                'unauthorized',
+                'restricted_resource',
+                'object_not_found',
+                'rate_limited',
+                'internal_server_error',
+                'service_unavailable',
+                'database_connection_unavailable',
+                'gateway_timeout',
+                'validation_error',
+                'conflict_error',
+              ].includes(code);
+            }
+            // Check for Notion client error name
+            if ('name' in err && (err as { name: unknown }).name === 'APIResponseError') {
+              return true;
+            }
+          }
+          return false;
+        };
 
-        if (errorString.includes('notion')) {
+        const isResendError = (err: unknown): boolean => {
+          if (err && typeof err === 'object') {
+            // Resend SDK errors have a 'name' property
+            if ('name' in err) {
+              const name = (err as { name: unknown }).name;
+              return name === 'ResendError' || name === 'Resend_Error';
+            }
+            // Resend errors also have 'statusCode' property from API responses
+            if ('statusCode' in err && typeof (err as { statusCode: unknown }).statusCode === 'number') {
+              return true;
+            }
+          }
+          return false;
+        };
+
+        if (isNotionError(error)) {
+          console.error('[action:contact] Notion API error:', error);
           throw new ActionError({
             code: 'INTERNAL_SERVER_ERROR',
             message: 'External service temporarily unavailable. Please try again.',
           });
         }
 
-        if (errorString.includes('resend') || errorString.includes('email')) {
-          // Non-critical: form was submitted but email failed
-          console.warn('[action:contact] Email failed but form was submitted');
+        if (isResendError(error)) {
+          // Log for observability - email failures should be tracked
+          console.warn('[action:contact] Email delivery failed:', {
+            errorName: (error as { name?: string }).name,
+            errorMessage: (error as { message?: string }).message,
+          });
+          // Return partial success - form was submitted but email failed
           return {
             success: true,
             message: 'Form submitted! Confirmation email may be delayed.',
             redirect: '/thank-you',
           };
         }
+
+        // Unknown error - log full details for debugging
+        console.error('[action:contact] Unknown error type:', {
+          errorName: (error as { name?: string })?.name,
+          errorMessage: (error as { message?: string })?.message,
+          errorCode: (error as { code?: string })?.code,
+        });
 
         throw new ActionError({
           code: 'INTERNAL_SERVER_ERROR',

@@ -8,7 +8,21 @@ import { Client, isFullPage, isFullDatabase } from '@notionhq/client';
 type Asserts<Function> = Function extends (input: any) => input is infer Type ? Type : never;
 
 export type ClientOptions = NonNullable<ConstructorParameters<typeof Client>[0]>;
-export interface QueryDatabaseParameters extends NonNullable<Parameters<Client['databases']['query']>[0]> {}
+
+// Query parameters for both databases.query (legacy) and dataSources.query (2025-09-03+)
+export interface QueryDatabaseParameters {
+  database_id: string;
+  filter_properties?: string[];
+  sorts?: Array<{
+    property?: string;
+    timestamp?: 'created_time' | 'last_edited_time';
+    direction: 'ascending' | 'descending';
+  }>;
+  filter?: Record<string, unknown>;
+  archived?: boolean;
+  start_cursor?: string;
+  page_size?: number;
+}
 
 export type DatabasePropertyConfigResponse = Asserts<typeof isFullDatabase>['properties'][string];
 

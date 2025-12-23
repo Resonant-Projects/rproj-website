@@ -47,11 +47,12 @@ if (!uuidRegex.test(notionDatabaseId)) {
 }
 
 // Test Notion API connection
-console.log('\n🔌 Testing Notion API connection...');
+console.log('\n🔌 Testing Notion API connection (API version 2025-09-03)...');
 
 try {
   const notion = new Client({
     auth: notionToken,
+    notionVersion: '2025-09-03',
   });
 
   // Try to retrieve database information
@@ -63,14 +64,27 @@ try {
   console.log(`   Database title: ${response.title[0]?.plain_text || 'Untitled'}`);
   console.log(`   Database ID: ${response.id}`);
 
-  // Try to query the database
-  const queryResponse = await notion.databases.query({
-    database_id: notionDatabaseId,
+  // Check for data_sources (new in API 2025-09-03)
+  const dataSources = response.data_sources;
+  let dataSourceId = notionDatabaseId;
+
+  if (dataSources && dataSources.length > 0) {
+    dataSourceId = dataSources[0].id;
+    console.log(`   Data source ID: ${dataSourceId}`);
+    console.log(`   Data sources count: ${dataSources.length}`);
+  } else {
+    console.log('   ⚠️  No data_sources found (may be pre-migration database)');
+  }
+
+  // Try to query the database using dataSources.query (API 2025-09-03)
+  console.log('\n📊 Testing dataSources.query...');
+  const queryResponse = await notion.dataSources.query({
+    data_source_id: dataSourceId,
     page_size: 1,
   });
 
   console.log(
-    `   Database query successful (${queryResponse.results.length} result${queryResponse.results.length !== 1 ? 's' : ''} returned)`
+    `   dataSources.query successful (${queryResponse.results.length} result${queryResponse.results.length !== 1 ? 's' : ''} returned)`
   );
 
   if (queryResponse.has_more) {
@@ -82,7 +96,7 @@ try {
     console.log(`   Sample page ID: ${firstPage.id}`);
   }
 
-  console.log('\n🎉 Notion configuration is valid!');
+  console.log('\n🎉 Notion configuration is valid (API 2025-09-03)!');
 } catch (error) {
   console.error('❌ Failed to connect to Notion API');
   console.error(`   Error: ${error.message}`);

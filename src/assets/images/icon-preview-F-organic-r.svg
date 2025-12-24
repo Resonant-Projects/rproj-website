@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="organic-outer" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#6e2765"/>
+      <stop offset="100%" stop-color="#7e3775"/>
+    </linearGradient>
+    <linearGradient id="organic-mid" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7e3775"/>
+      <stop offset="100%" stop-color="#6e2765"/>
+    </linearGradient>
+  </defs>
+  <!-- Outer organic bloom shape -->
+  <path d="M32 2 C14 2 2 14 2 32 C2 50 14 62 32 62 C50 62 62 50 62 32 C62 14 50 2 32 2" fill="url(#organic-outer)" opacity="0.2"/>
+  <!-- Middle organic shape with slight asymmetry -->
+  <path d="M32 8 C18 8 8 18 8 32 C8 46 18 56 32 56 C46 56 56 46 56 32 C56 18 46 8 32 8" fill="url(#organic-mid)" opacity="0.4"/>
+  <!-- Inner organic shape -->
+  <path d="M32 14 C22 14 14 22 14 32 C14 42 22 50 32 50 C42 50 50 42 50 32 C50 22 42 14 32 14" fill="url(#organic-outer)" opacity="0.6"/>
+  <!-- Core shape -->
+  <circle cx="32" cy="32" r="13" fill="#6e2765"/>
+  <!-- Elegant R with curved leg -->
+  <path d="M24 43 L24 21 L33 21 Q40 21 40 27 Q40 32 35 33 L35 33 Q36 33 37 34 L43 43 L37 43 L32 35 Q31 34 30 34 L30 43 Z M30 30 L32 30 Q35 30 35 27 Q35 25 32 25 L30 25 Z" fill="#faf9fb"/>
+  <!-- Decorative resonance curve from R -->
+  <path d="M43 43 Q48 38 50 32 Q52 26 48 22" stroke="#a87da3" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.6"/>
+</svg>

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="bloom-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7e3775"/>
+      <stop offset="100%" stop-color="#6e2765"/>
+    </linearGradient>
+  </defs>
+  <path d="M32 4 C20 4 12 14 12 26 C12 38 20 48 32 60 C44 48 52 38 52 26 C52 14 44 4 32 4" fill="url(#bloom-gradient)" opacity="0.3"/>
+  <path d="M32 10 C22 10 16 18 16 28 C16 38 22 46 32 54 C42 46 48 38 48 28 C48 18 42 10 32 10" fill="url(#bloom-gradient)" opacity="0.5"/>
+  <path d="M32 16 C24 16 20 22 20 30 C20 38 24 44 32 48 C40 44 44 38 44 30 C44 22 40 16 32 16" fill="url(#bloom-gradient)" opacity="0.7"/>
+  <ellipse cx="32" cy="32" rx="8" ry="10" fill="#6e2765"/>
+</svg>

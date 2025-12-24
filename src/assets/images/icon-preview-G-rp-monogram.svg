@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="bloom-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7e3775"/>
+      <stop offset="100%" stop-color="#6e2765"/>
+    </linearGradient>
+  </defs>
+  <!-- Outer bloom layer -->
+  <ellipse cx="32" cy="32" rx="30" ry="30" fill="url(#bloom-bg)" opacity="0.25"/>
+  <!-- Middle bloom layer -->
+  <ellipse cx="32" cy="32" rx="24" ry="24" fill="url(#bloom-bg)" opacity="0.4"/>
+  <!-- Inner bloom layer -->
+  <ellipse cx="32" cy="32" rx="18" ry="18" fill="url(#bloom-bg)" opacity="0.6"/>
+  <!-- Core circle -->
+  <ellipse cx="32" cy="32" rx="14" ry="14" fill="#6e2765"/>
+  <!-- Bold geometric R (top half) - style matching the logo image -->
+  <g fill="#faf9fb">
+    <!-- R vertical stem -->
+    <rect x="21" y="18" width="5" height="14"/>
+    <!-- R bowl -->
+    <path d="M26 18 L33 18 C38 18 41 20.5 41 24 C41 27.5 38 30 33 30 L26 30 Z M26 22 L26 26 L32 26 C34 26 36 25.5 36 24 C36 22.5 34 22 32 22 Z"/>
+    <!-- R diagonal leg -->
+    <polygon points="32,28 42,32 37,32 29,29"/>
+
+    <!-- Reflected P (bottom half - mirrored on horizontal axis at y=32) -->
+    <!-- P vertical stem (going down) -->
+    <rect x="21" y="32" width="5" height="14"/>
+    <!-- P bowl (reflected - curves downward) -->
+    <path d="M26 32 L33 32 C38 32 41 34.5 41 38 C41 41.5 38 44 33 44 L26 44 Z M26 36 L26 40 L32 40 C34 40 36 39.5 36 38 C36 36.5 34 36 32 36 Z"/>
+  </g>
+</svg>

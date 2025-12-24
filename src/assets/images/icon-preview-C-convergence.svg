@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="converge-gradient" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#6e2765"/>
+      <stop offset="100%" stop-color="#7e3775"/>
+    </linearGradient>
+  </defs>
+  <path d="M8 56 C8 32 20 12 32 12 C20 12 8 32 8 56" fill="url(#converge-gradient)" opacity="0.4"/>
+  <path d="M8 56 Q20 36 32 28 Q20 36 8 56" fill="#6e2765" opacity="0.6"/>
+  <path d="M56 56 C56 32 44 12 32 12 C44 12 56 32 56 56" fill="url(#converge-gradient)" opacity="0.4"/>
+  <path d="M56 56 Q44 36 32 28 Q44 36 56 56" fill="#6e2765" opacity="0.6"/>
+  <ellipse cx="32" cy="24" rx="6" ry="8" fill="#6e2765"/>
+  <ellipse cx="32" cy="24" rx="3" ry="4" fill="#7e3775"/>
+  <path d="M12 56 Q32 44 52 56" stroke="#6e2765" stroke-width="4" stroke-linecap="round" fill="none"/>
+</svg>

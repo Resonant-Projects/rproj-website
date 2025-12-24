@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="bloom-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7e3775"/>
+      <stop offset="100%" stop-color="#6e2765"/>
+    </linearGradient>
+    <linearGradient id="r-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#e8d4e6"/>
+    </linearGradient>
+  </defs>
+  <!-- Outer bloom layer -->
+  <ellipse cx="32" cy="32" rx="30" ry="30" fill="url(#bloom-bg)" opacity="0.25"/>
+  <!-- Middle bloom layer -->
+  <ellipse cx="32" cy="32" rx="24" ry="24" fill="url(#bloom-bg)" opacity="0.4"/>
+  <!-- Inner bloom layer -->
+  <ellipse cx="32" cy="32" rx="18" ry="18" fill="url(#bloom-bg)" opacity="0.6"/>
+  <!-- Core circle -->
+  <ellipse cx="32" cy="32" rx="14" ry="14" fill="#6e2765"/>
+  <!-- Stylized R letter -->
+  <path d="M24 44 L24 20 L34 20 C40 20 43 23 43 28 C43 33 40 35.5 35 36 L43 44 L37 44 L30 36.5 L30 44 Z M30 32 L33 32 C36 32 37 30.5 37 28 C37 25.5 36 24.5 33 24.5 L30 24.5 Z" fill="url(#r-gradient)"/>
+</svg>

@@ -1,12 +1,7 @@
 ---
 import Headline from '~/components/ui/Headline.astro';
 import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '~/components/starwind/accordion';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '~/components/starwind/accordion';
 import type { Faqs as Props } from '~/types';
 
 const {
@@ -36,9 +31,12 @@ const itemsWithValues = items.map((item, index) => ({
 
   <Accordion type="single" defaultValue={defaultValue} class="w-full">
     {
-      itemsWithValues.map((item) => (
+      itemsWithValues.map(item => (
         <AccordionItem value={item.value} defaultOpen={item.isDefaultOpen} class="border-border">
-          <AccordionTrigger defaultOpen={item.isDefaultOpen} class="text-foreground hover:text-primary text-lg font-semibold">
+          <AccordionTrigger
+            defaultOpen={item.isDefaultOpen}
+            class="text-lg font-semibold text-foreground hover:text-primary"
+          >
             {item.title}
           </AccordionTrigger>
           <AccordionContent defaultOpen={item.isDefaultOpen} class="text-muted-foreground">

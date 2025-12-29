@@ -3,6 +3,7 @@
 Three organic, flowing icon designs representing "resonance" - the physics of vibration, transformation, and creative energy.
 
 **Brand Context:**
+
 - Primary Purple: #6e2765
 - Secondary Purple: #7e3775
 - Philosophy: "When things resonate at their true frequency, they transform both creator and audience"
@@ -12,6 +13,7 @@ Three organic, flowing icon designs representing "resonance" - the physics of vi
 ## Concept 1: "The Bloom"
 
 ### Design Rationale
+
 This icon represents resonance as organic growth and expansion - like a flower blooming from its center or ripples emanating from a point of impact. The curved petals suggest sound waves that have taken on life, transforming from mere vibration into something beautiful and alive. The spiral motion evokes the feeling of energy unfolding outward, capturing the transformative nature of resonance.
 
 ### SVG Code
@@ -39,12 +41,14 @@ This icon represents resonance as organic growth and expansion - like a flower b
 ```
 
 ### Scalability Notes
+
 - **16x16 (favicon):** The concentric structure remains visible; core ellipse provides solid anchor point
 - **32x32:** Gradient layers become distinct; organic shape clearly readable
 - **Large display:** Full gradient beauty visible; flowing curves create elegant presence
 - **Monochrome:** Works well as single color due to layered opacity approach
 
 ### Pairing with Wordmark
+
 Best positioned to the LEFT of "Resonant Projects" with equal height to the cap-height of the text. The vertical orientation of the bloom complements horizontal text flow.
 
 ---
@@ -52,6 +56,7 @@ Best positioned to the LEFT of "Resonant Projects" with equal height to the cap-
 ## Concept 2: "The Wave Form"
 
 ### Design Rationale
+
 This icon captures resonance as flowing energy - a continuous wave that curves and flows like liquid sound. Rather than a rigid audio waveform, this is an organic, breathing curve that suggests both movement and stillness simultaneously. The dual curves interweaving represent the relationship between creator and audience, vibrating together at the same frequency.
 
 ### SVG Code
@@ -77,12 +82,14 @@ This icon captures resonance as flowing energy - a continuous wave that curves a
 ```
 
 ### Scalability Notes
+
 - **16x16 (favicon):** Simplify to single wave or increase stroke width; center dot provides recognition anchor
 - **32x32:** Both waves clearly visible; flowing motion is readable
 - **Large display:** Graceful curves create sense of continuous motion; gradient adds depth
 - **Monochrome:** Strong structure works perfectly in single color
 
 ### Pairing with Wordmark
+
 Ideal as a horizontal lockup - place to the LEFT of text. The horizontal nature of the wave flow leads the eye naturally into "Resonant Projects". Consider reducing icon width for tighter integration.
 
 ---
@@ -90,6 +97,7 @@ Ideal as a horizontal lockup - place to the LEFT of text. The horizontal nature 
 ## Concept 3: "The Convergence"
 
 ### Design Rationale
+
 This icon represents resonance as convergence - multiple frequencies coming together to create something unified and powerful. Inspired by the interference patterns of sound waves, the overlapping curved forms suggest harmony and alignment. The design evokes a moment of perfect synchronization where separate vibrations merge into one transformative experience.
 
 ### SVG Code
@@ -125,25 +133,27 @@ This icon represents resonance as convergence - multiple frequencies coming toge
 ```
 
 ### Scalability Notes
+
 - **16x16 (favicon):** The symmetrical structure scales well; central ellipse and base curve provide recognizable silhouette
 - **32x32:** Layered transparency begins to show depth; convergence motion is clear
 - **Large display:** Full complexity visible; overlapping forms create rich visual texture
 - **Monochrome:** Works as solid shape by removing transparency or using single fill
 
 ### Pairing with Wordmark
+
 Works well ABOVE "Resonant Projects" in a stacked arrangement, or to the LEFT in horizontal layout. The upward convergence point creates visual lift that pairs well with text below it.
 
 ---
 
 ## Comparison Summary
 
-| Aspect | The Bloom | The Wave Form | The Convergence |
-|--------|-----------|---------------|-----------------|
-| **Motion** | Expanding outward | Flowing horizontal | Converging inward |
-| **Metaphor** | Growth, flowering | Energy, vibration | Unity, harmony |
-| **Favicon Strength** | Good (solid core) | Moderate (needs simplification) | Good (symmetrical) |
-| **Complexity** | Medium | Low | High |
-| **Best Pairing** | Left of text | Left of text (horizontal) | Above or left of text |
+| Aspect               | The Bloom         | The Wave Form                   | The Convergence       |
+| -------------------- | ----------------- | ------------------------------- | --------------------- |
+| **Motion**           | Expanding outward | Flowing horizontal              | Converging inward     |
+| **Metaphor**         | Growth, flowering | Energy, vibration               | Unity, harmony        |
+| **Favicon Strength** | Good (solid core) | Moderate (needs simplification) | Good (symmetrical)    |
+| **Complexity**       | Medium            | Low                             | High                  |
+| **Best Pairing**     | Left of text      | Left of text (horizontal)       | Above or left of text |
 
 ---
 
@@ -154,4 +164,3 @@ Works well ABOVE "Resonant Projects" in a stacked arrangement, or to the LEFT in
 3. **Motion exploration** - Consider subtle animation for web use (CSS or Lottie)
 4. **Monochrome variants** - Create single-color versions for various use cases
 5. **Negative space versions** - White icon on purple background
-

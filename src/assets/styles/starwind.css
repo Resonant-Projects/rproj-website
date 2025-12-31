@@ -155,7 +155,16 @@
   }
 
   html {
-    @apply scheme-light dark:scheme-dark bg-background text-foreground;
+    @apply scheme-light dark:scheme-dark bg-background font-sans text-foreground;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-heading;
   }
 
   button {

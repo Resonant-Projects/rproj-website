@@ -1,14 +1,19 @@
 ---
-// Supports weights 100-900
-import '@fontsource-variable/raleway';
+// Fraunces: playful sophistication for headings
+// Work Sans: neutral competence for body text
+// DM Sans: geometric consistency for UI elements
+import '@fontsource-variable/fraunces';
+import '@fontsource-variable/work-sans';
+import '@fontsource-variable/dm-sans';
 ---
 
 <style is:inline>
   :root {
     /* Font Variables */
-    --font-family-primary: 'Raleway Variable', ui-sans-serif, system-ui;
-    --font-family-serif: 'Raleway Variable', ui-serif, Georgia;
-    --font-family-heading: 'Raleway Variable', ui-sans-serif, system-ui;
+    --font-family-primary: 'Work Sans Variable', ui-sans-serif, system-ui;
+    --font-family-serif: 'Fraunces Variable', ui-serif, Georgia;
+    --font-family-heading: 'Fraunces Variable', ui-serif, Georgia;
+    --font-family-ui: 'DM Sans Variable', ui-sans-serif, system-ui;
 
     /* Design System Variables */
     --radius: 0.5rem;
@@ -47,6 +52,7 @@ import '@fontsource-variable/raleway';
     --aw-font-sans: var(--font-family-primary);
     --aw-font-serif: var(--font-family-serif);
     --aw-font-heading: var(--font-family-heading);
+    --aw-font-ui: var(--font-family-ui);
     --aw-color-primary: var(--color-primary);
     --aw-color-secondary: var(--color-secondary);
     --aw-color-accent: var(--color-accent);

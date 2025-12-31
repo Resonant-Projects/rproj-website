@@ -39,9 +39,10 @@ export default {
         page: 'var(--aw-color-bg-page)',
       },
       fontFamily: {
-        sans: ['var(--font-family-primary, "Raleway Variable")', 'ui-sans-serif', 'system-ui'],
-        serif: ['var(--font-family-serif, "Raleway Variable")', 'ui-serif', 'Georgia'],
-        heading: ['var(--font-family-heading, "Raleway Variable")', 'ui-sans-serif', 'system-ui'],
+        sans: ['var(--font-family-primary, "Work Sans Variable")', 'ui-sans-serif', 'system-ui'],
+        serif: ['var(--font-family-heading, "Fraunces Variable")', 'ui-serif', 'Georgia'],
+        heading: ['var(--font-family-heading, "Fraunces Variable")', 'ui-serif', 'Georgia'],
+        ui: ['var(--font-family-ui, "DM Sans Variable")', 'ui-sans-serif', 'system-ui'],
       },
       animation: {
         fade: 'fadeInUp 1s both',

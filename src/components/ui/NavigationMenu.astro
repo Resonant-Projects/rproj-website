@@ -101,6 +101,7 @@ const currentPath = new URL(Astro.url).pathname;
     padding: 0.75rem 1rem;
     text-decoration: none;
     border-radius: var(--radius);
+    font-family: var(--font-family-ui);
     font-weight: 500;
     font-size: 0.9375rem;
     transition: all 0.2s ease-in-out;
@@ -153,7 +154,7 @@ const currentPath = new URL(Astro.url).pathname;
   }
 
   .nav-link-text {
-    font-family: var(--font-family-primary);
+    font-family: var(--font-family-ui);
   }
 
   .nav-item--dropdown:hover .dropdown-menu {
@@ -202,6 +203,7 @@ const currentPath = new URL(Astro.url).pathname;
     padding: 0.75rem 1rem;
     text-decoration: none;
     border-radius: calc(var(--radius) - 2px);
+    font-family: var(--font-family-ui);
     font-size: 0.875rem;
     transition: all 0.2s ease-in-out;
     color: var(--color-card-foreground);

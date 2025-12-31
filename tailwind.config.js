@@ -39,9 +39,10 @@ export default {
         page: 'var(--aw-color-bg-page)',
       },
       fontFamily: {
-        sans: ['var(--font-family-primary, "Raleway Variable")', 'ui-sans-serif', 'system-ui'],
-        serif: ['var(--font-family-serif, "Raleway Variable")', 'ui-serif', 'Georgia'],
-        heading: ['var(--font-family-heading, "Raleway Variable")', 'ui-sans-serif', 'system-ui'],
+        sans: ['var(--font-family-primary, "Lato")', 'ui-sans-serif', 'system-ui'],
+        serif: ['var(--font-family-serif, "Lato")', 'ui-serif', 'Georgia'],
+        heading: ['var(--font-family-heading, "Space Grotesk Variable")', 'ui-sans-serif', 'system-ui'],
+        ui: ['var(--font-family-ui, "Inter Variable")', 'ui-sans-serif', 'system-ui'],
       },
       animation: {
         fade: 'fadeInUp 1s both',

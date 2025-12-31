@@ -28,6 +28,12 @@
 }
 
 @theme inline {
+  /* Font Family definitions - connect Tailwind utilities to CustomStyles.astro variables */
+  --font-sans: var(--font-family-primary);
+  --font-serif: var(--font-family-serif);
+  --font-heading: var(--font-family-heading);
+  --font-ui: var(--font-family-ui);
+
   /* Semantic color mappings - these now reference our CustomStyles.astro variables */
   --color-background: var(--color-background);
   --color-foreground: var(--color-foreground);

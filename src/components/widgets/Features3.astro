@@ -21,6 +21,9 @@ const {
   classes = {},
   bg = await Astro.slots.render('bg'),
 } = Astro.props;
+
+const headlineClasses = (classes?.headline ?? {}) as Record<string, string>;
+const itemClasses = (classes?.items ?? {}) as Record<string, unknown>;
 ---
 
 <WidgetWrapper
@@ -31,7 +34,7 @@ const {
   }`}
   bg={bg}
 >
-  <Headline title={title} subtitle={subtitle} tagline={tagline} classes={classes?.headline as Record} />
+  <Headline title={title} subtitle={subtitle} tagline={tagline} classes={headlineClasses} />
 
   <div aria-hidden="true" class="aspect-w-16 aspect-h-7">
     {
@@ -64,7 +67,7 @@ const {
       title: 'text-lg font-semibold text-muted',
       description: 'mt-0.5',
       icon: 'shrink-0 mt-1 text-accent/70 w-6 h-6',
-      ...((classes?.items as object) ?? {}),
+      ...itemClasses,
     }}
   />
 </WidgetWrapper>

@@ -13,6 +13,7 @@ import { getPermalink } from '~/utils/permalinks';
 import Header from '~/components/widgets/Header.astro';
 import { headerData } from '~/navigation';
 import Features3 from '~/components/widgets/Features3.astro';
+import Testimonials from '~/components/widgets/Testimonials.astro';
 
 const metadata = {
   title: 'Resonant Projects — Amplifying your Creative Output with Frequency Resonance',
@@ -59,6 +60,7 @@ const metadata = {
     tagline="Services"
     title="How We Create Resonance"
     subtitle="Harmonizing technical expertise with artistic vision to help creators achieve their highest potential. Each service is crafted to enhance your creative process and amplify your work's impact."
+    columns={1}
     items={[
       {
         title: 'Resonant Design (Consulting)',
@@ -152,110 +154,10 @@ const metadata = {
     </Fragment>
   </Content>
 
-  <Features3
-    title="Skills"
-    subtitle="Discover the expertise that allow me to bring innovative solutions to your business."
-    columns={3}
-    defaultIcon="tabler:point-filled"
-    items={[
-      {
-        title: 'Engineering',
-        description:
-          'Degree in Computer Engineering, Mathematics, Electrical Engineering, and Computer Science, demonstrating strong technical and solution-oriented abilities.',
-      },
-      {
-        title: 'Software Development',
-        description:
-          'Experience building software for digital processing systems. Proficient in Python, C++, Rust, Java, TypeScript, and more.',
-      },
-      {
-        title: 'Audio Engineering',
-        description:
-          'Knowledge and experience in audio recording, mixing, and mastering, including work in a professional studio.',
-      },
-      {
-        title: 'System Administration',
-        description:
-          'Handling of servers, networks, and other IT infrastructure, ensuring smooth operation of digital systems.',
-      },
-      {
-        title: 'Signal Flow',
-        description: 'Expertise in signal flow, including audio and video processing, useful for media production.',
-      },
-      {
-        title: 'Personalized Recommendation',
-        description: 'Deep research and analysis of products and services to provide intelligent recommendations.',
-      },
-      {
-        title: 'Teaching and Mentoring',
-        description:
-          'Experience in teaching and mentoring, including leading workshops and providing guidance to students and colleagues.',
-      },
-      {
-        title: 'Adaptability',
-        description: 'Quick to adapt to new design trends, technologies, and client preferences.',
-      },
-      {
-        title: 'Holistic Thinking',
-        description:
-          'Ability to see the big picture and understand the interconnections between different parts of a system.',
-      },
-      {
-        title: 'Photography and Videography',
-        description:
-          'Skills in photography and videography, including digital and film, useful for visual media production.',
-      },
-      {
-        title: 'Color Grading in Post Production',
-        description: 'Skilled in using color to evoke emotions and enhance visual impact.',
-      },
-      {
-        title: 'Bi-Lingual',
-        description: 'Bilingual in English and Italian, bringing a unique perspective and cultural understanding.',
-      },
-    ]}
-  />
-
-  {/* Steps Widget *******************/}
-
-  <Steps
-    title="Let's bring your vision to life together – here's how we'll make it happen."
-    items={[
-      {
-        title: 'Step 1: <span class="font-medium">Start Project</span>',
-        description:
-          "Ready to get started? Fill out the 'Start Project' form to share your ideas and requirements. This is where you tell me about your vision and what you're hoping to achieve.",
-        icon: 'tabler:message-circle',
-      },
-      {
-        title: 'Step 2: <span class="font-medium">Book a Call</span>',
-        description:
-          "Let's connect! We'll schedule a friendly conversation to dive deeper into your project, discuss possibilities, and get to know each other better. This is where the magic begins.",
-        icon: 'tabler:phone',
-      },
-      {
-        title: 'Step 3: <span class="font-medium">Proposal & Agreement</span>',
-        description:
-          "I'll craft a detailed proposal outlining the project scope, timeline, and investment. Once we're aligned on expectations and terms, we'll finalize everything and get ready to create something amazing.",
-        icon: 'tabler:file-text',
-      },
-      {
-        title: 'Your Vision Comes to Life!',
-        icon: 'tabler:check',
-      },
-    ]}
-    image={{
-      src: '~/assets/images/journey-timeline-transparent.png',
-      alt: 'Steps image',
-    }}
-  />
-
-  {/* Features2 Widget ***************/}
-
   <Features2
-    title="Creators & Resources I Trust"
-    subtitle="A curated collection of creators, educators, and resources that have influenced my creative journey and continue to inspire my work."
-    tagline="Recommendations"
+    title="Creators & Resources That Inspire Me"
+    subtitle="A curated collection of creators, educators, and resources that have shaped my creative journey and continue to influence my work."
+    tagline="Inspiration"
     items={[
       {
         title: 'Andrew Huang',
@@ -375,6 +277,137 @@ const metadata = {
       <div class="bg-accent/50 absolute inset-0"></div>
     </Fragment>
   </Features2>
+
+  {/* Testimonials Widget ************/}
+
+  <Testimonials
+    title="What Clients Say"
+    subtitle="Feedback from creators and businesses I've had the pleasure of working with."
+    testimonials={[
+      {
+        name: 'Client Testimonial',
+        job: 'Creator / Business Owner',
+        testimonial:
+          'Testimonials coming soon. If you have worked with Resonant Projects, I would love to hear about your experience.',
+      },
+    ]}
+  />
+
+  <Features3
+    title="Skills"
+    subtitle="Discover the expertise that allow me to bring innovative solutions to your business."
+    columns={3}
+    defaultIcon="tabler:point-filled"
+    items={[
+      {
+        title: 'Engineering',
+        description:
+          'Degree in Computer Engineering, Mathematics, Electrical Engineering, and Computer Science, demonstrating strong technical and solution-oriented abilities.',
+      },
+      {
+        title: 'Software Development',
+        description:
+          'Experience building software for digital processing systems. Proficient in Python, C++, Rust, Java, TypeScript, and more.',
+      },
+      {
+        title: 'Audio Engineering',
+        description:
+          'Knowledge and experience in audio recording, mixing, and mastering, including work in a professional studio.',
+      },
+      {
+        title: 'System Administration',
+        description:
+          'Handling of servers, networks, and other IT infrastructure, ensuring smooth operation of digital systems.',
+      },
+      {
+        title: 'Signal Flow',
+        description: 'Expertise in signal flow, including audio and video processing, useful for media production.',
+      },
+      {
+        title: 'Personalized Recommendation',
+        description: 'Deep research and analysis of products and services to provide intelligent recommendations.',
+      },
+      {
+        title: 'Teaching and Mentoring',
+        description:
+          'Experience in teaching and mentoring, including leading workshops and providing guidance to students and colleagues.',
+      },
+      {
+        title: 'Adaptability',
+        description: 'Quick to adapt to new design trends, technologies, and client preferences.',
+      },
+      {
+        title: 'Holistic Thinking',
+        description:
+          'Ability to see the big picture and understand the interconnections between different parts of a system.',
+      },
+      {
+        title: 'Photography and Videography',
+        description:
+          'Skills in photography and videography, including digital and film, useful for visual media production.',
+      },
+      {
+        title: 'Color Grading in Post Production',
+        description: 'Skilled in using color to evoke emotions and enhance visual impact.',
+      },
+      {
+        title: 'Bi-Lingual',
+        description: 'Bilingual in English and Italian, bringing a unique perspective and cultural understanding.',
+      },
+    ]}
+  />
+
+  {/* Steps Widget *******************/}
+
+  <Steps
+    title="Let's bring your vision to life together – here's how we'll make it happen."
+    items={[
+      {
+        title: 'Step 1: <span class="font-medium">Start Project</span>',
+        description:
+          "Ready to get started? Fill out the 'Start Project' form to share your ideas and requirements. This is where you tell me about your vision and what you're hoping to achieve.",
+        icon: 'tabler:message-circle',
+      },
+      {
+        title: 'Step 2: <span class="font-medium">Book a Call</span>',
+        description:
+          "Let's connect! We'll schedule a friendly conversation to dive deeper into your project, discuss possibilities, and get to know each other better. This is where the magic begins.",
+        icon: 'tabler:phone',
+      },
+      {
+        title: 'Step 3: <span class="font-medium">Proposal & Agreement</span>',
+        description:
+          "I'll craft a detailed proposal outlining the project scope, timeline, and investment. Once we're aligned on expectations and terms, we'll finalize everything and get ready to create something amazing.",
+        icon: 'tabler:file-text',
+      },
+      {
+        title: 'Your Vision Comes to Life!',
+        icon: 'tabler:check',
+      },
+    ]}
+    image={{
+      src: '~/assets/images/journey-timeline-transparent.png',
+      alt: 'Steps image',
+    }}
+  />
+
+  {/* Mid-page CTA *******************/}
+
+  <CallToAction
+    actions={[
+      {
+        variant: 'primary',
+        text: 'Start Your Project',
+        href: getPermalink('/contact#form'),
+        icon: 'tabler:input-spark',
+      },
+    ]}
+  >
+    <Fragment slot="title">Ready to Begin?</Fragment>
+    <Fragment slot="subtitle">
+      Take the first step toward bringing your creative vision to life. Let's create something that truly resonates.
+    </Fragment>
+  </CallToAction>
 
   {/* HighlightedPosts Widget ********/}
 

@@ -88,7 +88,7 @@ export const headerData = {
       href: getPermalink('/til/all/1'),
     },
     {
-      text: 'My Story',
+      text: 'About',
       href: getPermalink('/about'),
     },
   ],

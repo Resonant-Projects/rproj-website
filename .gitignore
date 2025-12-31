@@ -39,6 +39,7 @@ tmp/
 **/*.tsbuildinfo
 test-results/
 playwright-report/
+.playwright-mcp/
 
 # Vendored package build artifacts (keep only sources)
 vendor/notion-astro-loader/src/dist/

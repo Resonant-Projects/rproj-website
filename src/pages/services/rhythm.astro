@@ -164,7 +164,23 @@ const comprehensiveFAQs = [
     title="Let's Finish Your Song"
     subtitle="I'm Keith, the face behind Resonant Rhythm, and I know what it feels like to get stuck in your creative process when crafting a hit song and not know what steps to take next."
     content="<p class='mb-4 text-lg'>Whether you want help with mixing and mastering, an extra set of ears, or you need a boost in confidence to send your track off to your dream label, Resonant Rhythm helps musicians complete their music with absolute excellence by tapping into the heart behind it and capturing in a way to move their listeners.</p>"
+    image={{
+      src: '~/assets/images/consulting_hero.png',
+      alt: 'Studio session',
+    }}
+    isReversed={true}
   />
+
+  {/* Mini CTA after introduction*/}
+  <div class="bg-muted/20 py-8 text-center">
+    <p class="mb-4 text-lg font-medium text-foreground">Ready to take the first step?</p>
+    <a
+      href="#contact"
+      class="text-primary-foreground hover:bg-primary/90 inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 font-semibold transition-colors"
+    >
+      Book Your Free Consultation
+    </a>
+  </div>
 
   {/* Polish & Release Section from live website*/}
   <Content
@@ -209,6 +225,13 @@ const comprehensiveFAQs = [
     items={musicProcessSteps}
   />
 
+  {/* CTA after process steps*/}
+  <CallToAction
+    title="Start Your Journey Today"
+    subtitle="No matter where you are in your production process, I'm here to help you finish strong."
+    actions={[{ text: 'GET STARTED', href: '#contact' }]}
+  />
+
   {/* Inspirational Section from live website*/}
   <Content
     title="Just imagine how you'll feel when you press play and those melodies roll out"
@@ -222,6 +245,19 @@ const comprehensiveFAQs = [
     subtitle="Real feedback from musicians who've worked with us"
     testimonials={enhancedTestimonials}
   />
+
+  {/* CTA after testimonials*/}
+  <div class="bg-accent/10 py-10 text-center">
+    <p class="mx-auto mb-4 max-w-2xl text-xl font-medium text-foreground">
+      Join the artists who've transformed their tracks into label-ready hits.
+    </p>
+    <a
+      href="#contact"
+      class="text-accent-foreground hover:bg-accent/90 inline-flex items-center gap-2 rounded-lg bg-accent px-8 py-4 text-lg font-bold transition-colors"
+    >
+      Start Your Transformation
+    </a>
+  </div>
 
   {/* About Keith Section from live website*/}
   <Content

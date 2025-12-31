@@ -18,6 +18,9 @@ const {
   classes = {},
   bg = await Astro.slots.render('bg'),
 } = Astro.props;
+
+const headlineClasses = (classes?.headline ?? {}) as Record<string, unknown>;
+const timelineClasses = (classes?.items ?? {}) as Record<string, string>;
 ---
 
 <WidgetWrapper id={id} isDark={isDark} containerClass={`max-w-5xl ${classes?.container ?? ''}`} bg={bg}>
@@ -30,10 +33,10 @@ const {
         classes={{
           container: 'text-left rtl:text-right',
           title: 'text-3xl lg:text-4xl',
-          ...((classes?.headline as object) ?? {}),
+          ...headlineClasses,
         }}
       />
-      <Timeline items={items} classes={classes?.items as Record} />
+      <Timeline items={items} classes={timelineClasses} />
     </div>
     {
       image && (

@@ -18,7 +18,7 @@ const image = await findImage(post.image);
 const link = APP_BLOG?.post?.isEnabled ? getPermalink(post.permalink, 'post') : '';
 
 // Determine if this is a newsletter based on tags
-const isNewsletter = post.tags?.some((tag) => tag.slug === 'newsletter');
+const isNewsletter = post.tags?.some(tag => tag.slug === 'newsletter');
 const categoryLabel = isNewsletter ? 'Newsletter' : post.category?.title || 'Article';
 const categoryIcon = isNewsletter ? 'tabler:mail' : 'tabler:file-text';
 
@@ -87,12 +87,12 @@ const formattedDate = post.publishDate
         )
       ) : (
         /* Fallback for posts without images - styled placeholder */
-        <div class="flex h-full flex-col items-center justify-center bg-gradient-to-br from-accent/20 via-muted to-accent/10 p-6">
-          <Icon name={categoryIcon} class="mb-3 h-12 w-12 text-accent/60" />
+        <div class="from-accent/20 to-accent/10 flex h-full flex-col items-center justify-center bg-gradient-to-br via-muted p-6">
+          <Icon name={categoryIcon} class="text-accent/60 mb-3 h-12 w-12" />
           <span class="bg-accent/90 text-accent-foreground inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold">
             {categoryLabel}
           </span>
-          {formattedDate && <span class="mt-3 text-sm font-medium text-muted-foreground">{formattedDate}</span>}
+          {formattedDate && <span class="text-muted-foreground mt-3 text-sm font-medium">{formattedDate}</span>}
         </div>
       )
     }

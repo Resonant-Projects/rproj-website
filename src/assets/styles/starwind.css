@@ -62,17 +62,17 @@
   --color-outline: var(--color-outline);
 
   /* Brand colors - Professional violet palette with neutral gray-violet light tones */
-  --color-brand-50: #f5f4f7;   /* Neutral gray (professional, studio-like) */
-  --color-brand-100: #e8e6ec;  /* Cool gray-violet */
-  --color-brand-200: #cdc8d6;  /* Muted violet-gray */
-  --color-brand-300: #a89bb3;  /* Dusty violet */
-  --color-brand-400: #8a6e8c;  /* Medium violet (transitions to brand) */
-  --color-brand-500: #6e2765;  /* PRIMARY: Signature brand violet - PRESERVED */
-  --color-brand-600: #5a2054;  /* Dark violet */
-  --color-brand-700: #451844;  /* Deeper violet */
-  --color-brand-800: #2e1430;  /* Near-black violet */
-  --color-brand-900: #1c101e;  /* Dark background */
-  --color-brand-950: #110a14;  /* Darkest */
+  --color-brand-50: #f5f4f7; /* Neutral gray (professional, studio-like) */
+  --color-brand-100: #e8e6ec; /* Cool gray-violet */
+  --color-brand-200: #cdc8d6; /* Muted violet-gray */
+  --color-brand-300: #a89bb3; /* Dusty violet */
+  --color-brand-400: #8a6e8c; /* Medium violet (transitions to brand) */
+  --color-brand-500: #6e2765; /* PRIMARY: Signature brand violet - PRESERVED */
+  --color-brand-600: #5a2054; /* Dark violet */
+  --color-brand-700: #451844; /* Deeper violet */
+  --color-brand-800: #2e1430; /* Near-black violet */
+  --color-brand-900: #1c101e; /* Dark background */
+  --color-brand-950: #110a14; /* Darkest */
 
   /* Border radius scale */
   --radius-xs: calc(var(--radius) - 0.375rem);

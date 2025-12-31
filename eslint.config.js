@@ -55,7 +55,7 @@ export default [
       '@typescript-eslint/no-var-requires': 'error',
 
       // General rules
-      'no-console': 'warn',
+      'no-console': 'off',
       'no-debugger': 'error',
       'no-unused-vars': 'off', // Handled by TypeScript
       'prefer-const': 'error',

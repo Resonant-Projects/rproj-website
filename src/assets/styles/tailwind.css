@@ -34,7 +34,18 @@
     --pagefind-ui-border-radius: 8px;
     --pagefind-ui-image-border-radius: 8px;
     --pagefind-ui-image-box-ratio: 3 / 2;
-    --pagefind-ui-font: var(--font-family-primary);
+    --pagefind-ui-font: var(--font-family-ui);
+  }
+
+  /* UI Typography - Inter for precision interface elements */
+  button,
+  input,
+  select,
+  textarea,
+  [type='button'],
+  [type='submit'],
+  [type='reset'] {
+    font-family: var(--font-family-ui);
   }
 }
 

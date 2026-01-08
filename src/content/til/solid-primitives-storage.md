@@ -2,7 +2,7 @@
 title: 'Solid Primitives: From Custom Utils to Battle-Tested Libraries'
 date: 2025-07-28
 tags: ['solidjs', 'storage', 'refactoring', 'libraries']
-description: 'Today I learned that migrating to @solid-primitives/storage reduced my code by 75% while adding features I hadn't even thought of.'
+description: 'Today I learned that migrating to @solid-primitives/storage reduced my code by 75% while adding features I hadn''t even thought of.'
 draft: false
 ---
 

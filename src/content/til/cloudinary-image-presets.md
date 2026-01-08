@@ -32,13 +32,10 @@ const presets: Record<Preset, CloudinaryTransformOptions> = {
 Transform presets into Cloudinary URLs:
 
 ```typescript
-export function getCloudinaryImageUrl(
-  publicId: string,
-  options: { preset: Preset; aspectRatio?: string }
-): string {
+export function getCloudinaryImageUrl(publicId: string, options: { preset: Preset; aspectRatio?: string }): string {
   const { preset, aspectRatio } = options;
   const transforms = presets[preset];
-  
+
   const parts = [
     `f_auto`,
     `q_${transforms.quality || 'auto'}`,
@@ -60,11 +57,9 @@ Generate srcset for responsive images:
 ```typescript
 export function getResponsiveImageUrls(publicId: string): ResponsiveUrls {
   const widths = [320, 640, 768, 1024, 1280, 1536];
-  
+
   return {
-    srcSet: widths
-      .map(w => `${getCloudinaryUrl(publicId, { width: w })} ${w}w`)
-      .join(', '),
+    srcSet: widths.map(w => `${getCloudinaryUrl(publicId, { width: w })} ${w}w`).join(', '),
     sizes: '(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw',
   };
 }

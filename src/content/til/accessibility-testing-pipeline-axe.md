@@ -37,12 +37,7 @@ export default {
       accessibility: 90,
     },
   },
-  urls: [
-    '/',
-    '/about',
-    '/contact',
-    '/services/rhythm',
-  ],
+  urls: ['/', '/about', '/contact', '/services/rhythm'],
 };
 ```
 
@@ -60,9 +55,9 @@ async function runA11yTests(urls) {
   for (const url of urls) {
     const page = await browser.newPage();
     await page.goto(`http://localhost:4321${url}`);
-    
+
     const axeResults = await new AxePuppeteer(page).analyze();
-    
+
     results.push({
       url,
       violations: axeResults.violations,

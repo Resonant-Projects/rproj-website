@@ -2,7 +2,7 @@
 title: 'Solid Primitives: From Custom Utils to Battle-Tested Libraries'
 date: 2025-07-28
 tags: ['solidjs', 'storage', 'refactoring', 'libraries']
-description: 'Today I learned that migrating to @solid-primitives/storage reduced my code by 75% while adding features I hadn''t even thought of.'
+description: "Today I learned that migrating to @solid-primitives/storage reduced my code by 75% while adding features I hadn't even thought of."
 draft: false
 ---
 
@@ -16,7 +16,7 @@ I spent days building custom localStorage utilities for my SolidJS app. Then I d
 // What I built (200+ lines)
 function createLocalStorage<T>(key: string, defaultValue: T) {
   const [value, setValue] = createSignal<T>(defaultValue);
-  
+
   // Initial load
   onMount(() => {
     const stored = localStorage.getItem(key);
@@ -28,17 +28,18 @@ function createLocalStorage<T>(key: string, defaultValue: T) {
       }
     }
   });
-  
+
   // Persist on change
   createEffect(() => {
     localStorage.setItem(key, JSON.stringify(value()));
   });
-  
+
   return [value, setValue] as const;
 }
 ```
 
 Problems I hadn't solved:
+
 - SSR hydration mismatches
 - Cross-tab synchronization
 - Serialization of complex types
@@ -50,10 +51,9 @@ Problems I hadn't solved:
 import { makePersisted } from '@solid-primitives/storage';
 
 // 3 lines instead of 200
-const [preferences, setPreferences] = makePersisted(
-  createSignal<UserPreferences>(defaultPreferences),
-  { name: 'user-preferences' }
-);
+const [preferences, setPreferences] = makePersisted(createSignal<UserPreferences>(defaultPreferences), {
+  name: 'user-preferences',
+});
 ```
 
 ## Features I Got for Free
@@ -62,25 +62,19 @@ const [preferences, setPreferences] = makePersisted(
 
 ```typescript
 // Automatically handles SSR
-const [theme, setTheme] = makePersisted(
-  createSignal<'light' | 'dark'>('light'),
-  { 
-    name: 'theme',
-    // No hydration mismatch!
-  }
-);
+const [theme, setTheme] = makePersisted(createSignal<'light' | 'dark'>('light'), {
+  name: 'theme',
+  // No hydration mismatch!
+});
 ```
 
 ### Cross-Tab Synchronization
 
 ```typescript
-const [settings, setSettings] = makePersisted(
-  createSignal(defaultSettings),
-  { 
-    name: 'settings',
-    sync: true, // Changes sync across tabs!
-  }
-);
+const [settings, setSettings] = makePersisted(createSignal(defaultSettings), {
+  name: 'settings',
+  sync: true, // Changes sync across tabs!
+});
 ```
 
 ### Custom Serialization
@@ -88,36 +82,27 @@ const [settings, setSettings] = makePersisted(
 ```typescript
 import { makePersisted } from '@solid-primitives/storage';
 
-const [birthDate, setBirthDate] = makePersisted(
-  createSignal<Date | null>(null),
-  {
-    name: 'birth-date',
-    serialize: (date) => date?.toISOString() ?? '',
-    deserialize: (str) => str ? new Date(str) : null,
-  }
-);
+const [birthDate, setBirthDate] = makePersisted(createSignal<Date | null>(null), {
+  name: 'birth-date',
+  serialize: date => date?.toISOString() ?? '',
+  deserialize: str => (str ? new Date(str) : null),
+});
 ```
 
 ### Storage Backends
 
 ```typescript
 // SessionStorage
-const [session, setSession] = makePersisted(
-  createSignal({}),
-  { 
-    name: 'session',
-    storage: sessionStorage,
-  }
-);
+const [session, setSession] = makePersisted(createSignal({}), {
+  name: 'session',
+  storage: sessionStorage,
+});
 
 // Custom async storage (IndexedDB, etc.)
-const [data, setData] = makePersisted(
-  createSignal({}),
-  {
-    name: 'large-data',
-    storage: indexedDBStorage,
-  }
-);
+const [data, setData] = makePersisted(createSignal({}), {
+  name: 'large-data',
+  storage: indexedDBStorage,
+});
 ```
 
 ## Migration Pattern
@@ -127,22 +112,19 @@ When your schema changes:
 ```typescript
 const CURRENT_VERSION = 2;
 
-const [rawData, setRawData] = makePersisted(
-  createSignal<VersionedData | null>(null),
-  { name: 'app-data' }
-);
+const [rawData, setRawData] = makePersisted(createSignal<VersionedData | null>(null), { name: 'app-data' });
 
 // Derived signal with migration
 const data = createMemo(() => {
   const raw = rawData();
   if (!raw) return defaultData;
-  
+
   if (raw.version < CURRENT_VERSION) {
     const migrated = migrateData(raw);
     setRawData(migrated);
     return migrated.data;
   }
-  
+
   return raw.data;
 });
 ```

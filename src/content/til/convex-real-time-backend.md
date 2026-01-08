@@ -17,7 +17,7 @@ Building real-time features typically requires:
 ```typescript
 // Server: Set up WebSocket handling
 const wss = new WebSocketServer({ port: 8080 });
-wss.on('connection', (ws) => {
+wss.on('connection', ws => {
   ws.on('message', handleMessage);
   ws.on('close', handleDisconnect);
   // Handle reconnection, heartbeats, etc.
@@ -25,8 +25,12 @@ wss.on('connection', (ws) => {
 
 // Client: Manage connection state
 const socket = new WebSocket('ws://localhost:8080');
-socket.onopen = () => { /* reconnection logic */ };
-socket.onclose = () => { /* retry with backoff */ };
+socket.onopen = () => {
+  /* reconnection logic */
+};
+socket.onclose = () => {
+  /* retry with backoff */
+};
 ```
 
 ## The Convex Way
@@ -43,7 +47,7 @@ export const getProfile = query({
   handler: async (ctx, { userId }) => {
     return await ctx.db
       .query('users')
-      .filter((q) => q.eq(q.field('clerkId'), userId))
+      .filter(q => q.eq(q.field('clerkId'), userId))
       .first();
   },
 });
@@ -62,11 +66,13 @@ The best part is the type safety that flows from database to UI:
 const users = defineTable({
   clerkId: v.string(),
   email: v.string(),
-  birthDetails: v.optional(v.object({
-    date: v.string(),
-    time: v.string(),
-    location: v.string(),
-  })),
+  birthDetails: v.optional(
+    v.object({
+      date: v.string(),
+      time: v.string(),
+      location: v.string(),
+    })
+  ),
 });
 
 // TypeScript knows the exact shape everywhere
@@ -89,9 +95,9 @@ export const updatePreferences = mutation({
   handler: async (ctx, { userId, preferences }) => {
     const user = await ctx.db
       .query('users')
-      .filter((q) => q.eq(q.field('clerkId'), userId))
+      .filter(q => q.eq(q.field('clerkId'), userId))
       .first();
-    
+
     if (user) {
       await ctx.db.patch(user._id, { preferences });
     }

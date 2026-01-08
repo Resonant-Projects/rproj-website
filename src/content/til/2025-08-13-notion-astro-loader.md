@@ -23,12 +23,12 @@ export function notionLoader(options) {
     name: 'notion-loader',
     async load({ store }) {
       const notion = new Client({ auth: options.auth });
-      
+
       const response = await notion.databases.query({
         database_id: options.database_id,
         filter: options.filter,
       });
-      
+
       for (const page of response.results) {
         store.set({
           id: page.id,
@@ -51,11 +51,12 @@ const resources = defineCollection({
     database_id: process.env.NOTION_RESOURCES_DB,
     filter: { property: 'Status', status: { equals: 'Published' } },
   }),
-  schema: () => z.object({
-    Name: z.string(),
-    Category: z.array(z.string()),
-    // ... other properties
-  }),
+  schema: () =>
+    z.object({
+      Name: z.string(),
+      Category: z.array(z.string()),
+      // ... other properties
+    }),
 });
 ```
 

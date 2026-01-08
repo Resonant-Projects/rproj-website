@@ -24,6 +24,7 @@ function isAllowedUrl(url: string): boolean {
 ```
 
 Why it's dangerous:
+
 - `https://evil.com/?redirect=mysite.com` passes the check
 - `https://mysite.com.evil.com` passes the check
 - An attacker can craft URLs that include the substring but redirect elsewhere
@@ -47,10 +48,7 @@ function isAllowedUrl(url: string): boolean {
 ## Better Yet: Use a Whitelist
 
 ```typescript
-const ALLOWED_ORIGINS = new Set([
-  'https://mysite.com',
-  'https://www.mysite.com',
-]);
+const ALLOWED_ORIGINS = new Set(['https://mysite.com', 'https://www.mysite.com']);
 
 function isAllowedUrl(url: string): boolean {
   try {

@@ -13,6 +13,7 @@ After years of complex JavaScript animation libraries, the View Transitions API 
 ## The Problem
 
 Traditional SPAs feel janky because:
+
 - Content pops in abruptly
 - No visual continuity between pages
 - Layout shift during hydration
@@ -26,7 +27,7 @@ export function ViewTransitionLink(props: { href: string; children: any }) {
 
   const handleClick = (e: MouseEvent) => {
     e.preventDefault();
-    
+
     if (!document.startViewTransition) {
       // Fallback for unsupported browsers
       navigate(props.href);
@@ -67,11 +68,17 @@ The magic is in the CSS:
 }
 
 @keyframes slide-out {
-  to { transform: translateX(-100%); opacity: 0; }
+  to {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
 }
 
 @keyframes slide-in {
-  from { transform: translateX(100%); opacity: 0; }
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
 }
 ```
 
@@ -113,9 +120,7 @@ const PageWrapper = (props: { children: any }) => {
 
 ```typescript
 // Feature detection
-const supportsViewTransitions = () => 
-  typeof document !== 'undefined' && 
-  'startViewTransition' in document;
+const supportsViewTransitions = () => typeof document !== 'undefined' && 'startViewTransition' in document;
 
 // Progressive enhancement
 if (supportsViewTransitions()) {

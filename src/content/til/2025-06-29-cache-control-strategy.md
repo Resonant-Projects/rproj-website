@@ -13,6 +13,7 @@ Not all content should be cached the same way. Today I implemented a nuanced cac
 ## The Problem
 
 Default caching often means:
+
 - Static assets cached forever (good)
 - Dynamic pages not cached at all (sometimes too aggressive)
 - API routes returning stale data (bad)
@@ -25,15 +26,11 @@ Default caching often means:
   "headers": [
     {
       "source": "/api/(.*)",
-      "headers": [
-        { "key": "Cache-Control", "value": "no-store, must-revalidate" }
-      ]
+      "headers": [{ "key": "Cache-Control", "value": "no-store, must-revalidate" }]
     },
     {
       "source": "/_astro/(.*)",
-      "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
-      ]
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
     },
     {
       "source": "/(.*)",

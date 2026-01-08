@@ -32,7 +32,7 @@ const notion = new Client({ auth: process.env.NOTION_TOKEN });
 
 export async function POST({ request }) {
   const data = await request.formData();
-  
+
   await notion.pages.create({
     parent: { database_id: process.env.NOTION_DATABASE_ID },
     properties: {
@@ -41,7 +41,7 @@ export async function POST({ request }) {
       Message: { rich_text: [{ text: { content: data.get('message') } }] },
     },
   });
-  
+
   return redirect('/thank-you');
 }
 ```

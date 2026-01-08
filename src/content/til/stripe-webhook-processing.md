@@ -18,7 +18,7 @@ Stripe sends a cascade of events during the subscription lifecycle:
 // Key events to handle
 const SUBSCRIPTION_EVENTS = [
   'customer.subscription.created',
-  'customer.subscription.updated', 
+  'customer.subscription.updated',
   'customer.subscription.deleted',
   'customer.subscription.paused',
   'customer.subscription.resumed',
@@ -41,15 +41,15 @@ export const handleWebhook = internalAction({
     const existing = await ctx.runQuery(internal.stripe.getProcessedEvent, {
       eventId: event.id,
     });
-    
+
     if (existing) {
       console.log(`Event ${event.id} already processed, skipping`);
       return;
     }
-    
+
     // Process the event
     await processEvent(ctx, event);
-    
+
     // Mark as processed
     await ctx.runMutation(internal.stripe.markEventProcessed, {
       eventId: event.id,
@@ -64,7 +64,7 @@ export const handleWebhook = internalAction({
 Stripe's subscription statuses need mapping to your app's logic:
 
 ```typescript
-type StripeStatus = 
+type StripeStatus =
   | 'active'
   | 'past_due'
   | 'unpaid'
@@ -101,7 +101,7 @@ The moment after payment is crucial for user confidence:
 export default function CheckoutSuccess() {
   const [searchParams] = useSearchParams();
   const sessionId = searchParams.get('session_id');
-  
+
   const syncStatus = createQuery(() => ({
     queryKey: ['checkout', 'sync', sessionId],
     queryFn: async () => {

@@ -38,18 +38,18 @@ export const cronJobs = cronJobs({
 
 // convex/emails.ts
 export const dailyEmailHandler = internalAction({
-  handler: async (ctx) => {
+  handler: async ctx => {
     const now = new Date();
     const currentHourUTC = now.getUTCHours();
-    
+
     // Find timezones where it's currently 8 AM
     const targetTimezones = getTimezonesForLocalHour(8, currentHourUTC);
-    
+
     // Get users in those timezones
     const users = await ctx.runQuery(internal.users.getUsersByTimezones, {
       timezones: targetTimezones,
     });
-    
+
     // Send emails
     for (const user of users) {
       await ctx.runAction(internal.emails.sendDailyEmail, { userId: user._id });
@@ -61,19 +61,16 @@ export const dailyEmailHandler = internalAction({
 ## Mapping UTC Hours to Timezones
 
 ```typescript
-function getTimezonesForLocalHour(
-  targetLocalHour: number, 
-  currentUTCHour: number
-): string[] {
+function getTimezonesForLocalHour(targetLocalHour: number, currentUTCHour: number): string[] {
   // Calculate what UTC offset would make it targetLocalHour right now
   // targetLocalHour = currentUTCHour + offset
   // offset = targetLocalHour - currentUTCHour
   let targetOffset = targetLocalHour - currentUTCHour;
-  
+
   // Normalize to valid offset range (-12 to +14)
   if (targetOffset < -12) targetOffset += 24;
   if (targetOffset > 14) targetOffset -= 24;
-  
+
   // Map offsets to timezone identifiers
   return TIMEZONE_OFFSET_MAP[targetOffset] || [];
 }
@@ -107,23 +104,23 @@ const userSchema = defineTable({
 
 ```typescript
 export const weeklyEmailHandler = internalAction({
-  handler: async (ctx) => {
+  handler: async ctx => {
     const now = new Date();
     const dayOfWeek = now.getUTCDay();
-    
+
     // Only run on Sundays (or user's preferred day)
     if (dayOfWeek !== 0) return;
-    
+
     const currentHourUTC = now.getUTCHours();
     const targetTimezones = getTimezonesForLocalHour(9, currentHourUTC);
-    
+
     const users = await ctx.runQuery(internal.users.getUsersForWeekly, {
       timezones: targetTimezones,
     });
-    
+
     for (const user of users) {
-      await ctx.runAction(internal.emails.sendWeeklyDigest, { 
-        userId: user._id 
+      await ctx.runAction(internal.emails.sendWeeklyDigest, {
+        userId: user._id,
       });
     }
   },
@@ -140,7 +137,7 @@ import { Temporal } from '@js-temporal/polyfill';
 function getTimezoneOffset(timezone: string, date: Date): number {
   const instant = Temporal.Instant.from(date.toISOString());
   const zonedDateTime = instant.toZonedDateTimeISO(timezone);
-  
+
   // Returns offset in minutes
   return zonedDateTime.offsetNanoseconds / 1_000_000_000 / 60;
 }
@@ -161,14 +158,12 @@ Prevent API rate limits with batching:
 async function processEmailCohort(users: User[]) {
   const BATCH_SIZE = 50;
   const BATCH_DELAY_MS = 1000;
-  
+
   for (let i = 0; i < users.length; i += BATCH_SIZE) {
     const batch = users.slice(i, i + BATCH_SIZE);
-    
-    await Promise.all(
-      batch.map(user => sendEmail(user))
-    );
-    
+
+    await Promise.all(batch.map(user => sendEmail(user)));
+
     if (i + BATCH_SIZE < users.length) {
       await delay(BATCH_DELAY_MS);
     }

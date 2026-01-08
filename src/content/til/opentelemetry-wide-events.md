@@ -70,25 +70,23 @@ export class RequestEvent {
 // server/api/dashboard.ts
 export async function getDashboard(req: Request) {
   const event = new RequestEvent(req.id);
-  
+
   try {
     const user = await getUser(req);
     event.setUser(user);
-    
+
     const events = await fetchEvents(user.id);
     event.set('eventsCount', events.length);
-    
+
     const lunar = await fetchLunarData(user.timezone);
     event.set('lunarPhase', lunar.phase);
-    
+
     event.set('status', 'success');
     return { events, lunar };
-    
   } catch (error) {
     event.setError(error as Error);
     event.set('status', 'error');
     throw error;
-    
   } finally {
     event.send();
   }
@@ -103,11 +101,11 @@ const telemetryMiddleware = t.middleware(async ({ ctx, next, path }) => {
   const event = new RequestEvent(ctx.requestId);
   event.set('procedure', path);
   event.set('type', 'trpc');
-  
+
   if (ctx.user) {
     event.setUser(ctx.user);
   }
-  
+
   try {
     const result = await next();
     event.set('status', 'success');
@@ -128,17 +126,17 @@ const telemetryMiddleware = t.middleware(async ({ ctx, next, path }) => {
 // routes/api/telemetry.ts
 export async function POST(req: Request) {
   const events = await req.json();
-  
+
   // Forward to Axiom/Datadog/etc
   await fetch('https://api.axiom.co/v1/datasets/events/ingest', {
     method: 'POST',
     headers: {
-      'Authorization': `Bearer ${process.env.AXIOM_TOKEN}`,
+      Authorization: `Bearer ${process.env.AXIOM_TOKEN}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(events),
   });
-  
+
   return new Response('OK');
 }
 ```
@@ -149,13 +147,13 @@ With wide events, queries become powerful:
 
 ```sql
 -- Find slow requests for premium users
-SELECT * FROM events 
-WHERE durationMs > 1000 
+SELECT * FROM events
+WHERE durationMs > 1000
   AND userTier = 'premium'
   AND timestamp > now() - interval '1 hour'
 
 -- Error rate by procedure
-SELECT 
+SELECT
   procedure,
   count(*) FILTER (WHERE status = 'error') * 100.0 / count(*) as error_rate
 FROM events

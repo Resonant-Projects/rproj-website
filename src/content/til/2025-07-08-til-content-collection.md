@@ -33,29 +33,41 @@ const tilCollection = defineCollection({
 I implemented two views for browsing TIL entries:
 
 ### Social Feed View
+
 Chronological list, Twitter-style:
 
 ```astro
-{entries.map(entry => (
-  <article class="til-entry">
-    <time>{entry.data.date}</time>
-    <h3>{entry.data.title}</h3>
-    <p>{entry.data.description}</p>
-    <div class="tags">{entry.data.tags.map(t => <span>{t}</span>)}</div>
-  </article>
-))}
+{
+  entries.map(entry => (
+    <article class="til-entry">
+      <time>{entry.data.date}</time>
+      <h3>{entry.data.title}</h3>
+      <p>{entry.data.description}</p>
+      <div class="tags">
+        {entry.data.tags.map(t => (
+          <span>{t}</span>
+        ))}
+      </div>
+    </article>
+  ))
+}
 ```
 
 ### Kanban Board View
+
 Entries grouped by week, with pagination:
 
 ```astro
-{weeks.map(week => (
-  <div class="week-column">
-    <h4>Week of {week.startDate}</h4>
-    {week.entries.map(entry => <TilCard {entry} />)}
-  </div>
-))}
+{
+  weeks.map(week => (
+    <div class="week-column">
+      <h4>Week of {week.startDate}</h4>
+      {week.entries.map(entry => (
+        <TilCard {entry} />
+      ))}
+    </div>
+  ))
+}
 ```
 
 ## Key Insight

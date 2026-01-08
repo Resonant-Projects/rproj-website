@@ -13,6 +13,7 @@ Building a custom website from scratch is rewarding, but starting with a solid f
 ## Why Start with a Template?
 
 AstroWind provides:
+
 - **Pre-built Astro components** with proper TypeScript types
 - **Tailwind CSS integration** with dark mode support out of the box
 - **SEO optimization** built into the layout components

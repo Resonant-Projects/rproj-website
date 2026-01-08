@@ -24,10 +24,10 @@ class FocusManager {
   trapFocus(container) {
     this.lastFocus = document.activeElement;
     this.modalStack.push(container);
-    
+
     const focusables = this.getFocusableElements(container);
     if (focusables.length) focusables[0].focus();
-    
+
     container.addEventListener('keydown', this.handleTabKey);
   }
 
@@ -37,9 +37,9 @@ class FocusManager {
     this.lastFocus?.focus();
   }
 
-  handleTabKey = (e) => {
+  handleTabKey = e => {
     if (e.key !== 'Tab') return;
-    
+
     const container = this.modalStack.at(-1);
     const focusables = this.getFocusableElements(container);
     const first = focusables[0];
@@ -69,10 +69,10 @@ initRovingTabindex(container) {
 
   container.addEventListener('keydown', (e) => {
     if (!['ArrowLeft', 'ArrowRight'].includes(e.key)) return;
-    
+
     const items = [...container.querySelectorAll('[data-roving-item]')];
     const current = items.findIndex(el => el === document.activeElement);
-    const next = e.key === 'ArrowRight' 
+    const next = e.key === 'ArrowRight'
       ? (current + 1) % items.length
       : (current - 1 + items.length) % items.length;
 
@@ -92,7 +92,7 @@ initGridNavigation(container, columns) {
   container.addEventListener('keydown', (e) => {
     const cells = [...container.querySelectorAll('[role="gridcell"]')];
     const current = cells.findIndex(c => c === document.activeElement);
-    
+
     let next;
     switch (e.key) {
       case 'ArrowRight': next = current + 1; break;
@@ -101,7 +101,7 @@ initGridNavigation(container, columns) {
       case 'ArrowUp': next = current - columns; break;
       default: return;
     }
-    
+
     if (next >= 0 && next < cells.length) {
       e.preventDefault();
       cells[next].focus();

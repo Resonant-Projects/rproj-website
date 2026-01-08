@@ -13,6 +13,7 @@ Interactive components with default states can flash during hydration. Today I f
 ## The Problem
 
 When an accordion has a default-open item:
+
 1. Server renders the closed state (HTML default)
 2. Page loads with closed accordion
 3. JavaScript hydrates and opens the default item
@@ -29,15 +30,14 @@ const defaultOpenId = 'faq-1';
 ---
 
 <div class="accordion" data-default-open={defaultOpenId}>
-  {faqs.map((faq, i) => (
-    <details 
-      open={faq.id === defaultOpenId}
-      data-accordion-item
-    >
-      <summary>{faq.question}</summary>
-      <div class="content">{faq.answer}</div>
-    </details>
-  ))}
+  {
+    faqs.map((faq, i) => (
+      <details open={faq.id === defaultOpenId} data-accordion-item>
+        <summary>{faq.question}</summary>
+        <div class="content">{faq.answer}</div>
+      </details>
+    ))
+  }
 </div>
 ```
 
@@ -48,7 +48,7 @@ The key is using the native `<details>` element with `open` attribute for SSR, t
 ```typescript
 // Only enhance, don't change initial state
 document.querySelectorAll('[data-accordion-item]').forEach(item => {
-  item.addEventListener('click', (e) => {
+  item.addEventListener('click', e => {
     // Add smooth height animation
     // Don't toggle open/closed - let browser handle that
   });

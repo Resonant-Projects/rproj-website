@@ -13,6 +13,7 @@ Navigation components are deceptively complex. Today I integrated Starwind UI's 
 ## Why Not Build From Scratch?
 
 Accessible navigation requires:
+
 - Proper ARIA labels and roles
 - Keyboard navigation support
 - Screen reader announcements
@@ -38,6 +39,7 @@ const { page, totalPages } = Astro.props;
 ```
 
 The component automatically handles:
+
 - Disabled states for first/last pages
 - Ellipsis for large page counts
 - `aria-current="page"` for the active page
@@ -57,6 +59,7 @@ import { Breadcrumbs, Breadcrumb } from '@/components/ui/Breadcrumbs';
 ```
 
 Includes:
+
 - Proper `nav` landmark
 - Schema.org structured data support
 - Visual separators that are hidden from screen readers

@@ -13,6 +13,7 @@ Static sites traditionally struggle with search—you either need a backend serv
 ## What Makes Pagefind Special
 
 Pagefind builds a search index at build time and includes a tiny client-side search that:
+
 - Works entirely client-side (no server needed)
 - Has a compressed index averaging ~100kB for most sites
 - Provides instant results with typo tolerance
@@ -25,6 +26,7 @@ pnpm add pagefind
 ```
 
 Then in your build script:
+
 ```json
 {
   "scripts": {

@@ -15,9 +15,9 @@ A single failed API call shouldn't crash your entire dashboard. Granular Suspens
 ```tsx
 // One failing query kills everything
 function Dashboard() {
-  const user = useQuery(userQuery);      // ✓ Works
-  const events = useQuery(eventsQuery);  // ✗ Server error
-  const lunar = useQuery(lunarQuery);    // Never even tries
+  const user = useQuery(userQuery); // ✓ Works
+  const events = useQuery(eventsQuery); // ✗ Server error
+  const lunar = useQuery(lunarQuery); // Never even tries
 
   // User sees: blank screen or error page
   return <DashboardLayout>...</DashboardLayout>;
@@ -57,11 +57,7 @@ Now if events fail, users still see their profile and lunar data.
 ## Error Boundary with Retry
 
 ```tsx
-function SectionErrorBoundary({ 
-  children, 
-  fallback,
-  sectionName 
-}: Props) {
+function SectionErrorBoundary({ children, fallback, sectionName }: Props) {
   const [error, setError] = createSignal<Error | null>(null);
 
   const retry = () => {
@@ -129,8 +125,8 @@ function EventsSkeleton() {
 function RefetchIndicator({ query }: { query: Query }) {
   return (
     <Show when={query.isFetching && !query.isLoading}>
-      <div class="absolute top-2 right-2">
-        <div class="h-2 w-2 rounded-full bg-blue-500 animate-pulse" />
+      <div class="absolute right-2 top-2">
+        <div class="h-2 w-2 animate-pulse rounded-full bg-blue-500" />
       </div>
     </Show>
   );
@@ -151,23 +147,16 @@ function EventsSection() {
 ## Pattern: Section Component Structure
 
 ```tsx
-function DashboardSection({ 
-  title, 
-  query, 
-  skeleton,
-  children 
-}: SectionProps) {
+function DashboardSection({ title, query, skeleton, children }: SectionProps) {
   return (
     <section class="dashboard-section">
       <header class="flex items-center justify-between">
         <h2>{title}</h2>
         <RefetchIndicator query={query} />
       </header>
-      
+
       <ErrorBoundary fallback={<SectionError title={title} />}>
-        <Suspense fallback={skeleton}>
-          {children}
-        </Suspense>
+        <Suspense fallback={skeleton}>{children}</Suspense>
       </ErrorBoundary>
     </section>
   );
@@ -182,4 +171,4 @@ Think of Suspense boundaries as "loading zones" and Error boundaries as "blast s
 2. Around third-party components
 3. Around user-generated content rendering
 
-The goal: a failure in one zone shouldn't affect others. Users should always see *something*—partial data is better than a blank screen.
+The goal: a failure in one zone shouldn't affect others. Users should always see _something_—partial data is better than a blank screen.

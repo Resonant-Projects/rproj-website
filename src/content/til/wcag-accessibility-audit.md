@@ -79,24 +79,22 @@ button:focus-visible {
 
 ```html
 <!-- Add at the very beginning of body -->
-<a href="#main-content" class="skip-link">
-  Skip to main content
-</a>
+<a href="#main-content" class="skip-link"> Skip to main content </a>
 
 <style>
-.skip-link {
-  position: absolute;
-  top: -40px;
-  left: 0;
-  padding: 8px;
-  background: var(--primary);
-  color: white;
-  z-index: 100;
-}
+  .skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    padding: 8px;
+    background: var(--primary);
+    color: white;
+    z-index: 100;
+  }
 
-.skip-link:focus {
-  top: 0;
-}
+  .skip-link:focus {
+    top: 0;
+  }
 </style>
 ```
 
@@ -104,7 +102,9 @@ button:focus-visible {
 
 ```html
 <!-- Before: No accessible name -->
-<button><svg><!-- menu icon --></svg></button>
+<button>
+  <svg><!-- menu icon --></svg>
+</button>
 
 <!-- After: Screen reader friendly -->
 <button aria-label="Open navigation menu">

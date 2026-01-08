@@ -22,7 +22,7 @@ function useData<T>(url: string) {
   useEffect(() => {
     setLoading(true);
     fetch(url)
-      .then((res) => res.json())
+      .then(res => res.json())
       .then(setData)
       .catch(setError)
       .finally(() => setLoading(false));
@@ -85,12 +85,12 @@ createEffect(() => {
   if (weekEvents.data) {
     const nextWeek = addDays(weekStart, 7);
     const prevWeek = addDays(weekStart, -7);
-    
+
     queryClient.prefetchQuery({
       queryKey: queryKeys.events.week(nextWeek.toString()),
       queryFn: () => fetchWeekEvents(nextWeek),
     });
-    
+
     queryClient.prefetchQuery({
       queryKey: queryKeys.events.week(prevWeek.toString()),
       queryFn: () => fetchWeekEvents(prevWeek),
@@ -105,7 +105,7 @@ createEffect(() => {
 const weekEvents = createQuery(() => ({
   queryKey: queryKeys.events.week(weekStart),
   queryFn: () => fetchWeekEvents(weekStart),
-  placeholderData: (previousData) => previousData, // Smooth transitions!
+  placeholderData: previousData => previousData, // Smooth transitions!
 }));
 ```
 

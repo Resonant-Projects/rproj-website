@@ -29,7 +29,9 @@ export const submitContact = defineAction({
   }),
   handler: async ({ name, email, message }) => {
     // Submit to Notion, send email, etc.
-    await notionClient.pages.create({ /* ... */ });
+    await notionClient.pages.create({
+      /* ... */
+    });
     return { success: true };
   },
 });
@@ -43,16 +45,13 @@ import { useActionState } from 'react';
 import { actions } from 'astro:actions';
 
 export function ContactForm() {
-  const [state, action, pending] = useActionState(
-    actions.submitContact,
-    { success: false, errors: {} }
-  );
+  const [state, action, pending] = useActionState(actions.submitContact, { success: false, errors: {} });
 
   return (
     <form action={action}>
       <input name="name" disabled={pending} />
       {state.errors?.name && <span>{state.errors.name}</span>}
-      
+
       <button type="submit" disabled={pending}>
         {pending ? 'Sending...' : 'Send Message'}
       </button>

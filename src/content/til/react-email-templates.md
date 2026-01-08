@@ -28,55 +28,29 @@ Email HTML is notoriously difficult—tables for layout, inline styles, and inco
 ## React Email Components
 
 ```tsx
-import {
-  Html,
-  Head,
-  Body,
-  Container,
-  Section,
-  Text,
-  Button,
-  Img,
-  Hr,
-} from '@react-email/components';
+import { Html, Head, Body, Container, Section, Text, Button, Img, Hr } from '@react-email/components';
 
-export function WeeklyDigestEmail({ 
-  userName, 
-  events, 
-  weekStart 
-}: WeeklyDigestProps) {
+export function WeeklyDigestEmail({ userName, events, weekStart }: WeeklyDigestProps) {
   return (
     <Html>
       <Head />
       <Body style={styles.body}>
         <Container style={styles.container}>
-          <Img
-            src="https://example.com/logo.png"
-            width={120}
-            height={40}
-            alt="Logo"
-          />
-          
+          <Img src="https://example.com/logo.png" width={120} height={40} alt="Logo" />
+
           <Section>
-            <Text style={styles.greeting}>
-              Hi {userName},
-            </Text>
-            <Text style={styles.intro}>
-              Here's your cosmic forecast for the week of {weekStart}.
-            </Text>
+            <Text style={styles.greeting}>Hi {userName},</Text>
+            <Text style={styles.intro}>Here's your cosmic forecast for the week of {weekStart}.</Text>
           </Section>
 
           <Hr style={styles.divider} />
 
-          {events.map((event) => (
+          {events.map(event => (
             <EventCard key={event.id} event={event} />
           ))}
 
           <Section style={styles.cta}>
-            <Button 
-              href="https://app.example.com/dashboard"
-              style={styles.button}
-            >
+            <Button href="https://app.example.com/dashboard" style={styles.button}>
               View Full Dashboard
             </Button>
           </Section>
@@ -94,15 +68,11 @@ export function WeeklyDigestEmail({
 function EventCard({ event }: { event: Event }) {
   return (
     <Section style={styles.eventCard}>
-      <Text style={styles.eventDate}>
-        {formatDate(event.date)}
-      </Text>
+      <Text style={styles.eventDate}>{formatDate(event.date)}</Text>
       <Text style={styles.eventTitle}>
         {event.emoji} {event.title}
       </Text>
-      <Text style={styles.eventDescription}>
-        {event.description}
-      </Text>
+      <Text style={styles.eventDescription}>{event.description}</Text>
     </Section>
   );
 }
@@ -120,10 +90,8 @@ export function Email() {
     <Html>
       <Tailwind>
         <Body className="bg-gray-100 font-sans">
-          <Container className="bg-white rounded-lg p-8 mx-auto">
-            <Text className="text-2xl font-bold text-gray-900">
-              Welcome!
-            </Text>
+          <Container className="mx-auto rounded-lg bg-white p-8">
+            <Text className="text-2xl font-bold text-gray-900">Welcome!</Text>
           </Container>
         </Body>
       </Tailwind>
@@ -154,8 +122,8 @@ await resend.emails.send({
   from: 'Cosmic Updates <updates@example.com>',
   to: user.email,
   subject: `Your Week Ahead: ${weekStart}`,
-  react: WeeklyDigestEmail({ 
-    userName: user.name, 
+  react: WeeklyDigestEmail({
+    userName: user.name,
     events,
     weekStart,
   }),

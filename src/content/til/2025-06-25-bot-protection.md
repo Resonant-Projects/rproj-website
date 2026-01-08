@@ -20,6 +20,7 @@ Spam bots love contact forms. Traditional CAPTCHAs frustrate real users. Today I
 ## Vercel's Approach
 
 Vercel's bot protection works invisibly by analyzing:
+
 - Request patterns
 - Browser fingerprints
 - Behavioral signals
@@ -48,11 +49,11 @@ On the server side, verify the bot check:
 ```typescript
 export async function POST({ request }) {
   const botVerification = request.headers.get('x-vercel-bot-protection');
-  
+
   if (botVerification !== 'verified') {
     return new Response('Bot detected', { status: 403 });
   }
-  
+
   // Process legitimate submission
 }
 ```

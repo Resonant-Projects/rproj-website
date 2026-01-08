@@ -29,13 +29,13 @@ const linkableTerms = [
 
 export function addInternalLinks(content: string): string {
   let result = content;
-  
+
   for (const { term, url } of linkableTerms) {
     // Only link first occurrence, avoid over-optimization
     const regex = new RegExp(`\\b(${term})\\b(?![^<]*>)`, 'i');
     result = result.replace(regex, `<a href="${url}">$1</a>`);
   }
-  
+
   return result;
 }
 ```
@@ -48,7 +48,7 @@ I also added a readability analysis to ensure content is accessible:
 export function analyzeReadability(text: string) {
   const sentences = text.split(/[.!?]+/);
   const avgWordsPerSentence = countWords(text) / sentences.length;
-  
+
   return {
     score: calculateFleschScore(text),
     avgSentenceLength: avgWordsPerSentence,

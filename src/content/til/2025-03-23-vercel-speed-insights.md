@@ -13,8 +13,9 @@ Lighthouse scores are great, but they're synthetic. Today I integrated Vercel Sp
 ## Why Real User Metrics Matter
 
 Lighthouse runs in a controlled environment. Real users have:
+
 - Varying network conditions
-- Different device capabilities  
+- Different device capabilities
 - Various geographic locations
 - Actual interaction patterns
 
@@ -29,8 +30,9 @@ import { SpeedInsights } from '@vercel/speed-insights/astro';
 ```
 
 That's it! Vercel automatically starts collecting:
+
 - **LCP** (Largest Contentful Paint)
-- **FID** (First Input Delay)  
+- **FID** (First Input Delay)
 - **CLS** (Cumulative Layout Shift)
 - **TTFB** (Time to First Byte)
 

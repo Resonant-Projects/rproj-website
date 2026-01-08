@@ -26,17 +26,21 @@ Typography is the foundation of design. Today I implemented a three-font editori
   --font-ui: 'Inter', system-ui, sans-serif;
 }
 
-.heading-1, .heading-2 {
+.heading-1,
+.heading-2 {
   font-family: var(--font-display);
   font-weight: 700;
 }
 
-.body-text, .prose {
+.body-text,
+.prose {
   font-family: var(--font-body);
   line-height: 1.75;
 }
 
-.button, .nav-link, .label {
+.button,
+.nav-link,
+.label {
   font-family: var(--font-ui);
   font-weight: 500;
 }
@@ -45,6 +49,7 @@ Typography is the foundation of design. Today I implemented a three-font editori
 ## The Iteration Process
 
 Getting fonts right took several attempts:
+
 1. First try: Too many weights, slow load times
 2. Second try: Fonts clashed in personality
 3. Final: Complementary serifs and sans-serifs with limited weights

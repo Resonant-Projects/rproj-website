@@ -55,15 +55,15 @@ accessibility-regression:
   steps:
     - name: Test current branch
       run: pnpm test:accessibility:ci && cp -r reports current/
-    
+
     - name: Checkout base branch
       uses: actions/checkout@v6
       with:
         ref: ${{ github.base_ref }}
-    
+
     - name: Test base branch
       run: pnpm test:accessibility:ci && cp -r reports base/
-    
+
     - name: Compare results
       run: diff current/summary.json base/summary.json
 ```

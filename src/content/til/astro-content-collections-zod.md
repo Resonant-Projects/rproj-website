@@ -71,20 +71,25 @@ For reusable metadata across collections, extract common patterns:
 
 ```typescript
 const metadataDefinition = () =>
-  z.object({
-    title: z.string().optional(),
-    description: z.string().optional(),
-    openGraph: z.object({
-      url: z.string().optional(),
-      images: z.array(z.object({ url: z.string() })).optional(),
-    }).optional(),
-  }).optional();
+  z
+    .object({
+      title: z.string().optional(),
+      description: z.string().optional(),
+      openGraph: z
+        .object({
+          url: z.string().optional(),
+          images: z.array(z.object({ url: z.string() })).optional(),
+        })
+        .optional(),
+    })
+    .optional();
 
 const postCollection = defineCollection({
-  schema: () => z.object({
-    title: z.string(),
-    metadata: metadataDefinition(),
-  }),
+  schema: () =>
+    z.object({
+      title: z.string(),
+      metadata: metadataDefinition(),
+    }),
 });
 ```
 

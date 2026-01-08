@@ -44,14 +44,14 @@ export const collections = {
 
 Notion's property types need translation to Zod schemas:
 
-| Notion Type | Zod Schema |
-|-------------|------------|
-| Title | `z.string()` |
-| Select | `z.string()` |
+| Notion Type  | Zod Schema            |
+| ------------ | --------------------- |
+| Title        | `z.string()`          |
+| Select       | `z.string()`          |
 | Multi-select | `z.array(z.string())` |
-| Date | `z.date()` |
-| Checkbox | `z.boolean()` |
-| URL | `z.string().url()` |
+| Date         | `z.date()`            |
+| Checkbox     | `z.boolean()`         |
+| URL          | `z.string().url()`    |
 
 ## Live Content Sync
 

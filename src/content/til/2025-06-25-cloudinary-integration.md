@@ -30,11 +30,7 @@ const cld = new Cloudinary({
 });
 
 export function getOptimizedUrl(publicId: string, width: number) {
-  return cld.image(publicId)
-    .format('auto')
-    .quality('auto')
-    .resize(fill().width(width))
-    .toURL();
+  return cld.image(publicId).format('auto').quality('auto').resize(fill().width(width)).toURL();
 }
 ```
 

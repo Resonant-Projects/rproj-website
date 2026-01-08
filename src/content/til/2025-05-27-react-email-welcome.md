@@ -30,9 +30,7 @@ export const WelcomeEmail = ({ name }: { name: string }) => (
       <Container>
         <Text>Welcome, {name}!</Text>
         <Text>Thanks for reaching out to Resonant Projects.</Text>
-        <Button href="https://resonantprojects.art">
-          Visit Our Site
-        </Button>
+        <Button href="https://resonantprojects.art">Visit Our Site</Button>
       </Container>
     </Body>
   </Html>

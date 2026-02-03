@@ -33,12 +33,12 @@ performance, security, code readability, and consistent error handling.
 - **Type Definitions**: Store custom type definitions in a dedicated `src/types`
   directory or within relevant feature/component directories. [14, 39]
 - **Configuration Files**: Keep configuration files (e.g., `astro.config.mjs`,
-  `tailwind.config.cjs`, `tsconfig.json`) at the project root. [25, 39]
+  `tailwind.config.js`, `tsconfig.json`) at the project root. [25, 39]
 - **Barrel Exports (`index.ts`)**: Use `index.ts` files within directories to
   simplify import paths for modules and components. [39]
 - **Path Aliases**: Configure path aliases in `tsconfig.json` (and
   `astro.config.mjs` if needed) for cleaner import statements (e.g.,
-  `@components/`, `@lib/`). [39]
+  `~/components/`, `~/utils/`). [39]
 
 ## 2. TypeScript Usage
 
@@ -107,8 +107,8 @@ performance, security, code readability, and consistent error handling.
 
 - **Utility-First**: Embrace Tailwind's utility-first approach for styling
   directly in your markup. [33]
-- **Configuration (`tailwind.config.cjs`)**:
-  - Customize your theme (colors, spacing, fonts) in `tailwind.config.cjs` to
+- **Configuration (`tailwind.config.js`)**:
+  - Customize your theme (colors, spacing, fonts) in `tailwind.config.js` to
     maintain consistency. [33]
   - Use `theme.extend` for adding custom utilities or overriding defaults.
 - **Readability**:

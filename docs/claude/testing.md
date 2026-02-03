@@ -21,13 +21,13 @@ bun run validate:notion             # Verify Notion env config
 
 Custom testing scripts in `scripts/`:
 
-| Script | Purpose |
-|--------|---------|
-| `accessibility-test.js` | Puppeteer + axe-core WCAG testing |
-| `contrast-checker.js` | Color contrast validation. Use `--palette` flag for full palette check |
-| `css-variable-validator.js` | Validates CSS variable definitions and usage |
-| `visual-verification.js` | Visual regression testing |
-| `content-analyzer.js` | Readability and content quality analysis |
+| Script                      | Purpose                                                                |
+| --------------------------- | ---------------------------------------------------------------------- |
+| `accessibility-test.js`     | Puppeteer + axe-core WCAG testing                                      |
+| `contrast-checker.js`       | Color contrast validation. Use `--palette` flag for full palette check |
+| `css-variable-validator.js` | Validates CSS variable definitions and usage                           |
+| `visual-verification.js`    | Visual regression testing                                              |
+| `content-analyzer.js`       | Readability and content quality analysis                               |
 
 ## Running Individual Scripts
 

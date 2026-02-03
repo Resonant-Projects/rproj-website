@@ -199,7 +199,7 @@ pnpm docs:css
 - **Zero JS by default**: Only hydrate interactive components
 - **Image optimization**: Uses Astro's built-in image processing
 - **Asset compression**: Configured in `astro.config.ts`
-- **CDN deployment**: Vercel's edge network with maxDuration: 10s
+- **CDN deployment**: Vercel's edge network with maxDuration: 30s
 
 #### Accessibility Features
 
@@ -231,7 +231,7 @@ pnpm docs:css
 - Server-side rendering with ISR disabled
 - Web Analytics enabled
 - Redis session storage (URL from environment)
-- Serverless functions with 10s timeout
+- Serverless functions with 30s timeout
 
 **Environment Variables**:
 

@@ -21,7 +21,7 @@
     }
   },
   "scripts": {
-    "dev": "export DEBUG_NOTION_LOADER=1 && mkdir -p public && node scripts/pagefind-sync.js && astro dev",
+    "dev": "export DEBUG_NOTION_LOADER=1 && mkdir -p public && npm run pagefind:sync && astro dev",
     "start": "astro dev",
     "build": "astro check && astro build",
     "puppeteer:install": "bunx puppeteer browsers install chrome",

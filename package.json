@@ -21,11 +21,11 @@
     }
   },
   "scripts": {
-    "dev": "export DEBUG_NOTION_LOADER=1 && mkdir -p public && bun run pagefind:build && astro dev",
+    "dev": "export DEBUG_NOTION_LOADER=1 && mkdir -p public && npm run pagefind:sync && astro dev",
     "start": "astro dev",
     "build": "astro check && astro build",
     "puppeteer:install": "bunx puppeteer browsers install chrome",
-    "pagefind:build": "pagefind --site public --output-path public/pagefind || echo 'Pagefind indexing skipped (empty public directory)'",
+    "pagefind:sync": "node scripts/pagefind-sync.js",
     "preview": "astro preview",
     "astro": "astro",
     "check": "bun run check:astro && bun run lint && bun run format",

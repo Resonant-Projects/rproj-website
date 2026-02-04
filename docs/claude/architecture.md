@@ -6,10 +6,10 @@ Detailed architecture reference for Claude Code when working on this codebase.
 
 Three collections defined in `src/content/config.ts`:
 
-| Collection    | Source             | Loader                                                         |
-| ------------- | ------------------ | -------------------------------------------------------------- |
-| **post**      | `src/data/post/`   | Local MDX via glob loader                                      |
-| **til**       | `src/content/til/` | "Today I Learned" markdown                                     |
+| Collection    | Source                | Loader                                                         |
+| ------------- | --------------------- | -------------------------------------------------------------- |
+| **post**      | `src/content/post/`   | Local MDX via glob loader                                      |
+| **til**       | `src/content/til/`    | "Today I Learned" markdown                                     |
 | **resources** | Notion database    | Vendored `notion-astro-loader` (filters Status = "Up-to-Date") |
 
 The vendored loader in `vendor/notion-astro-loader/` is a local fork. Modify there for Notion integration changes.

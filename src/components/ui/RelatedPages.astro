@@ -63,7 +63,7 @@ const classes = getVariantClasses();
       <div class={classes.container}>
         {pages.map(page => (
           <article class={classes.item}>
-            <a href={page.href} class="block">
+            <a href={page.href} class="block min-w-0">
               <div class={`flex items-start gap-3 ${classes.content}`}>
                 {showIcon && page.icon && (
                   <div class="mt-1 flex-shrink-0">

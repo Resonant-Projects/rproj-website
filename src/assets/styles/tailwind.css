@@ -103,17 +103,6 @@
     --tw-ring-color: var(--color-accent);
   }
 
-  /* Legacy utility mappings for backward compatibility */
-  .bg-page {
-    background-color: var(--aw-color-bg-page);
-  }
-  .bg-dark {
-    background-color: var(--aw-color-bg-page-dark);
-  }
-  .bg-light {
-    background-color: var(--aw-color-bg-page);
-  }
-
   .btn-outline {
     background-color: transparent;
     border-color: var(--color-border);
@@ -425,6 +414,17 @@
 }
 
 @layer utilities {
+  /* Legacy background utilities (moved from components for proper specificity) */
+  .bg-page {
+    background-color: var(--aw-color-bg-page);
+  }
+  .bg-dark {
+    background-color: var(--aw-color-bg-page-dark);
+  }
+  .bg-light {
+    background-color: var(--aw-color-bg-page);
+  }
+
   /* Semantic text color utilities */
   .text-page {
     color: var(--aw-color-text-page);

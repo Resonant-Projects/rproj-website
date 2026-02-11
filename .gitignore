@@ -27,7 +27,9 @@ pnpm-debug.log*
 # Editor directories and files
 .astro
 .idea
-.vercel
+.vercel/
+.claude/
+.taskmaster/
 .vscode/
 .cursor/rules/isolation_rules/
 

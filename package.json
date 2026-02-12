@@ -107,7 +107,7 @@
     "@astrojs/react": "4.4.2",
     "@axe-core/cli": "^4.11.1",
     "@chlorinec-pkgs/notion-astro-loader": "^1.1.2",
-    "@eslint/js": "^9.39.2",
+    "@eslint/js": "^10.0.1",
     "@iconify-json/flat-color-icons": "^1.2.3",
     "@iconify-json/material-symbols": "^1.2.55",
     "@iconify-json/mdi": "^1.2.3",

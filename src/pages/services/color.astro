@@ -9,6 +9,7 @@ import Hero from '~/components/widgets/Hero.astro';
 import CallToAction from '~/components/widgets/CallToAction.astro';
 import { getCategoryImages, getCloudinaryImageUrl } from '~/utils/cloudinary';
 import RelatedPages from '~/components/ui/RelatedPages.astro';
+import ServiceNavigation from '~/components/ui/ServiceNavigation.astro';
 import { getRelatedPages } from '~/utils/internal-linking';
 import colorHeroImage from '~/assets/images/color-hero.png';
 
@@ -59,6 +60,9 @@ const relatedServices = getRelatedPages('/services/color', 3, true);
     gradientBg={true}
     showScrollIndicator={true}
   />
+
+  {/* Service Navigation */}
+  <ServiceNavigation currentService="color" variant="horizontal" />
 
   {/* Portfolio Section*/}
   <section id="portfolio" class="bg-[var(--color-background)] py-20 dark:bg-[var(--color-background)]">

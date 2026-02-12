@@ -11,6 +11,7 @@ import CallToAction from '~/components/widgets/CallToAction.astro';
 import NotionContact from '~/components/widgets/NotionContact.astro';
 import RelatedPages from '~/components/ui/RelatedPages.astro';
 import ContextualLinks from '~/components/ui/ContextualLinks.astro';
+import ServiceNavigation from '~/components/ui/ServiceNavigation.astro';
 import { getRelatedPages } from '~/utils/internal-linking';
 
 const metadata = {
@@ -54,6 +55,9 @@ const contextualLinks = [
     image={{ src: '~/assets/images/consulting_hero.png', alt: 'Consulting session' }}
     showScrollIndicator={true}
   />
+
+  {/* Service Navigation */}
+  <ServiceNavigation currentService="design" variant="horizontal" />
 
   <Stats
     title="Proven Results from Years of Experience"

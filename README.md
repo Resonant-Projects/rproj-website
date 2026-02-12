@@ -7,8 +7,8 @@
 
 ---
 
-[![Website](https://img.shields.io/badge/Visit%20Live%20Site-rproj.art-556bf2?style=flat-square&logo=vercel&logoColor=white)](https://rproj.art)
-![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/keithce/rproj-astrowind?labelColor=171717&color=FF570A&link=https://coderabbit.ai&label=CodeRabbit+Reviews)
+[![Website](https://img.shields.io/badge/Visit%20Live%20Site-resonantprojects.art-556bf2?style=flat-square&logo=vercel&logoColor=white)](https://www.resonantprojects.art)
+[![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/Resonant-Projects/rproj-website?labelColor=171717&color=FF570A&label=CodeRabbit+Reviews)](https://coderabbit.ai)
 
 ---
 
@@ -50,20 +50,32 @@ The Resources section provides a curated collection of tools, tutorials, and ref
 - **Regular Updates:** Content is regularly reviewed and updated to ensure relevance
 - **Personal Recommendations:** Hand-picked resources that Keith personally uses and recommends
 
-Access the Resources section at: [https://www.rproj.art/resources](https://www.rproj.art/resources)
+Access the Resources section at: [https://www.resonantprojects.art/resources](https://www.resonantprojects.art/resources)
 
 ---
 
 ## 🌐 Live Site
 
-[https://www.rproj.art](https://www.rproj.art)
+[https://www.resonantprojects.art](https://www.resonantprojects.art)
 
 ---
 
 ## 🛠️ Tech Stack
 
-- ⚡ **Astro** – Static site generator for blazing-fast performance
-- 🔄 **CI/CD** – Automated deployment from GitHub
+| Category | Technologies |
+|----------|-------------|
+| **Framework** | Astro 5, React 19 (interactive islands) |
+| **Styling** | Tailwind CSS 4, Starwind UI, PostCSS |
+| **Content** | Notion API (CMS), MDX, Remark/Rehype pipeline |
+| **Media** | Cloudinary (image CDN), Sharp |
+| **Search & SEO** | Pagefind, Astro Sitemap, RSS, structured metadata |
+| **Email** | React Email, Resend |
+| **Scheduling** | Cal.com embed |
+| **Analytics** | Vercel Analytics, Vercel Speed Insights |
+| **Testing** | Playwright, axe-core, Lighthouse |
+| **Deployment** | Vercel, CI/CD from GitHub |
+| **Language** | TypeScript |
+| **Package Manager** | Bun |
 
 ---
 

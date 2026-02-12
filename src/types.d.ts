@@ -295,6 +295,14 @@ export interface Content extends Omit<Headline, 'classes'>, Widget {
 
 export interface Contact extends Omit<Headline, 'classes'>, Form, Widget {}
 
+export interface ServiceNav {
+  title: string;
+  href: string;
+  icon: string;
+  description: string;
+  isActive?: boolean;
+}
+
 // Global type definitions
 declare global {
   function gtag(command: 'config', targetId: string, config?: Record<string, unknown>): void;

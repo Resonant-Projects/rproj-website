@@ -3,6 +3,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '~/co
 import { Button } from '~/components/starwind/button';
 import Filter from '@tabler/icons/outline/filter.svg';
 import type { Taxonomy } from '~/types';
+import { SEARCH_PARAM, buildTilUrl } from '~/utils/search-routing';
 
 export interface Props {
   tags: Taxonomy[];
@@ -14,21 +15,12 @@ const { tags, selectedTag, class: className = '' } = Astro.props;
 
 // Helper function to create filter URL
 const createFilterUrl = (tag?: string, search?: string) => {
-  const params = new URLSearchParams();
-  if (search) params.set('search', search);
-
-  const queryString = params.toString();
-
-  if (tag) {
-    return `/til/${tag}/1${queryString ? `?${queryString}` : ''}`;
-  } else {
-    return `/til/all/1${queryString ? `?${queryString}` : ''}`;
-  }
+  return buildTilUrl({ tag, page: 1 }, search);
 };
 
 // Get current search query from URL
 const urlParams = new URLSearchParams(Astro.url.search);
-const searchQuery = urlParams.get('search');
+const searchQuery = urlParams.get(SEARCH_PARAM);
 ---
 
 <div class={`til-filter-sheet ${className}`}>

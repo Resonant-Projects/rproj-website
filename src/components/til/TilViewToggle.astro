@@ -1,5 +1,6 @@
 ---
 import { Icon } from 'astro-icon/components';
+import { SEARCH_PARAM, buildTilUrl } from '~/utils/search-routing';
 
 export interface Props {
   currentView: 'feed' | 'kanban';
@@ -8,28 +9,21 @@ export interface Props {
 
 const { currentView = 'feed', class: className = '' } = Astro.props;
 
-// Get current URL to preserve other parameters
-const preserveParams = ['tag', 'q']; // Parameters to preserve when switching views
+// Get current URL to preserve search state
 const url = new URL(Astro.url);
-url.searchParams.delete('view');
+const searchQuery = url.searchParams.get(SEARCH_PARAM) || undefined;
+const segments = url.pathname.split('/').filter(Boolean);
 
-// Build URLs for each view
-let feedUrl = new URL('/til/all/1', url.origin);
-let kanbanUrl = new URL('/til/board', url.origin);
+const isBoardRoute = segments[0] === 'til' && segments[1] === 'board';
+const routeTag = !isBoardRoute && segments[0] === 'til' && segments[1] !== 'all' ? segments[1] : undefined;
+const parsedPage = Number.parseInt(segments[2] ?? '1', 10);
+const routePage = Number.isFinite(parsedPage) && parsedPage > 0 ? parsedPage : 1;
 
-// Preserve specified query parameters
-preserveParams.forEach(param => {
-  if (url.searchParams.has(param)) {
-    const value = url.searchParams.get(param);
-    if (value !== null) {
-      feedUrl.searchParams.set(param, value);
-      kanbanUrl.searchParams.set(param, value);
-    }
-  }
-});
-
-// Set the view parameter for feed view
-feedUrl.searchParams.set('view', 'feed');
+const feedUrl = new URL(buildTilUrl({ tag: routeTag, page: routePage, view: 'feed' }, searchQuery), url.origin);
+const kanbanUrl = new URL('/til/board', url.origin);
+if (searchQuery) {
+  kanbanUrl.searchParams.set(SEARCH_PARAM, searchQuery);
+}
 ---
 
 <div class={`til-view-toggle ${className}`}>

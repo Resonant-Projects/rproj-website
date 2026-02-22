@@ -6,10 +6,31 @@ import ResourceGrid from '~/components/resources/ResourceGrid.astro';
 import Pagination from '~/components/common/Pagination.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { findResourceCategories, findResourceTypes } from '~/utils/resources';
+import { getNotionEntryTitle } from '~/utils/notion';
+import { getResourceCanonicalSlug } from '~/utils/resource-slug';
 
 type ResourceEntry = CollectionEntry<'resources'>;
 
 export const prerender = true;
+
+const toStringArray = (value: string | string[] | undefined): string[] => {
+  if (Array.isArray(value)) return value.filter(Boolean).map(String);
+  if (typeof value === 'string' && value.trim()) return [value];
+  return [];
+};
+
+const serializeResourceEntry = (entry: ResourceEntry) => {
+  const data = entry.data;
+  return {
+    id: entry.id,
+    title: data.Name || getNotionEntryTitle(entry),
+    summary: data['AI summary'] || '',
+    categories: toStringArray(data.Category),
+    types: toStringArray(data.Type),
+    href: `/resources/${getResourceCanonicalSlug(entry)}`,
+    source: data.Source || data['User Defined URL'] || '',
+  };
+};
 
 export async function getStaticPaths({
   paginate,
@@ -20,26 +41,22 @@ export async function getStaticPaths({
   const allCategories = await findResourceCategories();
   const allTypes = await findResourceTypes();
 
-  // Generate paths for every combination of category and type
   const paths = [];
 
   for (const category of allCategories) {
     for (const type of allTypes) {
       const filteredEntries = allEntries.filter((entry: ResourceEntry) => {
-        const data = entry.data;
-        const entryCategories = data.Category;
-        const entryTypes = data.Type;
+        const entryCategories = entry.data.Category;
+        const entryTypes = entry.data.Type;
 
         const categoryMatch = Array.isArray(entryCategories)
           ? entryCategories.includes(category)
           : entryCategories === category;
-
         const typeMatch = Array.isArray(entryTypes) ? entryTypes.includes(type) : entryTypes === type;
 
         return categoryMatch && typeMatch;
       });
 
-      // Always generate paths, even for empty results
       if (filteredEntries.length > 0) {
         paths.push(
           ...paginate(filteredEntries, {
@@ -48,7 +65,6 @@ export async function getStaticPaths({
           })
         );
       } else {
-        // Generate a single page for empty results
         paths.push({
           params: { category, type, page: '1' },
           props: {
@@ -83,66 +99,60 @@ const { page } = Astro.props as {
 };
 const params = Astro.params as { category: string; type: string; page: string };
 
-// Get the category and type information
-const allCategories = await findResourceCategories();
-const allTypes = await findResourceTypes();
 const decodedCategory = decodeURIComponent(params.category);
 const decodedType = decodeURIComponent(params.type);
 
-// Get URL parameters
-const searchQuery = Astro.url.searchParams.get('search') || null;
+const allEntries = await getCollection('resources');
+const scopedEntries = allEntries.filter((entry: ResourceEntry) => {
+  const entryCategories = entry.data.Category;
+  const entryTypes = entry.data.Type;
 
-// Filter entries based on search query (client-side filtering for search)
-let displayEntries = page.data;
-if (searchQuery) {
-  const searchTerm = searchQuery.toLowerCase();
-  displayEntries = page.data.filter((entry: ResourceEntry) => {
-    const data = entry.data;
-    const name = data.Name || '';
-    const summary = data['AI summary'] || '';
-    return name.toLowerCase().includes(searchTerm) || summary.toLowerCase().includes(searchTerm);
-  });
-}
+  const categoryMatch = Array.isArray(entryCategories)
+    ? entryCategories.includes(decodedCategory)
+    : entryCategories === decodedCategory;
+  const typeMatch = Array.isArray(entryTypes) ? entryTypes.includes(decodedType) : entryTypes === decodedType;
 
-// Update pagination info for search results
-const totalEntries = searchQuery ? displayEntries.length : page.total;
-const totalPages = Math.max(1, Math.ceil(totalEntries / page.size));
+  return categoryMatch && typeMatch;
+});
+const serializedEntries = scopedEntries.map(serializeResourceEntry);
 
-// Parse and sanitize currentPage with fallback and bounds check
-let p = parseInt(params.page, 10);
-if (Number.isNaN(p)) p = 1;
-const currentPage = Math.min(Math.max(1, p), totalPages);
+const allCategories = await findResourceCategories();
+const allTypes = await findResourceTypes();
 
-// Generate title
+const totalPages = Math.max(1, Math.ceil(page.total / page.size));
+let currentPage = Number.parseInt(params.page, 10);
+if (Number.isNaN(currentPage) || currentPage < 1) currentPage = 1;
+if (currentPage > totalPages) currentPage = totalPages;
+
 const title = 'RR Resources';
 const pageTitle = `${title}: ${decodedCategory} - ${decodedType} (Page ${currentPage} of ${totalPages})`;
-
-// SEO metadata
-const seoTitle = searchQuery
-  ? `${title}: ${decodedCategory} - ${decodedType} - "${searchQuery}" - Page ${currentPage}`
-  : pageTitle;
 const seoDescription = `Resources in the ${decodedCategory} category of type ${decodedType}. ${page.total} resources found.`;
+const canonical = new URL(
+  `/resources/category/${params.category}/type/${params.type}/${currentPage}`,
+  Astro.site ?? 'https://www.resonantprojects.art'
+).toString();
 ---
 
 <Layout
   metadata={{
-    title: seoTitle,
+    title: pageTitle,
     description: seoDescription,
-    canonical: Astro.url.href,
+    canonical,
   }}
 >
-  <div class="mx-auto max-w-7xl px-6 py-8 md:px-8">
+  <div class="mx-auto max-w-7xl px-6 py-8 md:px-8" data-resources-page>
     <div class="mb-8">
       <div class="flex items-center justify-between">
         <div>
           <h1 class="leading-tighter text-3xl font-bold tracking-tighter md:text-4xl">
             {title}: {decodedCategory} - {decodedType}
-            {searchQuery && <span class="text-primary">: "{searchQuery}"</span>}
+            <span data-search-query-display class="hidden text-primary"></span>
             <span class="text-muted-foreground text-lg font-normal">(Page {currentPage} of {totalPages})</span>
           </h1>
           <p class="text-muted-foreground mt-2">
             {page.total} resources in the {decodedCategory} category of type {decodedType}
           </p>
+          <p class="text-muted-foreground mt-2 hidden text-sm" data-search-summary></p>
         </div>
         <RrFilterSheet
           categories={allCategories}
@@ -153,92 +163,64 @@ const seoDescription = `Resources in the ${decodedCategory} category of type ${d
       </div>
     </div>
 
-    {/* Search*/}
     <div class="mb-8">
       <RrSearch />
     </div>
 
-    {/* Search Results or Content*/}
-    {
-      displayEntries.length > 0 ? (
-        <div>
-          <ResourceGrid entries={displayEntries} />
-
-          {/* Pagination*/}
-          <div class="mt-8">
-            <Pagination
-              currentPage={currentPage}
-              lastPage={totalPages}
-              prevUrl={page.url.prev}
-              nextUrl={page.url.next}
-              firstUrl={page.url.first}
-              lastUrl={page.url.last}
-              baseUrl={`/resources/category/${encodeURIComponent(decodedCategory)}/type/${encodeURIComponent(decodedType)}`}
-              queryParams={Astro.url.searchParams}
-            />
-          </div>
-        </div>
-      ) : (
-        <div class="py-16 text-center">
-          <div class="mx-auto max-w-md">
-            <div class="mb-6">
-              <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-muted">
-                <svg class="text-muted-foreground h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                  />
-                </svg>
-              </div>
-              <h2 class="mb-2 text-2xl font-semibold text-foreground">
-                {searchQuery ? 'No search results found' : 'No resources in this combination'}
-              </h2>
-              <p class="text-muted-foreground mb-6">
-                {searchQuery
-                  ? `We couldn't find any resources matching "${searchQuery}" in ${decodedCategory} - ${decodedType}.`
-                  : `We don't have any resources in the ${decodedCategory} category of type ${decodedType} yet.`}
-              </p>
+    <div data-resources-default-content>
+      {
+        page.data.length > 0 ? (
+          <div>
+            <ResourceGrid entries={page.data} />
+            <div class="mt-8" data-resources-pagination>
+              <Pagination
+                currentPage={currentPage}
+                lastPage={totalPages}
+                prevUrl={page.url.prev}
+                nextUrl={page.url.next}
+                firstUrl={page.url.first}
+                lastUrl={page.url.last}
+                baseUrl={`/resources/category/${encodeURIComponent(decodedCategory)}/type/${encodeURIComponent(decodedType)}`}
+                queryParams={Astro.url.searchParams}
+              />
             </div>
-
-            <div class="space-y-4">
+          </div>
+        ) : (
+          <div class="py-16 text-center">
+            <div class="mx-auto max-w-md">
+              <h2 class="mb-2 text-2xl font-semibold text-foreground">No resources in this combination</h2>
+              <p class="text-muted-foreground mb-6">
+                We don't have any resources in the {decodedCategory} category of type {decodedType} yet.
+              </p>
               <div class="flex flex-col justify-center gap-3 sm:flex-row">
                 <a
                   href={`/resources/category/${encodeURIComponent(decodedCategory)}/1`}
-                  class="text-primary-foreground hover:bg-primary/90 inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 transition-colors"
+                  class="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-primary-foreground transition-colors hover:bg-primary/90"
                 >
                   View all {decodedCategory} resources
                 </a>
                 <a
                   href={`/resources/type/${encodeURIComponent(decodedType)}/1`}
-                  class="text-secondary-foreground hover:bg-secondary/90 inline-flex items-center justify-center rounded-md bg-secondary px-4 py-2 transition-colors"
+                  class="inline-flex items-center justify-center rounded-md bg-secondary px-4 py-2 text-secondary-foreground transition-colors hover:bg-secondary/90"
                 >
                   View all {decodedType} resources
                 </a>
               </div>
-
-              <div class="border-t border-border pt-4">
-                <p class="text-muted-foreground mb-3 text-sm">Or explore our full collection:</p>
-                <a
-                  href="/resources/all/1"
-                  class="hover:text-primary/80 inline-flex items-center text-primary transition-colors"
-                >
-                  <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
-                    />
-                  </svg>
-                  Browse all resources
-                </a>
-              </div>
             </div>
           </div>
-        </div>
-      )
-    }
+        )
+      }
+    </div>
+
+    <div class="hidden" data-resources-search-results></div>
+
+    <script type="application/json" is:inline data-resources-dataset set:html={JSON.stringify(serializedEntries)} />
   </div>
+
+  <script>
+    import { initializeResourcesListing } from '~/scripts/resources-listing';
+
+    initializeResourcesListing();
+    document.addEventListener('astro:page-load', initializeResourcesListing);
+  </script>
 </Layout>

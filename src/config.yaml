@@ -1,6 +1,6 @@
 site:
   name: Resonant Projects
-  site: 'https://www.rproj.art'
+  site: 'https://www.resonantprojects.art'
   base: '/'
   trailingSlash: false
 

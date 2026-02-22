@@ -8,6 +8,7 @@ import { UI } from 'astrowind:config';
   }
 
   window.basic_script = true;
+  const eventRegistry = new WeakMap();
 
   function applyTheme(theme) {
     if (theme === 'dark') {
@@ -31,10 +32,18 @@ import { UI } from 'astrowind:config';
   };
   initTheme();
 
-  function attachEvent(selector, event, fn) {
+  function attachEvent(selector, event, fn, key = event) {
     const matches = typeof selector === 'string' ? document.querySelectorAll(selector) : selector;
     if (matches && matches.length) {
       matches.forEach(elem => {
+        const target = elem;
+        const existing = eventRegistry.get(target) ?? new Set();
+        const registryKey = `${event}:${key}`;
+        if (existing.has(registryKey)) {
+          return;
+        }
+        existing.add(registryKey);
+        eventRegistry.set(target, existing);
         elem.addEventListener(event, e => fn(e, elem), false);
       });
     }
@@ -44,66 +53,86 @@ import { UI } from 'astrowind:config';
     let lastKnownScrollPosition = window.scrollY;
     let ticking = true;
 
-    attachEvent('#header nav', 'click', function () {
-      document.querySelector('[data-aw-toggle-menu]')?.classList.remove('expanded');
-      document.body.classList.remove('overflow-hidden');
-      document.getElementById('header')?.classList.remove('h-screen');
-      document.getElementById('header')?.classList.remove('expanded');
-      document.getElementById('header')?.classList.remove('bg-page');
-      document.querySelector('#header nav')?.classList.add('hidden');
-      document.querySelector('#header > div > div:last-child')?.classList.add('hidden');
-    });
+    attachEvent(
+      '#header nav',
+      'click',
+      function () {
+        document.querySelector('[data-aw-toggle-menu]')?.classList.remove('expanded');
+        document.body.classList.remove('overflow-hidden');
+        document.getElementById('header')?.classList.remove('h-screen');
+        document.getElementById('header')?.classList.remove('expanded');
+        document.getElementById('header')?.classList.remove('bg-page');
+        document.querySelector('#header nav')?.classList.add('hidden');
+        document.querySelector('#header > div > div:last-child')?.classList.add('hidden');
+      },
+      'header-nav-click'
+    );
 
-    attachEvent('[data-aw-toggle-menu]', 'click', function (_, elem) {
-      elem.classList.toggle('expanded');
-      document.body.classList.toggle('overflow-hidden');
-      document.getElementById('header')?.classList.toggle('h-screen');
-      document.getElementById('header')?.classList.toggle('expanded');
-      document.getElementById('header')?.classList.toggle('bg-page');
-      document.querySelector('#header nav')?.classList.toggle('hidden');
-      document.querySelector('#header > div > div:last-child')?.classList.toggle('hidden');
-    });
+    attachEvent(
+      '[data-aw-toggle-menu]',
+      'click',
+      function (_, elem) {
+        elem.classList.toggle('expanded');
+        document.body.classList.toggle('overflow-hidden');
+        document.getElementById('header')?.classList.toggle('h-screen');
+        document.getElementById('header')?.classList.toggle('expanded');
+        document.getElementById('header')?.classList.toggle('bg-page');
+        document.querySelector('#header nav')?.classList.toggle('hidden');
+        document.querySelector('#header > div > div:last-child')?.classList.toggle('hidden');
+      },
+      'toggle-menu-click'
+    );
 
-    attachEvent('[data-aw-toggle-color-scheme]', 'click', function () {
-      if (defaultTheme.endsWith(':only')) {
-        return;
-      }
-      document.documentElement.classList.toggle('dark');
-      localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
-    });
-
-    attachEvent('[data-aw-social-share]', 'click', function (_, elem) {
-      const network = elem.getAttribute('data-aw-social-share');
-      const url = encodeURIComponent(elem.getAttribute('data-aw-url'));
-      const text = encodeURIComponent(elem.getAttribute('data-aw-text'));
-
-      let href;
-      switch (network) {
-        case 'facebook':
-          href = `https://www.facebook.com/sharer.php?u=${url}`;
-          break;
-        case 'twitter':
-          href = `https://twitter.com/intent/tweet?url=${url}&text=${text}`;
-          break;
-        case 'linkedin':
-          href = `https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${text}`;
-          break;
-        case 'whatsapp':
-          href = `https://wa.me/?text=${text}%20${url}`;
-          break;
-        case 'mail':
-          href = `mailto:?subject=%22${text}%22&body=${text}%20${url}`;
-          break;
-
-        default:
+    attachEvent(
+      '[data-aw-toggle-color-scheme]',
+      'click',
+      function () {
+        if (defaultTheme.endsWith(':only')) {
           return;
-      }
+        }
+        document.documentElement.classList.toggle('dark');
+        localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+      },
+      'toggle-color-scheme-click'
+    );
 
-      const newlink = document.createElement('a');
-      newlink.target = '_blank';
-      newlink.href = href;
-      newlink.click();
-    });
+    attachEvent(
+      '[data-aw-social-share]',
+      'click',
+      function (_, elem) {
+        const network = elem.getAttribute('data-aw-social-share');
+        const url = encodeURIComponent(elem.getAttribute('data-aw-url'));
+        const text = encodeURIComponent(elem.getAttribute('data-aw-text'));
+
+        let href;
+        switch (network) {
+          case 'facebook':
+            href = `https://www.facebook.com/sharer.php?u=${url}`;
+            break;
+          case 'twitter':
+            href = `https://twitter.com/intent/tweet?url=${url}&text=${text}`;
+            break;
+          case 'linkedin':
+            href = `https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${text}`;
+            break;
+          case 'whatsapp':
+            href = `https://wa.me/?text=${text}%20${url}`;
+            break;
+          case 'mail':
+            href = `mailto:?subject=%22${text}%22&body=${text}%20${url}`;
+            break;
+
+          default:
+            return;
+        }
+
+        const newlink = document.createElement('a');
+        newlink.target = '_blank';
+        newlink.href = href;
+        newlink.click();
+      },
+      'social-share-click'
+    );
 
     const screenSize = window.matchMedia('(max-width: 767px)');
     screenSize.addEventListener('change', function () {
@@ -128,16 +157,21 @@ import { UI } from 'astrowind:config';
     }
     applyHeaderStylesOnScroll();
 
-    attachEvent([document], 'scroll', function () {
-      lastKnownScrollPosition = window.scrollY;
+    attachEvent(
+      [document],
+      'scroll',
+      function () {
+        lastKnownScrollPosition = window.scrollY;
 
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          applyHeaderStylesOnScroll();
-        });
-        ticking = true;
-      }
-    });
+        if (!ticking) {
+          window.requestAnimationFrame(() => {
+            applyHeaderStylesOnScroll();
+          });
+          ticking = true;
+        }
+      },
+      'document-scroll'
+    );
   };
   const onPageShow = function () {
     document.documentElement.classList.add('motion-safe:scroll-smooth');
@@ -151,8 +185,8 @@ import { UI } from 'astrowind:config';
     document.querySelector('#header nav')?.classList.add('hidden');
   };
 
-  window.onload = onLoad;
-  window.onpageshow = onPageShow;
+  window.addEventListener('load', onLoad);
+  window.addEventListener('pageshow', onPageShow);
 
   document.addEventListener('astro:after-swap', () => {
     initTheme();
@@ -169,6 +203,9 @@ import { UI } from 'astrowind:config';
     animationCounter: 0,
 
     start() {
+      if (this.observer) {
+        this.observer.disconnect();
+      }
       const selectors = [
         '[class*=" intersect:"]',
         '[class*=":intersect:"]',
@@ -251,7 +288,10 @@ import { UI } from 'astrowind:config';
 
   Observer.start();
 
-  document.addEventListener('astro:after-swap', () => {
-    Observer.start();
-  });
+  if (!(window.__awObserverAfterSwapBound === true)) {
+    window.__awObserverAfterSwapBound = true;
+    document.addEventListener('astro:after-swap', () => {
+      Observer.start();
+    });
+  }
 </script>

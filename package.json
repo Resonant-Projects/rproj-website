@@ -36,6 +36,8 @@
     "format": "prettier --check .",
     "format:fix": "prettier -w .",
     "typecheck": "tsc --noEmit",
+    "test:e2e": "bunx playwright test",
+    "test:unit": "bun test --pass-with-no-tests \"src/**/*.test.ts\" \"src/**/*.test.tsx\" \"tests/unit/**/*.test.ts\" \"tests/unit/**/*.test.tsx\"",
     "visual-verify": "bun run puppeteer:install && node scripts/visual-verification.js",
     "visual-verify:ci": "bun run puppeteer:install && node scripts/visual-verification.js --headless",
     "test:contrast": "node scripts/contrast-checker.js",
@@ -57,7 +59,8 @@
     "axe:scan": "axe http://localhost:4321 --tags wcag2a,wcag2aa,wcag21aa --save axe-results.json",
     "lighthouse:accessibility": "lighthouse http://localhost:4321 --only-categories=accessibility --output-path=accessibility-reports/lighthouse-report.html --view",
     "test:a11y:full": "bun run test:accessibility && bun run axe:scan",
-    "test:complete": "bun run test:all && bun run test:accessibility"
+    "test:complete": "bun run test:all && bun run test:accessibility",
+    "resources:cache:refresh": "node scripts/refresh-resources-cache.js"
   },
   "dependencies": {
     "@astrojs/rss": "4.0.15",

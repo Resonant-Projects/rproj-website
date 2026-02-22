@@ -121,8 +121,9 @@ export function notionLoader({
       }),
     async load(ctx) {
       const { store, logger: log_db, parseData } = ctx;
-
-      const existingPageIds = new Set<string>(store.keys());
+      const existingEntries = new Map(store.entries());
+      const existingPageIds = new Set<string>(existingEntries.keys());
+      const cachedPageCount = existingPageIds.size;
       const renderPromises: Promise<void>[] = [];
 
       // Resolve data_source_id from database_id (API 2025-09-03)
@@ -151,7 +152,7 @@ export function notionLoader({
           try {
             // Use dataSources.query for API 2025-09-03+
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const res = await (notionClient as any).dataSources.query({
+            const res: any = await (notionClient as any).dataSources.query({
               data_source_id,
               filter_properties,
               sorts,
@@ -184,110 +185,121 @@ export function notionLoader({
         }
       }
 
-      let pageCount = 0;
-      // const pageLimit = 5; // cap during debugging to avoid rate limits
+      try {
+        let pageCount = 0;
+        // const pageLimit = 5; // cap during debugging to avoid rate limits
 
-      for await (const page of queryWithBackoff()) {
-        if (!isFullPage(page)) {
-          continue;
-        }
+        for await (const page of queryWithBackoff()) {
+          if (!isFullPage(page)) {
+            continue;
+          }
 
-        pageCount++;
-        // if (pageCount > pageLimit) {
-        //   break;
-        // }
+          pageCount++;
+          // if (pageCount > pageLimit) {
+          //   break;
+          // }
 
-        const log_pg = log_db.fork(`${log_db.label}/${page.id.slice(0, 6)}`);
+          const log_pg = log_db.fork(`${log_db.label}/${page.id.slice(0, 6)}`);
 
-        // Create metadata for logging
-        const titleProp = Object.entries(page.properties).find(([_, property]) => property.type === 'title');
-        const pageTitle = transformedPropertySchema.title.safeParse(titleProp ? titleProp[1] : {});
-        const pageMetadata = [
-          `${pageTitle.success ? '"' + pageTitle.data + '"' : 'Untitled'}`,
-          `(last edited ${page.last_edited_time.slice(0, 10)})`,
-        ].join(' ');
+          // Create metadata for logging
+          const titleProp = Object.entries(page.properties).find(([_, property]) => property.type === 'title');
+          const pageTitle = transformedPropertySchema.title.safeParse(titleProp ? titleProp[1] : {});
+          const pageMetadata = [
+            `${pageTitle.success ? '"' + pageTitle.data + '"' : 'Untitled'}`,
+            `(last edited ${page.last_edited_time.slice(0, 10)})`,
+          ].join(' ');
 
-        const isCached = existingPageIds.delete(page.id);
-        const existingPage = store.get(page.id);
+          const isCached = existingPageIds.delete(page.id);
+          const existingPage = existingEntries.get(page.id);
 
-        // If the page has been updated, re-render it
-        if (existingPage?.digest !== page.last_edited_time) {
-          const realSavePath = path.resolve(process.cwd(), 'src', imageSavePath);
+          // If the page has been updated, re-render it
+          if (existingPage?.digest !== page.last_edited_time) {
+            const realSavePath = path.resolve(process.cwd(), 'src', imageSavePath);
 
-          const renderer = new NotionPageRenderer(notionClient, page, realSavePath, log_pg);
+            const renderer = new NotionPageRenderer(notionClient, page, realSavePath, log_pg);
 
-          const data = await parseData(
-            await renderer.getPageData(experimentalCacheImageInData, experimentalRootSourceAlias)
-          );
+            const data = await parseData(
+              await renderer.getPageData(experimentalCacheImageInData, experimentalRootSourceAlias)
+            );
 
-          const renderPromise = (async () => {
-            let attempts = 0;
-            while (true) {
-              try {
-                const rendered = await renderer.render(processor);
-                store.set({
-                  id: page.id,
-                  digest: page.last_edited_time,
-                  data,
-                  rendered,
-                  filePath: `${VIRTUAL_CONTENT_ROOT}/${page.id}.md`, // 不重要，有就行
-                  assetImports: rendered?.metadata.imagePaths,
-                });
-                if (process?.env?.NOTION_TRACE === '1') {
-                  const propKeys = Object.keys((data as any)?.data?.properties ?? {});
-                  const titleSample = (data as any)?.data?.properties?.Name;
-                  const renderedLen = rendered?.html?.length ?? 0;
-                  log_pg.debug(
-                    `TRACE page saved id=${page.id.slice(0,6)} props=${propKeys.length} keys=[${propKeys.slice(0,8).join(', ')}${propKeys.length>8?', ...':''}] htmlLen=${renderedLen}`
-                  );
-                  if (titleSample) {
-                    try {
-                      const titleText = (titleSample as any).title?.map((t: any)=> t?.plain_text || '').join('');
-                      log_pg.debug(`TRACE titleFromProperties="${titleText}"`);
-                    } catch {}
+            const renderPromise = (async () => {
+              let attempts = 0;
+              while (true) {
+                try {
+                  const rendered = await renderer.render(processor);
+                  store.set({
+                    id: page.id,
+                    digest: page.last_edited_time,
+                    data,
+                    rendered,
+                    filePath: `${VIRTUAL_CONTENT_ROOT}/${page.id}.md`, // 不重要，有就行
+                    assetImports: rendered?.metadata.imagePaths,
+                  });
+                  if (process?.env?.NOTION_TRACE === '1') {
+                    const propKeys = Object.keys((data as any)?.data?.properties ?? {});
+                    const titleSample = (data as any)?.data?.properties?.Name;
+                    const renderedLen = rendered?.html?.length ?? 0;
+                    log_pg.debug(
+                      `TRACE page saved id=${page.id.slice(0, 6)} props=${propKeys.length} keys=[${propKeys.slice(0, 8).join(', ')}${propKeys.length > 8 ? ', ...' : ''}] htmlLen=${renderedLen}`
+                    );
+                    if (titleSample) {
+                      try {
+                        const titleText = (titleSample as any).title?.map((t: any) => t?.plain_text || '').join('');
+                        log_pg.debug(`TRACE titleFromProperties=\"${titleText}\"`);
+                      } catch {}
+                    }
                   }
+                  break;
+                } catch (e: any) {
+                  const msg = String(e?.message || e);
+                  if (msg.includes('rate limited') && attempts < 5) {
+                    const wait = Math.min(1000 * Math.pow(2, attempts), 10000);
+                    log_pg.warn(`Render rate limited. Backing off for ${wait}ms (attempt ${attempts + 1}/5)`);
+                    await sleep(wait);
+                    attempts++;
+                    continue;
+                  }
+                  throw e;
                 }
-                break;
-              } catch (e: any) {
-                const msg = String(e?.message || e);
-                if (msg.includes('rate limited') && attempts < 5) {
-                  const wait = Math.min(1000 * Math.pow(2, attempts), 10000);
-                  log_pg.warn(`Render rate limited. Backing off for ${wait}ms (attempt ${attempts + 1}/5)`);
-                  await sleep(wait);
-                  attempts++;
-                  continue;
-                }
-                throw e;
               }
-            }
-          })();
+            })();
 
-          renderPromises.push(renderPromise);
+            renderPromises.push(renderPromise);
 
-          log_pg.info(`${isCached ? 'Updated' : 'Created'} page ${dim(pageMetadata)}`);
-        } else {
-          log_pg.debug(`Skipped page ${dim(pageMetadata)}`);
+            log_pg.info(`${isCached ? 'Updated' : 'Created'} page ${dim(pageMetadata)}`);
+          } else {
+            log_pg.debug(`Skipped page ${dim(pageMetadata)}`);
+          }
         }
+
+        // Remove any pages that have been deleted
+        for (const deletedPageId of existingPageIds) {
+          const log_pg = log_db.fork(`${log_db.label}/${deletedPageId.slice(0, 6)}`);
+
+          store.delete(deletedPageId);
+          log_pg.info(`Deleted page`);
+        }
+
+        log_db.info(`Loaded database ${dim(`fetched ${pageCount} pages from API`)}`);
+
+        if (renderPromises.length === 0) {
+          return;
+        }
+
+        // Wait for rendering to complete
+        log_db.info(`Rendering ${renderPromises.length} updated pages`);
+        await Promise.all(renderPromises);
+        log_db.info(`Rendered ${renderPromises.length} pages`);
+      } catch (error) {
+        log_db.warn(
+          `[notion-loader] Query failed: ${error instanceof Error ? error.message : String(error)}`
+        );
+        if (cachedPageCount > 0) {
+          log_db.warn(`[notion-loader] Falling back to cached content (${cachedPageCount} entries in store).`);
+          return;
+        }
+        log_db.warn('[notion-loader] No cached entries available. Continuing with empty collection.');
       }
-
-      // Remove any pages that have been deleted
-      for (const deletedPageId of existingPageIds) {
-        const log_pg = log_db.fork(`${log_db.label}/${deletedPageId.slice(0, 6)}`);
-
-        store.delete(deletedPageId);
-        log_pg.info(`Deleted page`);
-      }
-
-      log_db.info(`Loaded database ${dim(`fetched ${pageCount} pages from API`)}`);
-
-      if (renderPromises.length === 0) {
-        return;
-      }
-
-      // Wait for rendering to complete
-      log_db.info(`Rendering ${renderPromises.length} updated pages`);
-      await Promise.all(renderPromises);
-      log_db.info(`Rendered ${renderPromises.length} pages`);
     },
   };
 }

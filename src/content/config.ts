@@ -22,7 +22,7 @@ const parseResourcesCache = (source: string): Array<Record<string, unknown>> => 
 const fallbackResourcesLoader = file('src/content/resources-cache.json', {
   parser: parseResourcesCache,
 });
-const isDevServer = process.argv.some((arg) => arg === 'dev' || arg.endsWith('/dev'));
+const isDevServer = import.meta.env.MODE === 'development';
 
 let notionLoaderFactory: ((options: NotionLoaderOptions) => Loader) | null = null;
 if (!isDevServer) {

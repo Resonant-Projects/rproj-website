@@ -123,8 +123,11 @@ const applySearch = (root: HTMLElement) => {
   let entries: ResourceListingEntry[] = [];
   try {
     entries = parseEntries(JSON.parse(datasetScript.textContent || '[]'));
-  } catch {
+  } catch (error) {
     entries = [];
+    if (import.meta.env.DEV) {
+      console.warn('[resources-listing] Failed to parse resources dataset JSON.', error);
+    }
   }
 
   const needle = searchQuery.toLowerCase();

@@ -108,8 +108,11 @@ const applySearch = (root: HTMLElement) => {
   let entries: TilListingEntry[] = [];
   try {
     entries = parseEntries(JSON.parse(datasetScript.textContent || '[]'));
-  } catch {
+  } catch (error) {
     entries = [];
+    if (import.meta.env.DEV) {
+      console.warn('[til-listing] Failed to parse TIL dataset JSON.', error);
+    }
   }
 
   const needle = searchQuery.toLowerCase();

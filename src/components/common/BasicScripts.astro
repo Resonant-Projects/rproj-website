@@ -9,6 +9,8 @@ import { UI } from 'astrowind:config';
 
   window.basic_script = true;
   const eventRegistry = new WeakMap();
+  const handlerRegistry = new WeakMap();
+  let handlerCounter = 0;
 
   function applyTheme(theme) {
     if (theme === 'dark') {
@@ -32,13 +34,24 @@ import { UI } from 'astrowind:config';
   };
   initTheme();
 
-  function attachEvent(selector, event, fn, key = event) {
+  function getHandlerKey(fn) {
+    let handlerKey = handlerRegistry.get(fn);
+    if (!handlerKey) {
+      handlerCounter += 1;
+      handlerKey = `handler-${handlerCounter}`;
+      handlerRegistry.set(fn, handlerKey);
+    }
+    return handlerKey;
+  }
+
+  function attachEvent(selector, event, fn, key) {
     const matches = typeof selector === 'string' ? document.querySelectorAll(selector) : selector;
     if (matches && matches.length) {
       matches.forEach(elem => {
         const target = elem;
         const existing = eventRegistry.get(target) ?? new Set();
-        const registryKey = `${event}:${key}`;
+        const dedupeKey = key ?? getHandlerKey(fn);
+        const registryKey = `${event}:${dedupeKey}`;
         if (existing.has(registryKey)) {
           return;
         }

@@ -52,17 +52,6 @@ const generatePageNumbers = (current: number, total: number): (number | string)[
 // Build URL for a specific page
 const buildPageUrl = (pageNum: number | string): string => {
   if (typeof pageNum === 'string') return '#';
-
-  if (pageNum === 1) {
-    // For page 1, use the base URL without /1
-    const url = new URL(baseUrl, Astro.site);
-    queryParams.forEach((value, key) => {
-      url.searchParams.set(key, value);
-    });
-    return url.pathname + url.search;
-  }
-
-  // For other pages, use /page/2, /page/3, etc.
   const url = new URL(`${baseUrl}/${pageNum}`, Astro.site);
   queryParams.forEach((value, key) => {
     url.searchParams.set(key, value);

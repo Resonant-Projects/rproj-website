@@ -1,7 +1,6 @@
 ---
 // Redirect /til to /til/all/1
-export const prerender = true;
+export const prerender = false;
 
-// This will redirect to the first page of all TIL entries
-return Astro.redirect('/til/all/1');
+return Astro.redirect(`/til/all/1${Astro.url.search || ''}`, 301);
 ---

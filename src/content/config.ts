@@ -1,7 +1,55 @@
 import { defineCollection, z } from 'astro:content';
-// Use vendored loader source so we can modify locally
-import { notionLoader } from '../../vendor/notion-astro-loader/src';
-import { glob } from 'astro/loaders';
+import { file, glob, type Loader } from 'astro/loaders';
+import type { NotionLoaderOptions } from '../../vendor/notion-astro-loader/src/loader.js';
+
+const parseResourcesCache = (source: string): Array<Record<string, unknown>> => {
+  const payload = JSON.parse(source) as unknown;
+  if (!Array.isArray(payload)) {
+    return [];
+  }
+
+  return payload.map((item, index) => {
+    const value = item as Record<string, unknown>;
+    const id = typeof value.id === 'string' && value.id ? value.id : `cache-${index}`;
+    const sourceData = (value.data as Record<string, unknown> | undefined) ?? value;
+    return {
+      id,
+      ...sourceData,
+    };
+  });
+};
+
+const fallbackResourcesLoader = file('src/content/resources-cache.json', {
+  parser: parseResourcesCache,
+});
+const isDevServer = import.meta.env.DEV;
+
+let notionLoaderFactory: ((options: NotionLoaderOptions) => Loader) | null = null;
+if (!isDevServer) {
+  try {
+    const module = await import('../../vendor/notion-astro-loader/src/loader.js');
+    notionLoaderFactory = module.notionLoader;
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    console.warn(`[resources-notion-loader] Falling back to cache loader: ${message}`);
+  }
+}
+
+const createNotionResourcesLoader = (auth: string, databaseId: string): Loader => {
+  if (!notionLoaderFactory) {
+    return fallbackResourcesLoader;
+  }
+
+  return notionLoaderFactory({
+    auth,
+    database_id: databaseId,
+    imageSavePath: 'content/notion/images',
+    filter: {
+      property: 'Status',
+      status: { equals: 'Up-to-Date' },
+    },
+  });
+};
 
 // Shared metadataDefinition for collections
 const metadataDefinition = () =>
@@ -83,19 +131,19 @@ const tilCollection = defineCollection({
     }),
 });
 
+const notionToken = process.env.NOTION_TOKEN;
+const notionResourcesDatabaseId = process.env.NOTION_RR_RESOURCES_ID;
+
+const resourcesLoader =
+  notionToken && notionResourcesDatabaseId && notionLoaderFactory
+    ? createNotionResourcesLoader(notionToken, notionResourcesDatabaseId)
+    : fallbackResourcesLoader;
+
 export const collections = {
   post: postCollection,
   til: tilCollection,
   resources: defineCollection({
-    loader: notionLoader({
-      auth: process.env.NOTION_TOKEN!,
-      database_id: process.env.NOTION_RR_RESOURCES_ID!,
-      imageSavePath: 'content/notion/images',
-      filter: {
-        property: 'Status',
-        status: { equals: 'Up-to-Date' },
-      },
-    }),
+    loader: resourcesLoader,
     // Schema: start from Notion property types; refine as needed
     schema: () =>
       z.object({

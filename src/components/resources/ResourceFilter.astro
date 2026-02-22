@@ -1,4 +1,6 @@
 ---
+import { SEARCH_PARAM, buildResourcesUrl } from '~/utils/search-routing';
+
 export interface Props {
   categories: string[];
   types: string[];
@@ -11,23 +13,12 @@ const { categories, types, selectedCategory, selectedType, class: className = ''
 
 // Helper function to create filter URL
 const createFilterUrl = (category?: string, type?: string, search?: string) => {
-  const params = new URLSearchParams();
-  if (search) params.set('q', search);
-
-  const queryString = params.toString();
-
-  if (category) {
-    return `/resources/category/${category}/1${queryString ? `?${queryString}` : ''}`;
-  } else if (type) {
-    return `/resources/type/${type}/1${queryString ? `?${queryString}` : ''}`;
-  } else {
-    return `/resources/all/1${queryString ? `?${queryString}` : ''}`;
-  }
+  return buildResourcesUrl({ category, type, page: 1 }, search);
 };
 
 // Get current search query from URL
 const urlParams = new URLSearchParams(Astro.url.search);
-const searchQuery = urlParams.get('q');
+const searchQuery = urlParams.get(SEARCH_PARAM);
 ---
 
 <div class={`rr-filter mb-8 ${className}`}>

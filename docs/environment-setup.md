@@ -161,6 +161,14 @@ For local development:
 3. Restart your development server
 4. The integration will automatically use your credentials
 
+For resources e2e/static-search reliability, refresh the Notion cache before running Playwright:
+
+```bash
+bun run resources:cache:refresh
+```
+
+The resources core-journey e2e suite is intentionally fail-fast when `src/content/resources-cache.json` is empty.
+
 ### 7. Security Notes
 
 - **Never commit** your `.env` file to version control

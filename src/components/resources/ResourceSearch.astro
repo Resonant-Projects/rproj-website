@@ -1,4 +1,6 @@
 ---
+import { SEARCH_PARAM } from '~/utils/search-routing';
+
 export interface Props {
   class?: string;
   placeholder?: string;
@@ -8,13 +10,14 @@ const { class: className = '', placeholder = 'Search RR Resources...' } = Astro.
 ---
 
 <div class={`rr-search ${className}`}>
-  <form id="search-form" class="relative">
+  <form id="resource-search-form" class="relative" data-resource-search-form>
     <input
       type="text"
-      id="search-input"
-      name="q"
+      id="resource-search-input"
+      name={SEARCH_PARAM}
       placeholder={placeholder}
       class="bg-muted/50 placeholder-muted-foreground w-full rounded-md border border-border px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+      data-resource-search-input
     />
     <button
       type="submit"
@@ -33,37 +36,42 @@ const { class: className = '', placeholder = 'Search RR Resources...' } = Astro.
 </div>
 
 <script>
-  // Client-side search functionality
-  document.addEventListener('DOMContentLoaded', () => {
-    const searchForm = document.getElementById('search-form');
-    const searchInputElement = document.querySelector<HTMLInputElement>('input#search-input');
+  import { SEARCH_PARAM } from '~/utils/search-routing';
 
-    // Runtime type guard to ensure we have a valid input element
-    if (!searchInputElement || !(searchInputElement instanceof HTMLInputElement)) {
+  const initResourceSearch = () => {
+    const searchForm = document.querySelector<HTMLFormElement>('[data-resource-search-form]');
+    const searchInputElement = searchForm?.querySelector<HTMLInputElement>('[data-resource-search-input]');
+
+    if (!searchForm || !searchInputElement || searchForm.dataset.initialized === 'true') {
       return;
     }
 
-    // Check URL for search query
-    const urlParams = new URLSearchParams(window.location.search);
-    const queryParam = urlParams.get('q');
+    searchForm.dataset.initialized = 'true';
+
+    const queryParam = new URLSearchParams(window.location.search).get(SEARCH_PARAM);
     if (queryParam) {
-      // Set the .value property instead of using setAttribute
       searchInputElement.value = queryParam;
     }
 
-    // Ensure searchForm is non-null before adding the submit listener
-    if (searchForm) {
-      searchForm.addEventListener('submit', e => {
-        e.preventDefault();
-        // Read .value (not getAttribute) from the HTMLInputElement
-        const queryValue = searchInputElement.value || '';
-        const trimmedValue = queryValue.trim();
-        if (trimmedValue) {
-          window.location.href = `/resources?q=${encodeURIComponent(trimmedValue)}`;
-        } else {
-          window.location.href = '/resources';
-        }
-      });
-    }
-  });
+    searchForm.addEventListener('submit', e => {
+      e.preventDefault();
+      const url = new URL(window.location.href);
+      const queryValue = searchInputElement.value.trim();
+
+      if (queryValue) {
+        url.searchParams.set(SEARCH_PARAM, queryValue);
+      } else {
+        url.searchParams.delete(SEARCH_PARAM);
+      }
+
+      window.location.href = `${url.pathname}${url.search ? `?${url.searchParams.toString()}` : ''}`;
+    });
+  };
+
+  document.addEventListener('astro:page-load', initResourceSearch);
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initResourceSearch);
+  } else {
+    initResourceSearch();
+  }
 </script>

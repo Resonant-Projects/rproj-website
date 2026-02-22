@@ -24,7 +24,11 @@ export interface QueryDatabaseParameters {
   page_size?: number;
 }
 
-export type DatabasePropertyConfigResponse = Asserts<typeof isFullDatabase>['properties'][string];
+export type DatabasePropertyConfigResponse = {
+  type: string;
+  description?: string;
+  [key: string]: unknown;
+};
 
 export type PageObjectResponse = Asserts<typeof isFullPage>;
 export type PageProperty = PageObjectResponse['properties'][string];

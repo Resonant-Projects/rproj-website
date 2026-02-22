@@ -12,7 +12,7 @@ interface ResourceListingEntry {
   source?: string;
 }
 
-const isSafeSourceUrl = (value: string): boolean => {
+const isSafeUrl = (value: string): boolean => {
   try {
     const parsed = new URL(value);
     return parsed.protocol === 'http:' || parsed.protocol === 'https:';
@@ -24,14 +24,15 @@ const isSafeSourceUrl = (value: string): boolean => {
 const renderCard = (entry: ResourceListingEntry): string => {
   const category = entry.categories[0];
   const type = entry.types[0];
-  const sourceMarkup = entry.source && isSafeSourceUrl(entry.source)
+  const safeHref = isSafeUrl(entry.href) ? escapeHtml(entry.href) : '#';
+  const sourceMarkup = entry.source && isSafeUrl(entry.source)
     ? `<a href="${escapeHtml(entry.source)}" target="_blank" rel="noopener noreferrer" class="text-xs font-medium text-primary transition-colors hover:text-accent">View Source →</a>`
     : '';
 
   return `<article class="resource-card group rounded-lg border border-border bg-card p-6 shadow-sm transition-all hover:shadow-lg" data-resource-card>
     <div class="mb-3">
       <h3 class="mb-2 text-lg font-semibold leading-tight">
-        <a href="${escapeHtml(entry.href)}" class="text-card-foreground transition-colors hover:text-primary group-hover:underline">${escapeHtml(entry.title)}</a>
+        <a href="${safeHref}" class="text-card-foreground transition-colors hover:text-primary group-hover:underline">${escapeHtml(entry.title)}</a>
       </h3>
       ${
         entry.summary

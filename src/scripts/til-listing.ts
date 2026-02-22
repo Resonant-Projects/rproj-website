@@ -10,7 +10,14 @@ interface TilListingEntry {
   date: string;
 }
 
-const slugifyTag = (tag: string): string => tag.toLowerCase().replace(/\s+/g, '-');
+const slugifyTag = (tag: string): string =>
+  tag
+    .normalize('NFKD')
+    .toLowerCase()
+    .replace(/\s+/g, '-')
+    .replace(/[^a-z0-9-]/g, '')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
 
 const formatDate = (value: string): string => {
   const date = new Date(value);

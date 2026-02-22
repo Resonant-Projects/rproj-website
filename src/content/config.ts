@@ -1,5 +1,6 @@
 import { defineCollection, z } from 'astro:content';
 import { file, glob, type Loader } from 'astro/loaders';
+import { existsSync } from 'node:fs';
 import type { NotionLoaderOptions } from '../../vendor/notion-astro-loader/src/loader.js';
 
 const parseResourcesCache = (source: string): Array<Record<string, unknown>> => {
@@ -19,9 +20,31 @@ const parseResourcesCache = (source: string): Array<Record<string, unknown>> => 
   });
 };
 
-const fallbackResourcesLoader = file('src/content/resources-cache.json', {
+const resourcesCachePath = 'src/content/resources-cache.json';
+const resourcesCacheFileLoader = file(resourcesCachePath, {
   parser: parseResourcesCache,
 });
+const fallbackResourcesLoader: Loader = {
+  name: 'resources-fallback-loader',
+  load: async context => {
+    const resourcesCacheUrl = new URL(resourcesCachePath, context.config.root);
+    if (!existsSync(resourcesCacheUrl)) {
+      const parsedFallback = parseResourcesCache('[]');
+      context.store.clear();
+      for (const rawItem of parsedFallback) {
+        const id = (rawItem.id as string | undefined) ?? '';
+        if (!id) {
+          continue;
+        }
+        const parsedData = await context.parseData({ id, data: rawItem });
+        context.store.set({ id, data: parsedData });
+      }
+      return;
+    }
+
+    await resourcesCacheFileLoader.load(context);
+  },
+};
 const isDevServer = import.meta.env.DEV;
 
 let notionLoaderFactory: ((options: NotionLoaderOptions) => Loader) | null = null;

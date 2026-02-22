@@ -3,23 +3,18 @@ import { Icon } from 'astro-icon/components';
 import { SEARCH_PARAM, buildTilUrl } from '~/utils/search-routing';
 
 export interface Props {
-  currentView: 'feed' | 'kanban';
+  currentView?: 'feed' | 'kanban';
+  tag?: string;
+  page?: number;
   class?: string;
 }
 
-const { currentView = 'feed', class: className = '' } = Astro.props;
+const { currentView = 'feed', tag, page = 1, class: className = '' } = Astro.props;
 
 // Get current URL to preserve search state
 const url = new URL(Astro.url);
 const searchQuery = url.searchParams.get(SEARCH_PARAM) || undefined;
-const segments = url.pathname.split('/').filter(Boolean);
-
-const isBoardRoute = segments[0] === 'til' && segments[1] === 'board';
-const routeTag = !isBoardRoute && segments[0] === 'til' && segments[1] !== 'all' ? segments[1] : undefined;
-const parsedPage = Number.parseInt(segments[2] ?? '1', 10);
-const routePage = Number.isFinite(parsedPage) && parsedPage > 0 ? parsedPage : 1;
-
-const feedUrl = new URL(buildTilUrl({ tag: routeTag, page: routePage, view: 'feed' }, searchQuery), url.origin);
+const feedUrl = new URL(buildTilUrl({ tag, page, view: 'feed' }, searchQuery), url.origin);
 const kanbanUrl = new URL('/til/board', url.origin);
 if (searchQuery) {
   kanbanUrl.searchParams.set(SEARCH_PARAM, searchQuery);
@@ -29,7 +24,7 @@ if (searchQuery) {
 <div class={`til-view-toggle ${className}`}>
   <div class="bg-muted/50 inline-flex rounded-md p-1">
     <a
-      href={feedUrl.toString()}
+      href={feedUrl.pathname + feedUrl.search}
       class={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
         currentView === 'feed'
           ? 'bg-card shadow-sm text-foreground'
@@ -42,7 +37,7 @@ if (searchQuery) {
       </span>
     </a>
     <a
-      href={kanbanUrl.toString()}
+      href={kanbanUrl.pathname + kanbanUrl.search}
       class={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
         currentView === 'kanban'
           ? 'bg-card shadow-sm text-foreground'

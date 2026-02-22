@@ -32,19 +32,22 @@ const toQuery = (search?: string, extra?: Record<string, string | undefined>): s
 };
 
 export const buildResourcesPath = ({ category, type, page = 1 }: ResourceRouteOptions = {}): string => {
+  const parsedPage = Number(page);
+  const safePage = Number.isInteger(parsedPage) && parsedPage > 0 ? parsedPage : 1;
+
   if (category && type) {
-    return `/resources/category/${encodeURIComponent(category)}/type/${encodeURIComponent(type)}/${page}`;
+    return `/resources/category/${encodeURIComponent(category)}/type/${encodeURIComponent(type)}/${safePage}`;
   }
 
   if (category) {
-    return `/resources/category/${encodeURIComponent(category)}/${page}`;
+    return `/resources/category/${encodeURIComponent(category)}/${safePage}`;
   }
 
   if (type) {
-    return `/resources/type/${encodeURIComponent(type)}/${page}`;
+    return `/resources/type/${encodeURIComponent(type)}/${safePage}`;
   }
 
-  return `/resources/all/${page}`;
+  return `/resources/all/${safePage}`;
 };
 
 export const buildResourcesUrl = (options: ResourceRouteOptions = {}, search?: string): string => {

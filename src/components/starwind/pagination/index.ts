@@ -1,10 +1,10 @@
-import * as PaginationComponent from './Pagination.astro';
-import * as PaginationContentComponent from './PaginationContent.astro';
-import * as PaginationEllipsisComponent from './PaginationEllipsis.astro';
-import * as PaginationItemComponent from './PaginationItem.astro';
-import * as PaginationLinkComponent from './PaginationLink.astro';
-import * as PaginationNextComponent from './PaginationNext.astro';
-import * as PaginationPreviousComponent from './PaginationPrevious.astro';
+import * as PaginationComponent from '~/components/starwind/pagination/Pagination.astro';
+import * as PaginationContentComponent from '~/components/starwind/pagination/PaginationContent.astro';
+import * as PaginationEllipsisComponent from '~/components/starwind/pagination/PaginationEllipsis.astro';
+import * as PaginationItemComponent from '~/components/starwind/pagination/PaginationItem.astro';
+import * as PaginationLinkComponent from '~/components/starwind/pagination/PaginationLink.astro';
+import * as PaginationNextComponent from '~/components/starwind/pagination/PaginationNext.astro';
+import * as PaginationPreviousComponent from '~/components/starwind/pagination/PaginationPrevious.astro';
 
 const Pagination = PaginationComponent.default;
 const PaginationContent = PaginationContentComponent.default;

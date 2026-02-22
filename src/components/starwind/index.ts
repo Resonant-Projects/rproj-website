@@ -1,5 +1,5 @@
 // Export all starwind components
-export * from './button/index.js';
-export * from './pagination/index.js';
-export * from './dialog/index.js';
-export * from './sheet/index.js';
+export * from '~/components/starwind/button/index.js';
+export * from '~/components/starwind/pagination/index.js';
+export * from '~/components/starwind/dialog/index.js';
+export * from '~/components/starwind/sheet/index.js';

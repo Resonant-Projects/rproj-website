@@ -1,11 +1,11 @@
-import * as SheetComponent from './Sheet.astro';
-import * as SheetCloseComponent from './SheetClose.astro';
-import * as SheetContentComponent from './SheetContent.astro';
-import * as SheetDescriptionComponent from './SheetDescription.astro';
-import * as SheetFooterComponent from './SheetFooter.astro';
-import * as SheetHeaderComponent from './SheetHeader.astro';
-import * as SheetTitleComponent from './SheetTitle.astro';
-import * as SheetTriggerComponent from './SheetTrigger.astro';
+import * as SheetComponent from '~/components/starwind/sheet/Sheet.astro';
+import * as SheetCloseComponent from '~/components/starwind/sheet/SheetClose.astro';
+import * as SheetContentComponent from '~/components/starwind/sheet/SheetContent.astro';
+import * as SheetDescriptionComponent from '~/components/starwind/sheet/SheetDescription.astro';
+import * as SheetFooterComponent from '~/components/starwind/sheet/SheetFooter.astro';
+import * as SheetHeaderComponent from '~/components/starwind/sheet/SheetHeader.astro';
+import * as SheetTitleComponent from '~/components/starwind/sheet/SheetTitle.astro';
+import * as SheetTriggerComponent from '~/components/starwind/sheet/SheetTrigger.astro';
 
 const Sheet = SheetComponent.default;
 const SheetClose = SheetCloseComponent.default;

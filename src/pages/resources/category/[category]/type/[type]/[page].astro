@@ -4,33 +4,11 @@ import RrSearch from '~/components/resources/ResourceSearch.astro';
 import RrFilterSheet from '~/components/resources/ResourceFilterSheet.astro';
 import ResourceGrid from '~/components/resources/ResourceGrid.astro';
 import Pagination from '~/components/common/Pagination.astro';
-import { getCollection, type CollectionEntry } from 'astro:content';
+import { getCollection } from 'astro:content';
 import { findResourceCategories, findResourceTypes } from '~/utils/resources';
-import { getNotionEntryTitle } from '~/utils/notion';
-import { getResourceCanonicalSlug } from '~/utils/resource-slug';
-
-type ResourceEntry = CollectionEntry<'resources'>;
+import { filterByCategoryAndType, serializeResourceEntry, type ResourceEntry } from '~/utils/resource-serialization';
 
 export const prerender = true;
-
-const toStringArray = (value: string | string[] | undefined): string[] => {
-  if (Array.isArray(value)) return value.filter(Boolean).map(String);
-  if (typeof value === 'string' && value.trim()) return [value];
-  return [];
-};
-
-const serializeResourceEntry = (entry: ResourceEntry) => {
-  const data = entry.data;
-  return {
-    id: entry.id,
-    title: data.Name || getNotionEntryTitle(entry),
-    summary: data['AI summary'] || '',
-    categories: toStringArray(data.Category),
-    types: toStringArray(data.Type),
-    href: `/resources/${getResourceCanonicalSlug(entry)}`,
-    source: data.Source || data['User Defined URL'] || '',
-  };
-};
 
 export async function getStaticPaths({
   paginate,
@@ -45,17 +23,7 @@ export async function getStaticPaths({
 
   for (const category of allCategories) {
     for (const type of allTypes) {
-      const filteredEntries = allEntries.filter((entry: ResourceEntry) => {
-        const entryCategories = entry.data.Category;
-        const entryTypes = entry.data.Type;
-
-        const categoryMatch = Array.isArray(entryCategories)
-          ? entryCategories.includes(category)
-          : entryCategories === category;
-        const typeMatch = Array.isArray(entryTypes) ? entryTypes.includes(type) : entryTypes === type;
-
-        return categoryMatch && typeMatch;
-      });
+      const filteredEntries = filterByCategoryAndType(allEntries, category, type);
 
       if (filteredEntries.length > 0) {
         paths.push(
@@ -71,7 +39,6 @@ export async function getStaticPaths({
             page: {
               data: [],
               url: {
-                current: 1,
                 prev: undefined,
                 next: undefined,
                 first: undefined,
@@ -103,18 +70,9 @@ const decodedCategory = decodeURIComponent(params.category);
 const decodedType = decodeURIComponent(params.type);
 
 const allEntries = await getCollection('resources');
-const scopedEntries = allEntries.filter((entry: ResourceEntry) => {
-  const entryCategories = entry.data.Category;
-  const entryTypes = entry.data.Type;
-
-  const categoryMatch = Array.isArray(entryCategories)
-    ? entryCategories.includes(decodedCategory)
-    : entryCategories === decodedCategory;
-  const typeMatch = Array.isArray(entryTypes) ? entryTypes.includes(decodedType) : entryTypes === decodedType;
-
-  return categoryMatch && typeMatch;
-});
+const scopedEntries = filterByCategoryAndType(allEntries, decodedCategory, decodedType);
 const serializedEntries = scopedEntries.map(serializeResourceEntry);
+const serializedEntriesJson = JSON.stringify(serializedEntries).replace(/</g, '\\u003c');
 
 const allCategories = await findResourceCategories();
 const allTypes = await findResourceTypes();
@@ -214,13 +172,12 @@ const canonical = new URL(
 
     <div class="hidden" data-resources-search-results></div>
 
-    <script type="application/json" is:inline data-resources-dataset set:html={JSON.stringify(serializedEntries)} />
+    <script type="application/json" is:inline data-resources-dataset set:html={serializedEntriesJson} />
   </div>
 
   <script>
     import { initializeResourcesListing } from '~/scripts/resources-listing';
 
-    initializeResourcesListing();
     document.addEventListener('astro:page-load', initializeResourcesListing);
   </script>
 </Layout>

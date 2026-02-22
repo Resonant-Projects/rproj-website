@@ -1,17 +1,14 @@
 ---
 import type { GetStaticPaths } from 'astro';
-import type { CollectionEntry } from 'astro:content';
 
 import Layout from '~/layouts/PageLayout.astro';
 import { getCollection } from 'astro:content';
 import { getPermalink } from '~/utils/permalinks';
 import { getNotionEntryTitle } from '~/utils/notion';
 import { getResourceCanonicalSlug, getResourceLegacySlug } from '~/utils/resource-slug';
+import { type ResourceEntry, toStringArray } from '~/utils/resource-serialization';
 
 export const prerender = true;
-
-type ResourceEntry = CollectionEntry<'resources'>;
-type ResourceRender = { rendered?: { html?: string } };
 
 type ResourceData = {
   Name?: string;
@@ -22,12 +19,6 @@ type ResourceData = {
   Category?: string[];
   Keywords?: string[];
   'AI summary'?: string;
-};
-
-const toStringArray = (value: string | string[] | undefined): string[] => {
-  if (Array.isArray(value)) return value.filter(Boolean).map(String);
-  if (typeof value === 'string' && value.trim()) return [value];
-  return [];
 };
 
 export const getStaticPaths = (async () => {
@@ -86,7 +77,7 @@ const tags = toStringArray(data.Tags);
 const keywords = toStringArray(data.Keywords);
 const sourceUrl = data.Source || data['User Defined URL'];
 
-const renderedHtml = (entry as unknown as ResourceRender).rendered?.html;
+const renderedHtml = entry.rendered?.html;
 ---
 
 <Layout metadata={{ title, description, canonical }}>

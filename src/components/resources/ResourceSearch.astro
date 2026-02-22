@@ -37,36 +37,14 @@ const { class: className = '', placeholder = 'Search RR Resources...' } = Astro.
 
 <script>
   import { SEARCH_PARAM } from '~/utils/search-routing';
+  import { initSearchForm } from '~/scripts/search-form';
 
-  const initResourceSearch = () => {
-    const searchForm = document.querySelector<HTMLFormElement>('[data-resource-search-form]');
-    const searchInputElement = searchForm?.querySelector<HTMLInputElement>('[data-resource-search-input]');
-
-    if (!searchForm || !searchInputElement || searchForm.dataset.initialized === 'true') {
-      return;
-    }
-
-    searchForm.dataset.initialized = 'true';
-
-    const queryParam = new URLSearchParams(window.location.search).get(SEARCH_PARAM);
-    if (queryParam) {
-      searchInputElement.value = queryParam;
-    }
-
-    searchForm.addEventListener('submit', e => {
-      e.preventDefault();
-      const url = new URL(window.location.href);
-      const queryValue = searchInputElement.value.trim();
-
-      if (queryValue) {
-        url.searchParams.set(SEARCH_PARAM, queryValue);
-      } else {
-        url.searchParams.delete(SEARCH_PARAM);
-      }
-
-      window.location.href = `${url.pathname}${url.search ? `?${url.searchParams.toString()}` : ''}`;
+  const initResourceSearch = () =>
+    initSearchForm({
+      formSelector: '[data-resource-search-form]',
+      inputSelector: '[data-resource-search-input]',
+      searchParam: SEARCH_PARAM,
     });
-  };
 
   document.addEventListener('astro:page-load', initResourceSearch);
   if (document.readyState === 'loading') {

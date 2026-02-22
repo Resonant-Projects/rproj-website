@@ -4,33 +4,11 @@ import RrSearch from '~/components/resources/ResourceSearch.astro';
 import RrFilterSheet from '~/components/resources/ResourceFilterSheet.astro';
 import ResourceGrid from '~/components/resources/ResourceGrid.astro';
 import Pagination from '~/components/common/Pagination.astro';
-import { getCollection, type CollectionEntry } from 'astro:content';
+import { getCollection } from 'astro:content';
 import { findResourceCategories, findResourceTypes } from '~/utils/resources';
-import { getNotionEntryTitle } from '~/utils/notion';
-import { getResourceCanonicalSlug } from '~/utils/resource-slug';
-
-type ResourceEntry = CollectionEntry<'resources'>;
+import { serializeResourceEntry, type ResourceEntry } from '~/utils/resource-serialization';
 
 export const prerender = true;
-
-const toStringArray = (value: string | string[] | undefined): string[] => {
-  if (Array.isArray(value)) return value.filter(Boolean).map(String);
-  if (typeof value === 'string' && value.trim()) return [value];
-  return [];
-};
-
-const serializeResourceEntry = (entry: ResourceEntry) => {
-  const data = entry.data;
-  return {
-    id: entry.id,
-    title: data.Name || getNotionEntryTitle(entry),
-    summary: data['AI summary'] || '',
-    categories: toStringArray(data.Category),
-    types: toStringArray(data.Type),
-    href: `/resources/${getResourceCanonicalSlug(entry)}`,
-    source: data.Source || data['User Defined URL'] || '',
-  };
-};
 
 export async function getStaticPaths({
   paginate,
@@ -60,7 +38,6 @@ export async function getStaticPaths({
           page: {
             data: [],
             url: {
-              current: 1,
               prev: undefined,
               next: undefined,
               first: undefined,
@@ -93,12 +70,14 @@ const scopedEntries = allEntries.filter((entry: ResourceEntry) => {
   return Array.isArray(entryTypes) ? entryTypes.includes(decodedType) : entryTypes === decodedType;
 });
 const serializedEntries = scopedEntries.map(serializeResourceEntry);
+const serializedEntriesJson = JSON.stringify(serializedEntries).replace(/</g, '\\u003c');
 
 const allTypes = await findResourceTypes();
 const allCategories = await findResourceCategories();
 
 const totalPages = Math.max(1, Math.ceil(page.total / page.size));
-const currentPage = Number.parseInt(params.page, 10);
+const parsedPage = Number.parseInt(params.page, 10);
+const currentPage = Math.max(1, Math.min(Number.isNaN(parsedPage) ? 1 : parsedPage, totalPages));
 
 const title = 'RR Resources';
 const pageTitle = `${title}: ${decodedType} (Page ${currentPage} of ${totalPages})`;
@@ -177,13 +156,12 @@ const canonical = new URL(`/resources/type/${params.type}/${currentPage}`, Astro
 
     <div class="hidden" data-resources-search-results></div>
 
-    <script type="application/json" is:inline data-resources-dataset set:html={JSON.stringify(serializedEntries)} />
+    <script type="application/json" is:inline data-resources-dataset set:html={serializedEntriesJson} />
   </div>
 
   <script>
     import { initializeResourcesListing } from '~/scripts/resources-listing';
 
-    initializeResourcesListing();
     document.addEventListener('astro:page-load', initializeResourcesListing);
   </script>
 </Layout>

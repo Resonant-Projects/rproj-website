@@ -177,7 +177,7 @@ const transformPageToCacheEntry = page => {
     public_url: isString(page.public_url) ? page.public_url : null,
     properties,
     ...sanitized,
-    flat: transformed,
+    rawTransformedProperties: transformed,
   };
 
   return {

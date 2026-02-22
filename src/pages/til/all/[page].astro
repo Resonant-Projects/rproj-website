@@ -11,20 +11,18 @@ type TilEntry = CollectionEntry<'til'>;
 
 export const prerender = true;
 
+export const ALL_ENTRIES = await fetchTilEntries();
+
 export async function getStaticPaths({
   paginate,
 }: {
   paginate: (data: TilEntry[], options: { params: Record<string, string>; pageSize: number }) => unknown[];
 }) {
-  const allEntries = await fetchTilEntries();
-
-  return paginate(allEntries, {
+  return paginate(ALL_ENTRIES, {
     params: { tag: 'all' },
     pageSize: 10,
   });
 }
-
-const allEntries = await fetchTilEntries();
 
 const { page } = Astro.props as {
   page: {
@@ -40,14 +38,15 @@ const totalPages = Math.ceil(page.total / page.size);
 const currentPage = Number.parseInt(params.page, 10);
 const title = 'Today I Learned';
 
-const serializedEntries = allEntries.map(entry => ({
+const serializedEntries = ALL_ENTRIES.map(entry => ({
   id: entry.id,
   slug: entry.slug,
   title: entry.data.title || '',
   description: entry.data.description || '',
   tags: entry.data.tags || [],
-  date: entry.data.date.toISOString(),
+  date: entry.data.date instanceof Date && !Number.isNaN(entry.data.date.valueOf()) ? entry.data.date.toISOString() : null,
 }));
+const serializedEntriesJson = JSON.stringify(serializedEntries).replace(/</g, '\\u003c');
 ---
 
 <Layout>
@@ -63,7 +62,7 @@ const serializedEntries = allEntries.map(entry => ({
 
     <div class="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
       <TilFilterSheet tags={await findTilTags()} selectedTag={undefined} />
-      <TilViewToggle currentView="feed" />
+      <TilViewToggle currentView="feed" page={currentPage} />
     </div>
 
     <div data-til-default-content>
@@ -84,13 +83,12 @@ const serializedEntries = allEntries.map(entry => ({
 
     <div class="hidden" data-til-search-results></div>
 
-    <script type="application/json" is:inline data-til-dataset set:html={JSON.stringify(serializedEntries)} />
+    <script type="application/json" is:inline data-til-dataset set:html={serializedEntriesJson} />
   </div>
 
   <script>
     import { initializeTilListing } from '~/scripts/til-listing';
 
-    initializeTilListing();
     document.addEventListener('astro:page-load', initializeTilListing);
   </script>
 </Layout>

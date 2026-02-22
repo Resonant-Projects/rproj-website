@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import AxeBuilder from '@axe-core/playwright';
 
 interface ResourceDatasetEntry {
   id: string;
@@ -113,6 +114,12 @@ const expectUrl = async (
 };
 
 test.describe('Resources static search journey', () => {
+  test('page is accessible', async ({ page }) => {
+    await page.goto('/resources/all/1');
+    const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
+    expect(results.violations).toEqual([]);
+  });
+
   test('redirect preserves search query', async ({ page }) => {
     await page.goto('/resources?search=foo');
     await expectUrl(page, '/resources/all/1', { search: 'foo' });
@@ -146,7 +153,7 @@ test.describe('Resources static search journey', () => {
     const summaryText = (await summary.textContent())?.trim() ?? '';
     expect(summaryText).toMatch(/^Showing\s+[1-9]\d*\s+result/);
 
-    const resultCards = searchResults.locator('.resource-card');
+    const resultCards = searchResults.locator('[data-resource-card]');
     await expect(resultCards.first()).toBeVisible();
     expect(await resultCards.count()).toBeGreaterThan(0);
 
@@ -175,6 +182,12 @@ test.describe('Resources static search journey', () => {
 });
 
 test.describe('TIL static search journey', () => {
+  test('page is accessible', async ({ page }) => {
+    await page.goto('/til/all/1');
+    const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
+    expect(results.violations).toEqual([]);
+  });
+
   test('redirect preserves search query', async ({ page }) => {
     await page.goto('/til?search=foo');
     await expectUrl(page, '/til/all/1', { search: 'foo' });
@@ -201,7 +214,7 @@ test.describe('TIL static search journey', () => {
     const summaryText = (await summary.textContent())?.trim() ?? '';
     expect(summaryText).toMatch(/^Showing\s+[1-9]\d*\s+result/);
 
-    const resultCards = searchResults.locator('.til-card');
+    const resultCards = searchResults.locator('[data-til-card]');
     await expect(resultCards.first()).toBeVisible();
     expect(await resultCards.count()).toBeGreaterThan(0);
   });

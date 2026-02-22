@@ -5,7 +5,7 @@ import TilViewToggle from '~/components/til/TilViewToggle.astro';
 import TilSocialFeed from '~/components/til/TilSocialFeed.astro';
 import Pagination from '~/components/common/Pagination.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
-import { findTilTags } from '~/utils/til';
+import { findTilTags, normalizeTagSlug } from '~/utils/til';
 
 type TilEntry = CollectionEntry<'til'>;
 
@@ -22,7 +22,7 @@ export async function getStaticPaths({
   return allTags.flatMap(tag => {
     const filteredEntries = allEntries.filter((entry: CollectionEntry<'til'>) => {
       const entryTags = entry.data.tags || [];
-      return entryTags.some((entryTag: string) => entryTag.toLowerCase().replace(/\s+/g, '-') === tag.slug);
+      return entryTags.some((entryTag: string) => normalizeTagSlug(entryTag) === tag.slug);
     });
 
     if (filteredEntries.length > 0) {
@@ -52,7 +52,7 @@ const currentTag = allTags.find(tag => tag.slug === params.tag);
 const allEntries = await getCollection('til');
 const scopedEntries = allEntries.filter((entry: CollectionEntry<'til'>) => {
   const entryTags = entry.data.tags || [];
-  return entryTags.some((entryTag: string) => entryTag.toLowerCase().replace(/\s+/g, '-') === params.tag);
+  return entryTags.some((entryTag: string) => normalizeTagSlug(entryTag) === params.tag);
 });
 
 const totalPages = Math.ceil(page.total / page.size);
@@ -67,6 +67,7 @@ const serializedEntries = scopedEntries.map(entry => ({
   tags: entry.data.tags || [],
   date: entry.data.date.toISOString(),
 }));
+const serializedEntriesJson = JSON.stringify(serializedEntries).replace(/</g, '\\u003c');
 ---
 
 <Layout>
@@ -86,7 +87,7 @@ const serializedEntries = scopedEntries.map(entry => ({
 
     <div class="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
       <TilFilterSheet tags={allTags} selectedTag={currentTag?.slug || undefined} />
-      <TilViewToggle currentView="feed" />
+      <TilViewToggle currentView="feed" tag={params.tag} page={currentPage} />
     </div>
 
     <div data-til-default-content>
@@ -121,13 +122,12 @@ const serializedEntries = scopedEntries.map(entry => ({
 
     <div class="hidden" data-til-search-results></div>
 
-    <script type="application/json" is:inline data-til-dataset set:html={JSON.stringify(serializedEntries)} />
+    <script type="application/json" is:inline data-til-dataset set:html={serializedEntriesJson} />
   </div>
 
   <script>
     import { initializeTilListing } from '~/scripts/til-listing';
 
-    initializeTilListing();
     document.addEventListener('astro:page-load', initializeTilListing);
   </script>
 </Layout>

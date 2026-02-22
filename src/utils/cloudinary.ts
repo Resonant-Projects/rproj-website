@@ -104,7 +104,12 @@ export interface ProcessedImage {
 }
 
 function buildFallbackImageUrl(width = 400, height = 300, message = 'Image unavailable'): string {
-  const safeMessage = message.replace(/[<>&"]/g, '');
+  const safeMessage = message
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&apos;');
   const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 ${width} ${height}'><rect width='100%' height='100%' fill='#f3f4f6'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='#4b5563' font-family='system-ui,sans-serif' font-size='16'>${safeMessage}</text></svg>`;
   return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
 }
@@ -211,7 +216,7 @@ export async function getCategoryImages(category: ImageCategory, count: number =
   const categoryFolder = IMAGE_CATEGORIES[category];
 
   if (!hasCloudinaryServerCredentials) {
-    return generateFallbackImages(category, count);
+    return generateFallbackImages(category, count, true);
   }
 
   try {
@@ -271,23 +276,36 @@ export async function getCategoryImages(category: ImageCategory, count: number =
 /**
  * Generate fallback images when Cloudinary search fails or returns no results
  */
-function generateFallbackImages(category: ImageCategory, count: number): ProcessedImage[] {
+function generateFallbackImages(category: ImageCategory, count: number, forceSvgFallback = false): ProcessedImage[] {
   const categoryFolder = IMAGE_CATEGORIES[category];
 
   return Array.from({ length: count }, (_, index) => {
     const imageNumber = index + 1;
     const publicId = `${categoryFolder}/sample-${imageNumber}`;
+    const title = `${category.charAt(0).toUpperCase() + category.slice(1)} Sample ${imageNumber}`;
+    const sourceUrl = forceSvgFallback
+      ? buildFallbackImageUrl(1200, 900, title)
+      : getCloudinaryImageUrl(publicId, { preset: 'portfolio' });
+    const thumbnailUrl = forceSvgFallback
+      ? buildFallbackImageUrl(300, 225, title)
+      : getCloudinaryImageUrl(publicId, { preset: 'thumbnail' });
+    const responsiveUrls = forceSvgFallback
+      ? RESPONSIVE_BREAKPOINTS.map(width => ({
+          width,
+          url: buildFallbackImageUrl(width, Math.round(width * 0.75), title),
+        }))
+      : getResponsiveImageUrls(publicId, {
+          preset: 'responsive',
+          aspectRatio: '4:3',
+        });
 
     return {
       publicId,
-      src: getCloudinaryImageUrl(publicId, { preset: 'portfolio' }),
+      src: sourceUrl,
       alt: `${category} photography sample ${imageNumber}`,
-      title: `${category.charAt(0).toUpperCase() + category.slice(1)} Sample ${imageNumber}`,
-      thumbnail: getCloudinaryImageUrl(publicId, { preset: 'thumbnail' }),
-      responsive: getResponsiveImageUrls(publicId, {
-        preset: 'responsive',
-        aspectRatio: '4:3',
-      }),
+      title,
+      thumbnail: thumbnailUrl,
+      responsive: responsiveUrls,
     };
   });
 }

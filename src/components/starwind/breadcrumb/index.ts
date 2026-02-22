@@ -1,10 +1,10 @@
-import * as BreadcrumbComponent from './Breadcrumb.astro';
-import * as BreadcrumbEllipsisComponent from './BreadcrumbEllipsis.astro';
-import * as BreadcrumbItemComponent from './BreadcrumbItem.astro';
-import * as BreadcrumbLinkComponent from './BreadcrumbLink.astro';
-import * as BreadcrumbListComponent from './BreadcrumbList.astro';
-import * as BreadcrumbPageComponent from './BreadcrumbPage.astro';
-import * as BreadcrumbSeparatorComponent from './BreadcrumbSeparator.astro';
+import * as BreadcrumbComponent from '~/components/starwind/breadcrumb/Breadcrumb.astro';
+import * as BreadcrumbEllipsisComponent from '~/components/starwind/breadcrumb/BreadcrumbEllipsis.astro';
+import * as BreadcrumbItemComponent from '~/components/starwind/breadcrumb/BreadcrumbItem.astro';
+import * as BreadcrumbLinkComponent from '~/components/starwind/breadcrumb/BreadcrumbLink.astro';
+import * as BreadcrumbListComponent from '~/components/starwind/breadcrumb/BreadcrumbList.astro';
+import * as BreadcrumbPageComponent from '~/components/starwind/breadcrumb/BreadcrumbPage.astro';
+import * as BreadcrumbSeparatorComponent from '~/components/starwind/breadcrumb/BreadcrumbSeparator.astro';
 
 const Breadcrumb = BreadcrumbComponent.default;
 const BreadcrumbEllipsis = BreadcrumbEllipsisComponent.default;

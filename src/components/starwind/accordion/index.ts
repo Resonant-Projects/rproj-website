@@ -1,7 +1,7 @@
-import * as AccordionComponent from './Accordion.astro';
-import * as AccordionContentComponent from './AccordionContent.astro';
-import * as AccordionItemComponent from './AccordionItem.astro';
-import * as AccordionTriggerComponent from './AccordionTrigger.astro';
+import * as AccordionComponent from '~/components/starwind/accordion/Accordion.astro';
+import * as AccordionContentComponent from '~/components/starwind/accordion/AccordionContent.astro';
+import * as AccordionItemComponent from '~/components/starwind/accordion/AccordionItem.astro';
+import * as AccordionTriggerComponent from '~/components/starwind/accordion/AccordionTrigger.astro';
 
 const Accordion = AccordionComponent.default;
 const AccordionContent = AccordionContentComponent.default;

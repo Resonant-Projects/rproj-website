@@ -1,4 +1,5 @@
 import { SEARCH_PARAM } from '~/utils/search-routing';
+import { escapeHtml } from '~/utils/html-escape';
 
 interface TilListingEntry {
   id: string;
@@ -8,14 +9,6 @@ interface TilListingEntry {
   tags: string[];
   date: string;
 }
-
-const escapeHtml = (value: string): string =>
-  value
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#39;');
 
 const slugifyTag = (tag: string): string => tag.toLowerCase().replace(/\s+/g, '-');
 
@@ -36,7 +29,7 @@ const renderTilCard = (entry: TilListingEntry): string => {
   const maxLength = 150;
   const description = entry.description.length > maxLength ? `${entry.description.slice(0, maxLength)}...` : entry.description;
 
-  return `<article class="til-card" data-til-entry-id="${escapeHtml(entry.id)}">
+  return `<article class="til-card" data-til-entry-id="${escapeHtml(entry.id)}" data-til-card>
     <div class="flex h-full flex-col rounded-lg border border-border bg-card p-6 transition-all duration-300 hover:shadow-md">
       <div class="mb-2 flex items-start justify-between">
         <span class="text-sm text-muted-foreground">${escapeHtml(formatDate(entry.date))}</span>
@@ -84,6 +77,13 @@ const applySearch = (root: HTMLElement) => {
   const summary = root.querySelector<HTMLElement>('[data-search-summary]');
 
   if (!datasetScript || !searchResults || !defaultContent) {
+    if (import.meta.env.DEV) {
+      const missing: string[] = [];
+      if (!datasetScript) missing.push('datasetScript');
+      if (!searchResults) missing.push('searchResults');
+      if (!defaultContent) missing.push('defaultContent');
+      console.warn('[til-listing] Missing required listing elements.', { missing, root });
+    }
     return;
   }
 

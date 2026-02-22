@@ -37,36 +37,14 @@ const { class: className = '', placeholder = 'Search TIL entries...' } = Astro.p
 
 <script>
   import { SEARCH_PARAM } from '~/utils/search-routing';
+  import { initSearchForm } from '~/scripts/search-form';
 
-  const initTilSearch = () => {
-    const searchForm = document.querySelector<HTMLFormElement>('[data-til-search-form]');
-    const searchInput = searchForm?.querySelector<HTMLInputElement>('[data-til-search-input]');
-
-    if (!searchForm || !searchInput || searchForm.dataset.initialized === 'true') {
-      return;
-    }
-
-    searchForm.dataset.initialized = 'true';
-
-    const queryParam = new URLSearchParams(window.location.search).get(SEARCH_PARAM);
-    if (queryParam) {
-      searchInput.value = queryParam;
-    }
-
-    searchForm.addEventListener('submit', e => {
-      e.preventDefault();
-      const url = new URL(window.location.href);
-      const query = searchInput.value.trim();
-
-      if (query) {
-        url.searchParams.set(SEARCH_PARAM, query);
-      } else {
-        url.searchParams.delete(SEARCH_PARAM);
-      }
-
-      window.location.href = `${url.pathname}${url.search ? `?${url.searchParams.toString()}` : ''}`;
+  const initTilSearch = () =>
+    initSearchForm({
+      formSelector: '[data-til-search-form]',
+      inputSelector: '[data-til-search-input]',
+      searchParam: SEARCH_PARAM,
     });
-  };
 
   document.addEventListener('astro:page-load', initTilSearch);
   if (document.readyState === 'loading') {

@@ -1,4 +1,6 @@
 import { SEARCH_PARAM } from '~/utils/search-routing';
+import { toStringArray } from '~/utils/string-array';
+import { escapeHtml } from '~/utils/html-escape';
 
 interface ResourceListingEntry {
   id: string;
@@ -10,22 +12,23 @@ interface ResourceListingEntry {
   source?: string;
 }
 
-const escapeHtml = (value: string): string =>
-  value
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#39;');
+const isSafeSourceUrl = (value: string): boolean => {
+  try {
+    const parsed = new URL(value);
+    return parsed.protocol === 'http:' || parsed.protocol === 'https:';
+  } catch {
+    return false;
+  }
+};
 
 const renderCard = (entry: ResourceListingEntry): string => {
   const category = entry.categories[0];
   const type = entry.types[0];
-  const sourceMarkup = entry.source
+  const sourceMarkup = entry.source && isSafeSourceUrl(entry.source)
     ? `<a href="${escapeHtml(entry.source)}" target="_blank" rel="noopener noreferrer" class="text-xs font-medium text-primary transition-colors hover:text-accent">View Source →</a>`
     : '';
 
-  return `<article class="resource-card group rounded-lg border border-border bg-card p-6 shadow-sm transition-all hover:shadow-lg">
+  return `<article class="resource-card group rounded-lg border border-border bg-card p-6 shadow-sm transition-all hover:shadow-lg" data-resource-card>
     <div class="mb-3">
       <h3 class="mb-2 text-lg font-semibold leading-tight">
         <a href="${escapeHtml(entry.href)}" class="text-card-foreground transition-colors hover:text-primary group-hover:underline">${escapeHtml(entry.title)}</a>
@@ -57,18 +60,6 @@ const renderCard = (entry: ResourceListingEntry): string => {
   </article>`;
 };
 
-const normalizeArray = (value: unknown): string[] => {
-  if (Array.isArray(value)) {
-    return value.map(String).filter(Boolean);
-  }
-
-  if (typeof value === 'string' && value.trim()) {
-    return [value.trim()];
-  }
-
-  return [];
-};
-
 const parseEntries = (raw: unknown): ResourceListingEntry[] => {
   if (!Array.isArray(raw)) {
     return [];
@@ -82,8 +73,8 @@ const parseEntries = (raw: unknown): ResourceListingEntry[] => {
         id: String(record.id ?? ''),
         title: String(record.title ?? ''),
         summary: String(record.summary ?? ''),
-        categories: normalizeArray(record.categories),
-        types: normalizeArray(record.types),
+        categories: toStringArray(record.categories as string | string[] | undefined),
+        types: toStringArray(record.types as string | string[] | undefined),
         href: String(record.href ?? ''),
         source: typeof record.source === 'string' ? record.source : undefined,
       };

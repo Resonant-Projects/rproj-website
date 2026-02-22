@@ -12,6 +12,8 @@ export interface WeeklyDateRange {
 
 export type TilEntry = CollectionEntry<'til'>;
 
+export const normalizeTagSlug = (tag: string): string => tag.toLowerCase().replace(/\s+/g, '-');
+
 /**
  * Fetch all TIL entries
  */
@@ -45,7 +47,7 @@ export const findTilTags = async (): Promise<Taxonomy[]> => {
   entries.forEach(entry => {
     if (Array.isArray(entry.data.tags)) {
       entry.data.tags.forEach(tag => {
-        const slug = tag.toLowerCase().replace(/\s+/g, '-');
+        const slug = normalizeTagSlug(tag);
         tagMap.set(slug, { slug, title: tag });
       });
     }
@@ -61,7 +63,7 @@ export const findTilEntriesByTag = async (tag: string): Promise<TilEntry[]> => {
   const entries = await fetchTilEntries();
   const normalizedTag = tag.toLowerCase();
 
-  return entries.filter(entry => entry.data.tags.some(t => t.toLowerCase().replace(/\s+/g, '-') === normalizedTag));
+  return entries.filter(entry => entry.data.tags.some(t => normalizeTagSlug(t) === normalizedTag));
 };
 
 /**

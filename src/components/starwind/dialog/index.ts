@@ -1,11 +1,11 @@
-import * as DialogComponent from './Dialog.astro';
-import * as DialogCloseComponent from './DialogClose.astro';
-import * as DialogContentComponent from './DialogContent.astro';
-import * as DialogDescriptionComponent from './DialogDescription.astro';
-import * as DialogFooterComponent from './DialogFooter.astro';
-import * as DialogHeaderComponent from './DialogHeader.astro';
-import * as DialogTitleComponent from './DialogTitle.astro';
-import * as DialogTriggerComponent from './DialogTrigger.astro';
+import * as DialogComponent from '~/components/starwind/dialog/Dialog.astro';
+import * as DialogCloseComponent from '~/components/starwind/dialog/DialogClose.astro';
+import * as DialogContentComponent from '~/components/starwind/dialog/DialogContent.astro';
+import * as DialogDescriptionComponent from '~/components/starwind/dialog/DialogDescription.astro';
+import * as DialogFooterComponent from '~/components/starwind/dialog/DialogFooter.astro';
+import * as DialogHeaderComponent from '~/components/starwind/dialog/DialogHeader.astro';
+import * as DialogTitleComponent from '~/components/starwind/dialog/DialogTitle.astro';
+import * as DialogTriggerComponent from '~/components/starwind/dialog/DialogTrigger.astro';
 
 const Dialog = DialogComponent.default;
 const DialogClose = DialogCloseComponent.default;

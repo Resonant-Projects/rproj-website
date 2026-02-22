@@ -24,7 +24,9 @@ export default defineConfig({
     trace: 'on-first-retry',
   },
 
-  /* Configure projects for major browsers */
+  /* Configure projects for major browsers.
+   * CI currently runs chromium only as a speed optimization; schedule periodic firefox/webkit runs separately.
+   */
   projects: [
     {
       name: 'chromium',

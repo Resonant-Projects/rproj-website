@@ -13,8 +13,8 @@ const parseResourcesCache = (source: string): Array<Record<string, unknown>> => 
     const id = typeof value.id === 'string' && value.id ? value.id : `cache-${index}`;
     const sourceData = (value.data as Record<string, unknown> | undefined) ?? value;
     return {
-      id,
       ...sourceData,
+      id,
     };
   });
 };
@@ -131,8 +131,8 @@ const tilCollection = defineCollection({
     }),
 });
 
-const notionToken = process.env.NOTION_TOKEN;
-const notionResourcesDatabaseId = process.env.NOTION_RR_RESOURCES_ID;
+const notionToken = import.meta.env.NOTION_TOKEN;
+const notionResourcesDatabaseId = import.meta.env.NOTION_RR_RESOURCES_ID;
 
 const resourcesLoader =
   notionToken && notionResourcesDatabaseId && notionLoaderFactory
@@ -151,6 +151,7 @@ export const collections = {
         properties: z.any().optional(),
         // Flattened map of all property values for convenient access
         flat: z.record(z.unknown()).optional(),
+        rawTransformedProperties: z.record(z.unknown()).optional(),
         Name: z.string().optional(),
         Source: z.string().url().optional(),
         'User Defined URL': z.string().url().optional(),

@@ -1,4 +1,4 @@
-import Button from './Button.astro';
+import Button from '~/components/starwind/button/Button.astro';
 
 export { Button as StarwindButton };
 export { Button };

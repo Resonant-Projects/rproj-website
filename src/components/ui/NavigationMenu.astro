@@ -24,7 +24,7 @@ const { links = [], className = '', orientation = 'horizontal', showChevrons = t
 const currentPath = new URL(Astro.url).pathname;
 ---
 
-<nav class={`navigation-menu ${className}`} role="navigation" aria-label="Main navigation">
+<nav class={`navigation-menu ${className}`} aria-label="Main navigation">
   <ul class={`nav-list nav-list--${orientation}`}>
     {
       links.map((link, index) => (
@@ -280,8 +280,9 @@ const currentPath = new URL(Astro.url).pathname;
   const initNavigationMenus = () => {
     const dropdownButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('.nav-link--dropdown'));
 
-    const closeDropdowns = (skipButton?: HTMLButtonElement) => {
-      dropdownButtons.forEach(button => {
+    const closeAllDropdowns = (skipButton?: HTMLButtonElement) => {
+      const liveButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('.nav-link--dropdown'));
+      liveButtons.forEach(button => {
         if (!skipButton || button !== skipButton) {
           button.setAttribute('aria-expanded', 'false');
         }
@@ -300,7 +301,7 @@ const currentPath = new URL(Astro.url).pathname;
 
       const toggleMenu = () => {
         const isExpanded = button.getAttribute('aria-expanded') === 'true';
-        closeDropdowns(button);
+        closeAllDropdowns(button);
         button.setAttribute('aria-expanded', (!isExpanded).toString());
       };
 
@@ -320,7 +321,7 @@ const currentPath = new URL(Astro.url).pathname;
 
         if (event.key === 'ArrowDown') {
           event.preventDefault();
-          closeDropdowns(button);
+          closeAllDropdowns(button);
           button.setAttribute('aria-expanded', 'true');
           menuItems[0]?.focus();
           return;
@@ -328,7 +329,7 @@ const currentPath = new URL(Astro.url).pathname;
 
         if (event.key === 'ArrowUp') {
           event.preventDefault();
-          closeDropdowns(button);
+          closeAllDropdowns(button);
           button.setAttribute('aria-expanded', 'true');
           menuItems[menuItems.length - 1]?.focus();
           return;
@@ -342,6 +343,29 @@ const currentPath = new URL(Astro.url).pathname;
       });
 
       menu?.addEventListener('keydown', event => {
+        const focusableItems = Array.from(
+          menu.querySelectorAll<HTMLElement>(
+            '[role="menuitem"], a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+          )
+        );
+        const currentIndex = focusableItems.findIndex(item => item === document.activeElement);
+
+        if (event.key === 'ArrowDown') {
+          event.preventDefault();
+          if (!focusableItems.length) return;
+          const nextIndex = currentIndex === -1 || currentIndex === focusableItems.length - 1 ? 0 : currentIndex + 1;
+          focusableItems[nextIndex]?.focus();
+          return;
+        }
+
+        if (event.key === 'ArrowUp') {
+          event.preventDefault();
+          if (!focusableItems.length) return;
+          const previousIndex = currentIndex <= 0 ? focusableItems.length - 1 : currentIndex - 1;
+          focusableItems[previousIndex]?.focus();
+          return;
+        }
+
         if (event.key === 'Escape') {
           event.preventDefault();
           button.setAttribute('aria-expanded', 'false');
@@ -359,17 +383,19 @@ const currentPath = new URL(Astro.url).pathname;
     document.addEventListener('click', event => {
       const target = event.target as Element;
       if (!target.closest('.nav-item--dropdown')) {
-        closeDropdowns();
+        closeAllDropdowns();
       }
     });
 
     document.addEventListener('keydown', event => {
       if (event.key === 'Escape') {
-        closeDropdowns();
+        closeAllDropdowns();
       }
     });
   };
 
+  // initNavigationMenus runs on astro:page-load for View Transitions and on DOMContentLoaded/immediate for full loads;
+  // per-button dataset.initialized and window.__navMenuOutsideClickBound keep this dual path idempotent.
   document.addEventListener('astro:page-load', initNavigationMenus);
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initNavigationMenus);

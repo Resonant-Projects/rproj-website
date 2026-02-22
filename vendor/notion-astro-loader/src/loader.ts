@@ -187,7 +187,6 @@ export function notionLoader({
 
       try {
         let pageCount = 0;
-        // const pageLimit = 5; // cap during debugging to avoid rate limits
 
         for await (const page of queryWithBackoff()) {
           if (!isFullPage(page)) {
@@ -195,9 +194,6 @@ export function notionLoader({
           }
 
           pageCount++;
-          // if (pageCount > pageLimit) {
-          //   break;
-          // }
 
           const log_pg = log_db.fork(`${log_db.label}/${page.id.slice(0, 6)}`);
 
@@ -259,7 +255,8 @@ export function notionLoader({
                     attempts++;
                     continue;
                   }
-                  throw e;
+                  log_pg.error(`Skipping page after render retries exhausted. page.id=${page.id} error=${msg}`);
+                  break;
                 }
               }
             })();
@@ -291,6 +288,8 @@ export function notionLoader({
         await Promise.all(renderPromises);
         log_db.info(`Rendered ${renderPromises.length} pages`);
       } catch (error) {
+        // Best-effort fallback: this warning uses cachedPageCount captured before query/render work.
+        // Because store.set may have partially succeeded before this catch, current store size can differ.
         log_db.warn(
           `[notion-loader] Query failed: ${error instanceof Error ? error.message : String(error)}`
         );

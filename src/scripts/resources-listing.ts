@@ -29,9 +29,10 @@ const renderCard = (entry: ResourceListingEntry): string => {
   const category = entry.categories[0];
   const type = entry.types[0];
   const safeHref = isSafeUrl(entry.href) ? escapeHtml(entry.href) : '#';
-  const sourceMarkup = entry.source && isSafeUrl(entry.source)
-    ? `<a href="${escapeHtml(entry.source)}" target="_blank" rel="noopener noreferrer" class="text-xs font-medium text-primary transition-colors hover:text-accent">View Source →</a>`
-    : '';
+  const sourceMarkup =
+    entry.source && isSafeUrl(entry.source)
+      ? `<a href="${escapeHtml(entry.source)}" target="_blank" rel="noopener noreferrer" class="text-xs font-medium text-primary transition-colors hover:text-accent">View Source →</a>`
+      : '';
 
   return `<article class="resource-card group rounded-lg border border-border bg-card p-6 shadow-sm transition-all hover:shadow-lg" data-resource-card>
     <div class="mb-3">

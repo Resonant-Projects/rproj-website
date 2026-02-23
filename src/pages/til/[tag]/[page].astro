@@ -65,9 +65,8 @@ const serializedEntries = scopedEntries.map(entry => ({
   title: entry.data.title || '',
   description: entry.data.description || '',
   tags: entry.data.tags || [],
-  date: entry.data.date instanceof Date && !Number.isNaN(entry.data.date.valueOf())
-      ? entry.data.date.toISOString()
-      : null,
+  date:
+    entry.data.date instanceof Date && !Number.isNaN(entry.data.date.valueOf()) ? entry.data.date.toISOString() : null,
 }));
 const serializedEntriesJson = JSON.stringify(serializedEntries).replace(/</g, '\\u003c');
 ---
@@ -82,7 +81,11 @@ const serializedEntriesJson = JSON.stringify(serializedEntries).replace(/</g, '\
       </h1>
 
       {
-        currentTag && <p class="text-muted-foreground mb-4">{page.total} entries tagged with #{currentTag.title}</p>
+        currentTag && (
+          <p class="text-muted-foreground mb-4">
+            {page.total} entries tagged with #{currentTag.title}
+          </p>
+        )
       }
       <p class="text-muted-foreground mt-2 hidden text-sm" data-search-summary></p>
     </div>

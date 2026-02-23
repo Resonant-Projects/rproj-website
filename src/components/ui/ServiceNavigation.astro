@@ -73,11 +73,13 @@ const classes = getVariantClasses();
     <nav aria-label="Service navigation" class={`service-navigation ${className}`}>
       <div class={classes.container}>
         {
-          services.map((service) => (
+          services.map(service => (
             <a
               href={service.href}
               class={`${classes.item} ${
-                service.isActive ? 'text-primary-foreground border-primary bg-primary' : 'bg-card hover:border-primary/20'
+                service.isActive
+                  ? 'text-primary-foreground border-primary bg-primary'
+                  : 'hover:border-primary/20 bg-card'
               }`}
               aria-current={service.isActive ? 'page' : undefined}
               title={`${service.title}: ${service.description}`}

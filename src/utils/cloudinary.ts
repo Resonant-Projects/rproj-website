@@ -1,14 +1,13 @@
 import { getCldImageUrl, getCldOgImageUrl } from 'astro-cloudinary/helpers';
 import { v2 as cloudinary } from 'cloudinary';
+import { escapeHtml } from '~/utils/html-escape';
 
 // Environment variables with validation
 const CLOUDINARY_CLOUD_NAME = import.meta.env.PUBLIC_CLOUDINARY_CLOUD_NAME;
 const CLOUDINARY_API_KEY = import.meta.env.PUBLIC_CLOUDINARY_API_KEY;
 const CLOUDINARY_API_SECRET = import.meta.env.CLOUDINARY_API_SECRET;
-
-if (!CLOUDINARY_CLOUD_NAME) {
-  throw new Error('PUBLIC_CLOUDINARY_CLOUD_NAME environment variable is required');
-}
+const hasCloudinaryCloudName = Boolean(CLOUDINARY_CLOUD_NAME);
+const hasCloudinaryServerCredentials = Boolean(CLOUDINARY_CLOUD_NAME && CLOUDINARY_API_KEY && CLOUDINARY_API_SECRET);
 
 // Image transformation presets for different use cases
 export const CLOUDINARY_PRESETS = {
@@ -105,6 +104,12 @@ export interface ProcessedImage {
   responsive: Array<{ width: number; url: string }>;
 }
 
+function buildFallbackImageUrl(width = 400, height = 300, message = 'Image unavailable'): string {
+  const safeMessage = escapeHtml(message);
+  const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 ${width} ${height}'><rect width='100%' height='100%' fill='#f3f4f6'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='#4b5563' font-family='system-ui,sans-serif' font-size='16'>${safeMessage}</text></svg>`;
+  return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+}
+
 /**
  * Generate a Cloudinary image URL with optimizations
  */
@@ -127,6 +132,12 @@ export function getCloudinaryImageUrl(
 
   // Merge with custom options (custom options override preset)
   const finalOptions = { ...baseOptions, ...customOptions };
+  const fallbackWidth = typeof finalOptions.width === 'number' ? finalOptions.width : 400;
+  const fallbackHeight = typeof finalOptions.height === 'number' ? finalOptions.height : 300;
+
+  if (!hasCloudinaryCloudName) {
+    return buildFallbackImageUrl(fallbackWidth, fallbackHeight);
+  }
 
   try {
     return getCldImageUrl({
@@ -142,7 +153,7 @@ export function getCloudinaryImageUrl(
     });
 
     // Return a fallback URL
-    return `https://via.placeholder.com/${finalOptions.width || 400}x${finalOptions.height || 300}?text=Image+Error`;
+    return buildFallbackImageUrl(fallbackWidth, fallbackHeight);
   }
 }
 
@@ -199,6 +210,10 @@ export function getResponsiveImageUrls(
  */
 export async function getCategoryImages(category: ImageCategory, count: number = 8): Promise<ProcessedImage[]> {
   const categoryFolder = IMAGE_CATEGORIES[category];
+
+  if (!hasCloudinaryServerCredentials) {
+    return generateFallbackImages(category, count, true);
+  }
 
   try {
     // Configure Cloudinary if not already configured
@@ -257,23 +272,36 @@ export async function getCategoryImages(category: ImageCategory, count: number =
 /**
  * Generate fallback images when Cloudinary search fails or returns no results
  */
-function generateFallbackImages(category: ImageCategory, count: number): ProcessedImage[] {
+function generateFallbackImages(category: ImageCategory, count: number, forceSvgFallback = false): ProcessedImage[] {
   const categoryFolder = IMAGE_CATEGORIES[category];
 
   return Array.from({ length: count }, (_, index) => {
     const imageNumber = index + 1;
     const publicId = `${categoryFolder}/sample-${imageNumber}`;
+    const title = `${category.charAt(0).toUpperCase() + category.slice(1)} Sample ${imageNumber}`;
+    const sourceUrl = forceSvgFallback
+      ? buildFallbackImageUrl(1200, 900, title)
+      : getCloudinaryImageUrl(publicId, { preset: 'portfolio' });
+    const thumbnailUrl = forceSvgFallback
+      ? buildFallbackImageUrl(300, 225, title)
+      : getCloudinaryImageUrl(publicId, { preset: 'thumbnail' });
+    const responsiveUrls = forceSvgFallback
+      ? RESPONSIVE_BREAKPOINTS.map(width => ({
+          width,
+          url: buildFallbackImageUrl(width, Math.round(width * 0.75), title),
+        }))
+      : getResponsiveImageUrls(publicId, {
+          preset: 'responsive',
+          aspectRatio: '4:3',
+        });
 
     return {
       publicId,
-      src: getCloudinaryImageUrl(publicId, { preset: 'portfolio' }),
+      src: sourceUrl,
       alt: `${category} photography sample ${imageNumber}`,
-      title: `${category.charAt(0).toUpperCase() + category.slice(1)} Sample ${imageNumber}`,
-      thumbnail: getCloudinaryImageUrl(publicId, { preset: 'thumbnail' }),
-      responsive: getResponsiveImageUrls(publicId, {
-        preset: 'responsive',
-        aspectRatio: '4:3',
-      }),
+      title,
+      thumbnail: thumbnailUrl,
+      responsive: responsiveUrls,
     };
   });
 }
@@ -282,6 +310,10 @@ function generateFallbackImages(category: ImageCategory, count: number): Process
  * Generate OG image URL for social media sharing
  */
 export function getOgImageUrl(title: string, subtitle?: string, backgroundImage?: string): string {
+  if (!hasCloudinaryCloudName) {
+    return '';
+  }
+
   try {
     return getCldOgImageUrl({
       src: backgroundImage || 'og-background',

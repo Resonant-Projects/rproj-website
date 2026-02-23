@@ -79,6 +79,24 @@ Access the Resources section at: [https://www.resonantprojects.art/resources](ht
 
 ---
 
+## ✅ E2E Testing Setup
+
+Before running Playwright e2e tests for resources/static-search journeys, refresh the Notion-backed fallback cache:
+
+```bash
+bun run resources:cache:refresh
+```
+
+Then run:
+
+```bash
+bun run test:e2e
+```
+
+If `src/content/resources-cache.json` is empty, the resources core-journey test intentionally fails fast with setup guidance.
+
+---
+
 ## 📬 Contact
 
 Questions, collaborations, or want to request a service?  

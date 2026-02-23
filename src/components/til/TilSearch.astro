@@ -1,4 +1,6 @@
 ---
+import { SEARCH_PARAM } from '~/utils/search-routing';
+
 export interface Props {
   class?: string;
   placeholder?: string;
@@ -8,13 +10,14 @@ const { class: className = '', placeholder = 'Search TIL entries...' } = Astro.p
 ---
 
 <div class={`til-search ${className}`}>
-  <form id="search-form" class="relative">
+  <form id="til-search-form" class="relative" data-til-search-form>
     <input
       type="text"
-      id="search-input"
-      name="q"
+      id="til-search-input"
+      name={SEARCH_PARAM}
       placeholder={placeholder}
       class="bg-muted/50 placeholder-muted-foreground w-full rounded-md border border-border px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+      data-til-search-input
     />
     <button
       type="submit"
@@ -33,25 +36,20 @@ const { class: className = '', placeholder = 'Search TIL entries...' } = Astro.p
 </div>
 
 <script>
-  // Client-side search functionality
-  document.addEventListener('DOMContentLoaded', () => {
-    const searchForm = document.getElementById('search-form');
-    const searchInput = document.getElementById('search-input') as HTMLInputElement;
+  import { SEARCH_PARAM } from '~/utils/search-routing';
+  import { initSearchForm } from '~/scripts/search-form';
 
-    // Check URL for search query
-    const urlParams = new URLSearchParams(window.location.search);
-    const queryParam = urlParams.get('q');
-    if (queryParam) {
-      searchInput.value = queryParam;
-      // Trigger search...
-    }
-
-    searchForm?.addEventListener('submit', e => {
-      e.preventDefault();
-      const query = searchInput.value.trim();
-      if (query) {
-        window.location.href = `/til?q=${encodeURIComponent(query)}`;
-      }
+  const initTilSearch = () =>
+    initSearchForm({
+      formSelector: '[data-til-search-form]',
+      inputSelector: '[data-til-search-input]',
+      searchParam: SEARCH_PARAM,
     });
-  });
+
+  document.addEventListener('astro:page-load', initTilSearch);
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initTilSearch);
+  } else {
+    initTilSearch();
+  }
 </script>

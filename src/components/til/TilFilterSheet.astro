@@ -3,6 +3,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '~/co
 import { Button } from '~/components/starwind/button';
 import Filter from '@tabler/icons/outline/filter.svg';
 import type { Taxonomy } from '~/types';
+import { SEARCH_PARAM, buildTilUrl } from '~/utils/search-routing';
 
 export interface Props {
   tags: Taxonomy[];
@@ -14,21 +15,12 @@ const { tags, selectedTag, class: className = '' } = Astro.props;
 
 // Helper function to create filter URL
 const createFilterUrl = (tag?: string, search?: string) => {
-  const params = new URLSearchParams();
-  if (search) params.set('search', search);
-
-  const queryString = params.toString();
-
-  if (tag) {
-    return `/til/${tag}/1${queryString ? `?${queryString}` : ''}`;
-  } else {
-    return `/til/all/1${queryString ? `?${queryString}` : ''}`;
-  }
+  return buildTilUrl({ tag, page: 1 }, search);
 };
 
 // Get current search query from URL
 const urlParams = new URLSearchParams(Astro.url.search);
-const searchQuery = urlParams.get('search');
+const searchQuery = urlParams.get(SEARCH_PARAM);
 ---
 
 <div class={`til-filter-sheet ${className}`}>
@@ -84,25 +76,6 @@ const searchQuery = urlParams.get('search');
           </div>
         </div>
 
-        <!-- Clear All Filters -->
-        {
-          selectedTag && (
-            <div class="bg-destructive/10 border-destructive/20 rounded-lg border p-4">
-              <div class="flex items-center justify-between">
-                <div>
-                  <h3 class="mb-1 text-sm font-medium text-foreground">Active Filters</h3>
-                  <p class="text-muted-foreground text-xs">Clear all applied filters</p>
-                </div>
-                <a
-                  href={createFilterUrl(undefined, searchQuery || undefined)}
-                  class="text-destructive border-destructive/20 hover:bg-destructive/10 hover:border-destructive/30 inline-flex items-center rounded-md border bg-background px-4 py-2 text-sm font-medium transition-all duration-200"
-                >
-                  Clear all filters
-                </a>
-              </div>
-            </div>
-          )
-        }
       </div>
     </SheetContent>
   </Sheet>

@@ -3,6 +3,7 @@ dist/
 .output/
 public/pagefind/
 src/content/notion/images
+src/content/resources-cache.json
 
 # dependencies
 node_modules/

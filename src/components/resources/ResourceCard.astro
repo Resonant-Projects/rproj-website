@@ -1,8 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import type { ResourceData } from '../../types/resources.ts';
-import { getNotionEntryTitle } from '../../utils/notion';
-import { cleanSlug } from '../../utils/permalinks';
+import { getResourceCanonicalSlug } from '~/utils/resource-slug';
 
 export interface Props {
   entry: CollectionEntry<'resources'>;
@@ -18,15 +17,26 @@ const type = Array.isArray(data.Type) ? data.Type[0] : data.Type;
 const category = Array.isArray(data.Category) ? data.Category[0] : data.Category;
 const source = data.Source || data['User Defined URL'];
 const summary = data['AI summary'];
+const safeSource = (() => {
+  if (!source) return null;
+  try {
+    const parsed = new URL(source);
+    if (parsed.protocol === 'http:' || parsed.protocol === 'https:') {
+      return parsed.toString();
+    }
+  } catch {
+    return null;
+  }
+  return null;
+})();
 
-// Generate the canonical slug using the same logic as the dynamic route
-const entryTitle = getNotionEntryTitle(entry);
-const canonicalSlug = cleanSlug(entryTitle);
+const canonicalSlug = getResourceCanonicalSlug(entry);
 const href = `/resources/${canonicalSlug}`;
 ---
 
 <article
   class={`resource-card group rounded-lg border bg-card border-border p-6 shadow-sm transition-all hover:shadow-lg ${className}`}
+  data-resource-card
 >
   <div class="mb-3">
     <h3 class="mb-2 text-lg font-semibold leading-tight">
@@ -57,9 +67,9 @@ const href = `/resources/${canonicalSlug}`;
     </div>
 
     {
-      source && (
+      safeSource && (
         <a
-          href={source}
+          href={safeSource}
           target="_blank"
           rel="noopener noreferrer"
           class="text-xs font-medium text-primary transition-colors hover:text-accent"
@@ -70,12 +80,3 @@ const href = `/resources/${canonicalSlug}`;
     }
   </div>
 </article>
-
-<style>
-  .line-clamp-3 {
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-</style>

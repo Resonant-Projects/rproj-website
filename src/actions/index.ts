@@ -9,6 +9,7 @@ import { Resend } from 'resend';
 import { render } from '@react-email/render';
 import React from 'react';
 import ResonantWelcomeEmail from '~/utils/welcome-email';
+import { resolveDataSourceId } from '~/utils/notion-datasource';
 
 const resend = new Resend(import.meta.env.RESEND_API_KEY);
 const notion = new Client({
@@ -79,25 +80,20 @@ export const server = {
       try {
         // Resolve data_source_id from database_id (API 2025-09-03)
         const databaseId = import.meta.env.NOTION_DATABASE_ID;
-        let dataSourceId: string | null = null;
-
-        try {
-          const db = await notion.databases.retrieve({ database_id: databaseId });
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const dataSources = (db as any).data_sources;
-          if (dataSources?.[0]?.id) {
-            dataSourceId = dataSources[0].id;
-            console.debug('[action:contact] Resolved data_source_id');
-          }
-        } catch (e) {
-          console.warn('[action:contact] Failed to resolve data_source_id:', e);
+        if (!databaseId) {
+          throw new ActionError({
+            code: 'INTERNAL_SERVER_ERROR',
+            message: 'Missing Notion database configuration.',
+          });
         }
 
-        // Dynamically choose parent type based on resolution result
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const parent: any = dataSourceId
-          ? { type: 'data_source_id', data_source_id: dataSourceId }
-          : { database_id: databaseId };
+        const dataSourceId = await resolveDataSourceId(notion, databaseId);
+        console.debug('[action:contact] Resolved data source for Notion write');
+
+        const parent: { database_id: string } | { type: 'data_source_id'; data_source_id: string } =
+          dataSourceId !== databaseId
+            ? { type: 'data_source_id', data_source_id: dataSourceId }
+            : { database_id: databaseId };
 
         // Create Notion page
         console.debug('[action:contact] Creating Notion page');

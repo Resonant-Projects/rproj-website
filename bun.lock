@@ -51,6 +51,7 @@
         "@astrojs/partytown": "^2.1.4",
         "@astrojs/react": "4.4.2",
         "@axe-core/cli": "^4.11.1",
+        "@axe-core/playwright": "^4.11.1",
         "@chlorinec-pkgs/notion-astro-loader": "^1.1.2",
         "@eslint/js": "^9.39.2",
         "@iconify-json/flat-color-icons": "^1.2.3",
@@ -184,6 +185,8 @@
     "@atproto/xrpc": ["@atproto/xrpc@0.6.12", "", { "dependencies": { "@atproto/lexicon": "^0.4.10", "zod": "^3.23.8" } }, "sha512-Ut3iISNLujlmY9Gu8sNU+SPDJDvqlVzWddU8qUr0Yae5oD4SguaUFjjhireMGhQ3M5E0KljQgDbTmnBo1kIZ3w=="],
 
     "@axe-core/cli": ["@axe-core/cli@4.11.1", "", { "dependencies": { "@axe-core/webdriverjs": "^4.11.1", "axe-core": "~4.11.1", "chromedriver": "latest", "colors": "^1.4.0", "commander": "^9.4.1", "dotenv": "^17.2.2", "selenium-webdriver": "~4.39.0" }, "bin": { "axe": "dist/src/bin/cli.js" } }, "sha512-xC7doMReoy7QnQ18azdpIZHoYL1HcG5c5wvEcCpm5kWny520RGTRrBcnAZENaQ9nTQAkE7fXZFK4Z1cfBDTBFg=="],
+
+    "@axe-core/playwright": ["@axe-core/playwright@4.11.1", "", { "dependencies": { "axe-core": "~4.11.1" }, "peerDependencies": { "playwright-core": ">= 1.0.0" } }, "sha512-mKEfoUIB1MkVTht0BGZFXtSAEKXMJoDkyV5YZ9jbBmZCcWDz71tegNsdTkIN8zc/yMi5Gm2kx7Z5YQ9PfWNAWw=="],
 
     "@axe-core/webdriverjs": ["@axe-core/webdriverjs@4.11.1", "", { "dependencies": { "axe-core": "~4.11.1" }, "peerDependencies": { "selenium-webdriver": ">3.0.0-beta  || >=2.53.1 || >4.0.0-alpha" } }, "sha512-UVq7uBsqaQlHj7PQPg+WhE0nV6ccYtE0cnGglStS5RE3RAB+gQcb30R1k3usI+Q/xyROSJHhusOus4BzqrlZ1w=="],
 

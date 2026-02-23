@@ -1,7 +1,75 @@
 import { defineCollection, z } from 'astro:content';
-// Use vendored loader source so we can modify locally
-import { notionLoader } from '../../vendor/notion-astro-loader/src';
-import { glob } from 'astro/loaders';
+import { file, glob, type Loader } from 'astro/loaders';
+import { existsSync } from 'node:fs';
+import type { NotionLoaderOptions } from '../../vendor/notion-astro-loader/src/loader.js';
+
+const parseResourcesCache = (source: string): Array<Record<string, unknown>> => {
+  let payload: unknown;
+  try {
+    payload = JSON.parse(source) as unknown;
+  } catch {
+    // parseResourcesCache should tolerate malformed JSON.parse input and fail closed.
+    return [];
+  }
+  if (!Array.isArray(payload)) {
+    return [];
+  }
+
+  return payload.map((item, index) => {
+    const value = item as Record<string, unknown>;
+    const id = typeof value.id === 'string' && value.id ? value.id : `cache-${index}`;
+    const sourceData = (value.data as Record<string, unknown> | undefined) ?? value;
+    return {
+      ...sourceData,
+      id,
+    };
+  });
+};
+
+const resourcesCachePath = 'src/content/resources-cache.json';
+const resourcesCacheFileLoader = file(resourcesCachePath, {
+  parser: parseResourcesCache,
+});
+const fallbackResourcesLoader: Loader = {
+  name: 'resources-fallback-loader',
+  load: async context => {
+    const resourcesCacheUrl = new URL(resourcesCachePath, context.config.root);
+    if (!existsSync(resourcesCacheUrl)) {
+      context.store.clear();
+      return;
+    }
+
+    await resourcesCacheFileLoader.load(context);
+  },
+};
+const isDevServer = import.meta.env.DEV;
+
+let notionLoaderFactory: ((options: NotionLoaderOptions) => Loader) | null = null;
+if (!isDevServer) {
+  try {
+    const module = await import('../../vendor/notion-astro-loader/src/loader.js');
+    notionLoaderFactory = module.notionLoader;
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    console.warn(`[resources-notion-loader] Falling back to cache loader: ${message}`);
+  }
+}
+
+const createNotionResourcesLoader = (auth: string, databaseId: string): Loader => {
+  if (!notionLoaderFactory) {
+    return fallbackResourcesLoader;
+  }
+
+  return notionLoaderFactory({
+    auth,
+    database_id: databaseId,
+    imageSavePath: 'content/notion/images',
+    filter: {
+      property: 'Status',
+      status: { equals: 'Up-to-Date' },
+    },
+  });
+};
 
 // Shared metadataDefinition for collections
 const metadataDefinition = () =>
@@ -70,7 +138,7 @@ const postCollection = defineCollection({
 });
 
 const tilCollection = defineCollection({
-  type: 'content',
+  loader: glob({ pattern: ['**/*.md', '**/*.mdx'], base: 'src/content/til' }),
   schema: ({ image }) =>
     z.object({
       title: z.string(),
@@ -83,19 +151,19 @@ const tilCollection = defineCollection({
     }),
 });
 
+const notionToken = import.meta.env.NOTION_TOKEN;
+const notionResourcesDatabaseId = import.meta.env.NOTION_RR_RESOURCES_ID;
+
+const resourcesLoader =
+  notionToken && notionResourcesDatabaseId
+    ? createNotionResourcesLoader(notionToken, notionResourcesDatabaseId)
+    : fallbackResourcesLoader;
+
 export const collections = {
   post: postCollection,
   til: tilCollection,
   resources: defineCollection({
-    loader: notionLoader({
-      auth: process.env.NOTION_TOKEN!,
-      database_id: process.env.NOTION_RR_RESOURCES_ID!,
-      imageSavePath: 'content/notion/images',
-      filter: {
-        property: 'Status',
-        status: { equals: 'Up-to-Date' },
-      },
-    }),
+    loader: resourcesLoader,
     // Schema: start from Notion property types; refine as needed
     schema: () =>
       z.object({
@@ -103,6 +171,7 @@ export const collections = {
         properties: z.any().optional(),
         // Flattened map of all property values for convenient access
         flat: z.record(z.unknown()).optional(),
+        rawTransformedProperties: z.record(z.unknown()).optional(),
         Name: z.string().optional(),
         Source: z.string().url().optional(),
         'User Defined URL': z.string().url().optional(),

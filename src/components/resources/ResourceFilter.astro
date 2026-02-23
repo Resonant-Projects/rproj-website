@@ -1,4 +1,6 @@
 ---
+import { SEARCH_PARAM, buildResourcesUrl } from '~/utils/search-routing';
+
 export interface Props {
   categories: string[];
   types: string[];
@@ -9,25 +11,9 @@ export interface Props {
 
 const { categories, types, selectedCategory, selectedType, class: className = '' } = Astro.props;
 
-// Helper function to create filter URL
-const createFilterUrl = (category?: string, type?: string, search?: string) => {
-  const params = new URLSearchParams();
-  if (search) params.set('q', search);
-
-  const queryString = params.toString();
-
-  if (category) {
-    return `/resources/category/${category}/1${queryString ? `?${queryString}` : ''}`;
-  } else if (type) {
-    return `/resources/type/${type}/1${queryString ? `?${queryString}` : ''}`;
-  } else {
-    return `/resources/all/1${queryString ? `?${queryString}` : ''}`;
-  }
-};
-
 // Get current search query from URL
 const urlParams = new URLSearchParams(Astro.url.search);
-const searchQuery = urlParams.get('q');
+const searchQuery = urlParams.get(SEARCH_PARAM);
 ---
 
 <div class={`rr-filter mb-8 ${className}`}>
@@ -38,7 +24,7 @@ const searchQuery = urlParams.get('q');
       {
         selectedCategory && (
           <a
-            href={createFilterUrl(undefined, selectedType, searchQuery || undefined)}
+            href={buildResourcesUrl({ category: undefined, type: selectedType, page: 1 }, searchQuery || undefined)}
             class="text-sm text-primary transition-colors hover:text-accent"
           >
             Clear category
@@ -51,7 +37,7 @@ const searchQuery = urlParams.get('q');
       {
         categories.map(category => (
           <a
-            href={createFilterUrl(category, selectedType, searchQuery || undefined)}
+            href={buildResourcesUrl({ category, type: selectedType, page: 1 }, searchQuery || undefined)}
             class={`rounded-full px-3 py-2 text-sm font-medium transition-colors ${
               selectedCategory === category
                 ? 'bg-primary text-white'
@@ -72,7 +58,7 @@ const searchQuery = urlParams.get('q');
       {
         selectedType && (
           <a
-            href={createFilterUrl(selectedCategory, undefined, searchQuery || undefined)}
+            href={buildResourcesUrl({ category: selectedCategory, type: undefined, page: 1 }, searchQuery || undefined)}
             class="text-sm text-primary transition-colors hover:text-accent"
           >
             Clear type
@@ -85,7 +71,7 @@ const searchQuery = urlParams.get('q');
       {
         types.map(type => (
           <a
-            href={createFilterUrl(selectedCategory, type, searchQuery || undefined)}
+            href={buildResourcesUrl({ category: selectedCategory, type, page: 1 }, searchQuery || undefined)}
             class={`rounded-full px-3 py-2 text-sm font-medium transition-colors ${
               selectedType === type ? 'bg-primary text-white' : 'hover:bg-muted-foreground/20 bg-muted text-foreground'
             }`}
@@ -102,7 +88,7 @@ const searchQuery = urlParams.get('q');
     (selectedCategory || selectedType) && (
       <div class="border-t border-border pt-4">
         <a
-          href={createFilterUrl(undefined, undefined, searchQuery || undefined)}
+          href={buildResourcesUrl({ category: undefined, type: undefined, page: 1 }, searchQuery || undefined)}
           class="text-sm font-medium text-primary transition-colors hover:text-accent"
         >
           Clear all filters

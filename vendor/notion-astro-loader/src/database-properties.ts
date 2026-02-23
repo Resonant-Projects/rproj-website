@@ -31,9 +31,10 @@ export async function propertiesSchemaForDatabase(client: Client, databaseId: st
     return z.object({});
   }
 
-  const schemaForDatabaseProperty: (propertyConfig: DatabasePropertyConfigResponse) => z.ZodTypeAny = (
-    propertyConfig
-  ) => rawPropertyType[propertyConfig.type];
+  const schemaForDatabaseProperty = (propertyConfig: DatabasePropertyConfigResponse): z.ZodTypeAny => {
+    const propertyType = propertyConfig.type as keyof typeof rawPropertyType;
+    return rawPropertyType[propertyType] ?? z.unknown();
+  };
 
   const schema = Object.fromEntries(
     Object.entries(database.properties).map(([key, value]) => {

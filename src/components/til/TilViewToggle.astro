@@ -1,41 +1,30 @@
 ---
 import { Icon } from 'astro-icon/components';
+import { SEARCH_PARAM, buildTilUrl } from '~/utils/search-routing';
 
 export interface Props {
-  currentView: 'feed' | 'kanban';
+  currentView?: 'feed' | 'kanban';
+  tag?: string;
+  page?: number;
   class?: string;
 }
 
-const { currentView = 'feed', class: className = '' } = Astro.props;
+const { currentView = 'feed', tag, page = 1, class: className = '' } = Astro.props;
 
-// Get current URL to preserve other parameters
-const preserveParams = ['tag', 'q']; // Parameters to preserve when switching views
+// Get current URL to preserve search state
 const url = new URL(Astro.url);
-url.searchParams.delete('view');
-
-// Build URLs for each view
-let feedUrl = new URL('/til/all/1', url.origin);
-let kanbanUrl = new URL('/til/board', url.origin);
-
-// Preserve specified query parameters
-preserveParams.forEach(param => {
-  if (url.searchParams.has(param)) {
-    const value = url.searchParams.get(param);
-    if (value !== null) {
-      feedUrl.searchParams.set(param, value);
-      kanbanUrl.searchParams.set(param, value);
-    }
-  }
-});
-
-// Set the view parameter for feed view
-feedUrl.searchParams.set('view', 'feed');
+const searchQuery = url.searchParams.get(SEARCH_PARAM) || undefined;
+const feedUrl = new URL(buildTilUrl({ tag, page, view: 'feed' }, searchQuery), url.origin);
+const kanbanUrl = new URL('/til/board', url.origin);
+if (searchQuery) {
+  kanbanUrl.searchParams.set(SEARCH_PARAM, searchQuery);
+}
 ---
 
 <div class={`til-view-toggle ${className}`}>
   <div class="bg-muted/50 inline-flex rounded-md p-1">
     <a
-      href={feedUrl.toString()}
+      href={feedUrl.pathname + feedUrl.search}
       class={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
         currentView === 'feed'
           ? 'bg-card shadow-sm text-foreground'
@@ -48,7 +37,7 @@ feedUrl.searchParams.set('view', 'feed');
       </span>
     </a>
     <a
-      href={kanbanUrl.toString()}
+      href={kanbanUrl.pathname + kanbanUrl.search}
       class={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
         currentView === 'kanban'
           ? 'bg-card shadow-sm text-foreground'

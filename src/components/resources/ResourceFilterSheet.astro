@@ -2,6 +2,7 @@
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '~/components/starwind/sheet';
 import { Button } from '~/components/starwind/button';
 import Filter from '@tabler/icons/outline/filter.svg';
+import { SEARCH_PARAM, buildResourcesUrl } from '~/utils/search-routing';
 
 export interface Props {
   categories: string[];
@@ -13,28 +14,9 @@ export interface Props {
 
 const { categories, types, selectedCategory, selectedType, class: className = '' } = Astro.props;
 
-// Helper function to create filter URL
-const createFilterUrl = (category?: string, type?: string, search?: string) => {
-  const params = new URLSearchParams();
-  if (search) params.set('q', search);
-
-  const queryString = params.toString();
-
-  // If both category and type are selected, use the combined route
-  if (category && type) {
-    return `/resources/category/${category}/type/${type}/1${queryString ? `?${queryString}` : ''}`;
-  } else if (category) {
-    return `/resources/category/${category}/1${queryString ? `?${queryString}` : ''}`;
-  } else if (type) {
-    return `/resources/type/${type}/1${queryString ? `?${queryString}` : ''}`;
-  } else {
-    return `/resources/all/1${queryString ? `?${queryString}` : ''}`;
-  }
-};
-
 // Get current search query from URL
 const urlParams = new URLSearchParams(Astro.url.search);
-const searchQuery = urlParams.get('q');
+const searchQuery = urlParams.get(SEARCH_PARAM);
 ---
 
 <div class={`rr-filter-sheet ${className}`}>
@@ -63,7 +45,7 @@ const searchQuery = urlParams.get('q');
             {
               selectedCategory && (
                 <a
-                  href={createFilterUrl(undefined, selectedType, searchQuery || undefined)}
+                  href={buildResourcesUrl({ category: undefined, type: selectedType, page: 1 }, searchQuery || undefined)}
                   class="hover:bg-primary/10 rounded-md px-3 py-1 text-sm font-medium text-primary transition-colors hover:text-accent"
                 >
                   Clear category
@@ -76,7 +58,7 @@ const searchQuery = urlParams.get('q');
             {
               categories.map(category => (
                 <a
-                  href={createFilterUrl(category, selectedType, searchQuery || undefined)}
+                  href={buildResourcesUrl({ category, type: selectedType, page: 1 }, searchQuery || undefined)}
                   class={`rounded-full px-4 py-2.5 text-sm font-medium transition-all duration-200 ${
                     selectedCategory === category
                       ? 'hover:bg-primary/90 bg-primary text-white shadow-md'
@@ -100,7 +82,10 @@ const searchQuery = urlParams.get('q');
             {
               selectedType && (
                 <a
-                  href={createFilterUrl(selectedCategory || undefined, undefined, searchQuery || undefined)}
+                  href={buildResourcesUrl(
+                    { category: selectedCategory || undefined, type: undefined, page: 1 },
+                    searchQuery || undefined
+                  )}
                   class="hover:bg-primary/10 rounded-md px-3 py-1 text-sm font-medium text-primary transition-colors hover:text-accent"
                 >
                   Clear type
@@ -113,7 +98,7 @@ const searchQuery = urlParams.get('q');
             {
               types.map(type => (
                 <a
-                  href={createFilterUrl(selectedCategory, type, searchQuery || undefined)}
+                  href={buildResourcesUrl({ category: selectedCategory, type, page: 1 }, searchQuery || undefined)}
                   class={`rounded-full px-4 py-2.5 text-sm font-medium transition-all duration-200 ${
                     selectedType === type
                       ? 'hover:bg-primary/90 bg-primary text-white shadow-md'
@@ -137,7 +122,7 @@ const searchQuery = urlParams.get('q');
                   <p class="text-muted-foreground text-xs">Clear all applied filters</p>
                 </div>
                 <a
-                  href={createFilterUrl(undefined, undefined, searchQuery || undefined)}
+                  href={buildResourcesUrl({ category: undefined, type: undefined, page: 1 }, searchQuery || undefined)}
                   class="text-destructive border-destructive/20 hover:bg-destructive/10 hover:border-destructive/30 inline-flex items-center rounded-md border bg-background px-4 py-2 text-sm font-medium transition-all duration-200"
                 >
                   Clear all filters

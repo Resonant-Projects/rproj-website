@@ -49,6 +49,16 @@ export interface NotionLoaderOptions
 }
 
 const DEFAULT_IMAGE_SAVE_PATH = 'assets/images/notion';
+const NOTION_PAGE_SIZE_MAX = 100;
+
+const resolveNotionPageSize = (): number => {
+  const raw = process?.env?.NOTION_PAGE_SIZE;
+  const parsed = raw ? Number.parseInt(raw, 10) : Number.NaN;
+  if (Number.isNaN(parsed)) {
+    return NOTION_PAGE_SIZE_MAX;
+  }
+  return Math.max(1, Math.min(parsed, NOTION_PAGE_SIZE_MAX));
+};
 
 /**
  * Notion loader for the Astro Content Layer API.
@@ -86,6 +96,8 @@ export function notionLoader({
   experimentalRootSourceAlias = 'src',
   ...clientOptions
 }: NotionLoaderOptions): Loader {
+  const pageSize = resolveNotionPageSize();
+
   // Use API version 2025-09-03 for multi-source database support
   const notionClient = new Client({
     ...clientOptions,
@@ -158,11 +170,13 @@ export function notionLoader({
               sorts,
               filter,
               archived,
-              page_size: 5,
+              page_size: pageSize,
               start_cursor,
             });
             if (process?.env?.DEBUG_NOTION_LOADER === '1') {
-              log_db.debug(`Query page_size=5 start_cursor=${start_cursor ?? 'none'} results=${res.results.length} has_more=${res.has_more}`);
+              log_db.debug(
+                `Query page_size=${pageSize} start_cursor=${start_cursor ?? 'none'} results=${res.results.length} has_more=${res.has_more}`
+              );
             }
             for (const r of res.results) {
               // @ts-ignore

@@ -11,14 +11,14 @@ type TilEntry = CollectionEntry<'til'>;
 
 export const prerender = true;
 
-export const ALL_ENTRIES = await fetchTilEntries();
+const ALL_ENTRIES = await fetchTilEntries();
 
 export async function getStaticPaths({
   paginate,
 }: {
   paginate: (data: TilEntry[], options: { params: Record<string, string>; pageSize: number }) => unknown[];
 }) {
-  return paginate(ALL_ENTRIES, {
+  return paginate(await fetchTilEntries(), {
     params: { tag: 'all' },
     pageSize: 10,
   });
@@ -40,7 +40,7 @@ const title = 'Today I Learned';
 
 const serializedEntries = ALL_ENTRIES.map(entry => ({
   id: entry.id,
-  slug: entry.slug,
+  slug: entry.id,
   title: entry.data.title || '',
   description: entry.data.description || '',
   tags: entry.data.tags || [],

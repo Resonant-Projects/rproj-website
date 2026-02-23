@@ -1,7 +1,7 @@
 ---
 import { Icon } from 'astro-icon/components';
 import type { TilEntry } from '~/utils/til';
-import { formatTilDate, groupTilEntriesByDay } from '~/utils/til';
+import { formatTilDate, groupTilEntriesByDay, normalizeTagSlug } from '~/utils/til';
 
 export interface Props {
   entries: TilEntry[];
@@ -19,8 +19,6 @@ const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
 // Only include days with entries
 const daysWithEntries = days.filter(day => (entriesByDay.get(day) ?? []).length > 0);
 
-// Function to format tag for URL
-const formatTagForUrl = (tag: string) => tag.toLowerCase().replace(/\s+/g, '-');
 ---
 
 <div class={`til-kanban-view ${className}`}>
@@ -38,7 +36,7 @@ const formatTagForUrl = (tag: string) => tag.toLowerCase().replace(/\s+/g, '-');
                 data-til-entry-id={entry.id}
               >
                 <a
-                  href={`/til/${entry.slug}`}
+                  href={`/til/${entry.id}`}
                   class="mb-2 block font-medium text-foreground transition-colors hover:text-primary"
                 >
                   {entry.data.title}
@@ -50,7 +48,7 @@ const formatTagForUrl = (tag: string) => tag.toLowerCase().replace(/\s+/g, '-');
                 <div class="flex flex-wrap gap-1">
                   {entry.data.tags.slice(0, 2).map(tag => (
                     <a
-                      href={`/til?tag=${formatTagForUrl(tag)}&view=kanban`}
+                      href={`/til?tag=${normalizeTagSlug(tag)}&view=kanban`}
                       class="bg-primary/10 dark:bg-primary/20 hover:bg-primary/20 dark:hover:bg-primary/30 rounded px-1.5 py-0.5 text-xs text-primary transition-colors"
                     >
                       #{tag}

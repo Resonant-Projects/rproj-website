@@ -36,8 +36,9 @@ const { page } = Astro.props as {
 };
 const params = Astro.params as { page: string };
 
-const totalPages = Math.ceil(page.total / page.size);
-const currentPage = Number.parseInt(params.page, 10);
+const totalPages = Math.max(1, Math.ceil(page.total / page.size));
+const parsedPage = Number.parseInt(params.page, 10);
+const currentPage = Math.max(1, Math.min(Number.isNaN(parsedPage) ? 1 : parsedPage, totalPages));
 
 const title = 'RR Resources';
 const pageTitle = `${title} (Page ${currentPage} of ${totalPages})`;

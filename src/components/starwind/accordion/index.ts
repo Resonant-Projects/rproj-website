@@ -7,10 +7,14 @@ const Accordion = AccordionComponent.default;
 const AccordionContent = AccordionContentComponent.default;
 const AccordionItem = AccordionItemComponent.default;
 const AccordionTrigger = AccordionTriggerComponent.default;
-const accordionModule = AccordionComponent as Record<string, unknown>;
-const accordionContentModule = AccordionContentComponent as Record<string, unknown>;
-const accordionItemModule = AccordionItemComponent as Record<string, unknown>;
-const accordionTriggerModule = AccordionTriggerComponent as Record<string, unknown>;
+
+type VariantFunction = (...args: unknown[]) => string;
+type VariantModule = Record<string, VariantFunction> & { default: unknown };
+
+const accordionModule = AccordionComponent as unknown as VariantModule;
+const accordionContentModule = AccordionContentComponent as unknown as VariantModule;
+const accordionItemModule = AccordionItemComponent as unknown as VariantModule;
+const accordionTriggerModule = AccordionTriggerComponent as unknown as VariantModule;
 
 const AccordionVariants = {
   accordion: accordionModule.accordion,

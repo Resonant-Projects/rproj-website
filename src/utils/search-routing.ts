@@ -55,11 +55,14 @@ export const buildResourcesUrl = (options: ResourceRouteOptions = {}, search?: s
 };
 
 export const buildTilPath = ({ tag, page = 1 }: TilRouteOptions = {}): string => {
+  const parsedPage = Number(page);
+  const safePage = Number.isInteger(parsedPage) && parsedPage > 0 ? parsedPage : 1;
+
   if (tag) {
-    return `/til/${encodeURIComponent(tag)}/${page}`;
+    return `/til/${encodeURIComponent(tag)}/${safePage}`;
   }
 
-  return `/til/all/${page}`;
+  return `/til/all/${safePage}`;
 };
 
 export const buildTilUrl = (options: TilRouteOptions = {}, search?: string): string => {

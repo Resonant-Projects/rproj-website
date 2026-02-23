@@ -13,28 +13,38 @@ export interface WeeklyDateRange {
 export type TilEntry = CollectionEntry<'til'>;
 
 export const normalizeTagSlug = (tag: string): string => tag.toLowerCase().replace(/\s+/g, '-');
+let tilEntriesPromise: Promise<TilEntry[]> | null = null;
 
 /**
  * Fetch all TIL entries
  */
 export const fetchTilEntries = async (): Promise<TilEntry[]> => {
-  // console.log('🔍 [TIL] Starting to fetch TIL entries...');
-  try {
-    const tilEntries = await getCollection('til', ({ data }) => {
-      // console.log('🔍 [TIL] Processing entry:', data.title, 'draft:', data.draft);
-      return !data.draft;
-    });
-    // console.log('🔍 [TIL] Total entries found:', tilEntries.length);
-    const sorted = tilEntries.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf()) as TilEntry[];
-    // console.log(
-    //   '🔍 [TIL] Sorted entries:',
-    //   sorted.map(e => e.data.title)
-    // );
-    return sorted;
-  } catch (error) {
-    console.error('❌ [TIL] Error fetching TIL entries:', error);
-    return [];
+  if (tilEntriesPromise) {
+    return tilEntriesPromise;
   }
+
+  // console.log('🔍 [TIL] Starting to fetch TIL entries...');
+  tilEntriesPromise = (async () => {
+    try {
+      const tilEntries = await getCollection('til', ({ data }) => {
+        // console.log('🔍 [TIL] Processing entry:', data.title, 'draft:', data.draft);
+        return !data.draft;
+      });
+      // console.log('🔍 [TIL] Total entries found:', tilEntries.length);
+      const sorted = tilEntries.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf()) as TilEntry[];
+      // console.log(
+      //   '🔍 [TIL] Sorted entries:',
+      //   sorted.map(e => e.data.title)
+      // );
+      return sorted;
+    } catch (error) {
+      console.error('❌ [TIL] Error fetching TIL entries:', error);
+      tilEntriesPromise = null;
+      return [];
+    }
+  })();
+
+  return tilEntriesPromise;
 };
 
 /**
@@ -61,7 +71,7 @@ export const findTilTags = async (): Promise<Taxonomy[]> => {
  */
 export const findTilEntriesByTag = async (tag: string): Promise<TilEntry[]> => {
   const entries = await fetchTilEntries();
-  const normalizedTag = tag.toLowerCase();
+  const normalizedTag = normalizeTagSlug(tag);
 
   return entries.filter(entry => entry.data.tags.some(t => normalizeTagSlug(t) === normalizedTag));
 };

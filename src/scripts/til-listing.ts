@@ -20,7 +20,17 @@ const slugifyTag = (tag: string): string =>
     .replace(/^-|-$/g, '');
 
 const formatDate = (value: string): string => {
-  const date = new Date(value);
+  const dateOnlyMatch = value.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  const date = dateOnlyMatch
+    ? new Date(
+        Date.UTC(
+          Number.parseInt(dateOnlyMatch[1], 10),
+          Number.parseInt(dateOnlyMatch[2], 10) - 1,
+          Number.parseInt(dateOnlyMatch[3], 10)
+        )
+      )
+    : new Date(value);
+
   if (Number.isNaN(date.valueOf())) {
     return value;
   }
@@ -29,6 +39,7 @@ const formatDate = (value: string): string => {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
+    ...(dateOnlyMatch ? { timeZone: 'UTC' } : {}),
   }).format(date);
 };
 

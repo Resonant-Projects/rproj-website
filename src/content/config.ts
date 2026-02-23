@@ -4,7 +4,13 @@ import { existsSync } from 'node:fs';
 import type { NotionLoaderOptions } from '../../vendor/notion-astro-loader/src/loader.js';
 
 const parseResourcesCache = (source: string): Array<Record<string, unknown>> => {
-  const payload = JSON.parse(source) as unknown;
+  let payload: unknown;
+  try {
+    payload = JSON.parse(source) as unknown;
+  } catch {
+    // parseResourcesCache should tolerate malformed JSON.parse input and fail closed.
+    return [];
+  }
   if (!Array.isArray(payload)) {
     return [];
   }
@@ -29,16 +35,7 @@ const fallbackResourcesLoader: Loader = {
   load: async context => {
     const resourcesCacheUrl = new URL(resourcesCachePath, context.config.root);
     if (!existsSync(resourcesCacheUrl)) {
-      const parsedFallback = parseResourcesCache('[]');
       context.store.clear();
-      for (const rawItem of parsedFallback) {
-        const id = (rawItem.id as string | undefined) ?? '';
-        if (!id) {
-          continue;
-        }
-        const parsedData = await context.parseData({ id, data: rawItem });
-        context.store.set({ id, data: parsedData });
-      }
       return;
     }
 
@@ -141,7 +138,7 @@ const postCollection = defineCollection({
 });
 
 const tilCollection = defineCollection({
-  type: 'content',
+  loader: glob({ pattern: ['**/*.md', '**/*.mdx'], base: 'src/content/til' }),
   schema: ({ image }) =>
     z.object({
       title: z.string(),
@@ -158,7 +155,7 @@ const notionToken = import.meta.env.NOTION_TOKEN;
 const notionResourcesDatabaseId = import.meta.env.NOTION_RR_RESOURCES_ID;
 
 const resourcesLoader =
-  notionToken && notionResourcesDatabaseId && notionLoaderFactory
+  notionToken && notionResourcesDatabaseId
     ? createNotionResourcesLoader(notionToken, notionResourcesDatabaseId)
     : fallbackResourcesLoader;
 

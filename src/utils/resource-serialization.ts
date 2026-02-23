@@ -27,11 +27,11 @@ export const filterByCategoryAndType = (
   type: string
 ): ResourceEntry[] => {
   return entries.filter(entry => {
-    const entryCategories = entry.data.Category;
-    const entryTypes = entry.data.Type;
+    const entryCategories = toStringArray(entry.data.Category);
+    const entryTypes = toStringArray(entry.data.Type);
 
-    const categoryMatch = Array.isArray(entryCategories) ? entryCategories.includes(category) : entryCategories === category;
-    const typeMatch = Array.isArray(entryTypes) ? entryTypes.includes(type) : entryTypes === type;
+    const categoryMatch = entryCategories.includes(category);
+    const typeMatch = entryTypes.includes(type);
 
     return categoryMatch && typeMatch;
   });

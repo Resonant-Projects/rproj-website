@@ -2,7 +2,7 @@
 import { getCollection } from 'astro:content';
 import { Icon } from 'astro-icon/components';
 import Layout from '~/layouts/PageLayout.astro';
-import { formatTilDate } from '~/utils/til';
+import { formatTilDate, normalizeTagSlug } from '~/utils/til';
 
 export const prerender = true;
 
@@ -12,7 +12,7 @@ export async function getStaticPaths() {
   });
 
   return tilEntries.map(entry => ({
-    params: { slug: entry.slug },
+    params: { slug: entry.id },
     props: { entry },
   }));
 }
@@ -28,7 +28,7 @@ if (!entry) {
         return !data.draft;
       });
 
-      entry = tilEntries.find(e => e.slug === slug) as typeof entry;
+      entry = tilEntries.find(e => e.id === slug) as typeof entry;
     } catch (error) {
       console.error('Error fetching TIL entry during prefetch:', error);
     }
@@ -36,11 +36,10 @@ if (!entry) {
 }
 
 // Check if entry exists and has required properties
-if (!entry || !entry.render) {
+if (!entry) {
   throw new Error(`TIL entry not found or invalid for slug: ${Astro.params.slug}`);
 }
-
-const { Content } = await entry.render();
+const renderedHtml = entry.rendered?.html;
 
 const { title, date, tags, description } = entry.data;
 const formattedDate = formatTilDate(date);
@@ -71,7 +70,7 @@ const metadata = {
           {
             tags.map(tag => (
               <a
-                href={`/til?tag=${tag.toLowerCase().replace(/\s+/g, '-')}`}
+                href={`/til?tag=${normalizeTagSlug(tag)}`}
                 class="bg-primary/10 dark:bg-primary/20 hover:bg-primary/20 dark:hover:bg-primary/30 rounded-md px-2 py-1 text-xs font-medium text-primary transition-colors"
               >
                 #{tag}
@@ -85,7 +84,7 @@ const metadata = {
     <div class="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
       <div class="p-6 sm:p-8">
         <div class="prose-enhanced max-w-none dark:prose-invert">
-          <Content />
+          {renderedHtml ? <Fragment set:html={renderedHtml} /> : null}
         </div>
       </div>
     </div>

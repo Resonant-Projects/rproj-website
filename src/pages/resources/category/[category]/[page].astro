@@ -62,7 +62,7 @@ const { page } = Astro.props as {
 };
 const params = Astro.params as { category: string; page: string };
 
-const decodedCategory = decodeURIComponent(params.category);
+const decodedCategory = params.category;
 const allEntries = await getCollection('resources');
 const scopedEntries = allEntries.filter((entry: ResourceEntry) => {
   const categories = entry.data.Category;

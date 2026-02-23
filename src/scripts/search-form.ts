@@ -1,4 +1,4 @@
-interface InitSearchFormOptions {
+export interface InitSearchFormOptions {
   formSelector: string;
   inputSelector: string;
   searchParam: string;

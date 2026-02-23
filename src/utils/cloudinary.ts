@@ -1,5 +1,6 @@
 import { getCldImageUrl, getCldOgImageUrl } from 'astro-cloudinary/helpers';
 import { v2 as cloudinary } from 'cloudinary';
+import { escapeHtml } from '~/utils/html-escape';
 
 // Environment variables with validation
 const CLOUDINARY_CLOUD_NAME = import.meta.env.PUBLIC_CLOUDINARY_CLOUD_NAME;
@@ -104,12 +105,7 @@ export interface ProcessedImage {
 }
 
 function buildFallbackImageUrl(width = 400, height = 300, message = 'Image unavailable'): string {
-  const safeMessage = message
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&apos;');
+  const safeMessage = escapeHtml(message);
   const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 ${width} ${height}'><rect width='100%' height='100%' fill='#f3f4f6'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='#4b5563' font-family='system-ui,sans-serif' font-size='16'>${safeMessage}</text></svg>`;
   return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
 }

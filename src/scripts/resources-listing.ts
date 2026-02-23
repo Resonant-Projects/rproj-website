@@ -13,6 +13,10 @@ interface ResourceListingEntry {
 }
 
 const isSafeUrl = (value: string): boolean => {
+  if (value.startsWith('/')) {
+    return true;
+  }
+
   try {
     const parsed = new URL(value);
     return parsed.protocol === 'http:' || parsed.protocol === 'https:';

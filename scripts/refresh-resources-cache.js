@@ -7,6 +7,8 @@ import { Client } from '@notionhq/client';
 import { config as loadDotenv } from 'dotenv';
 
 const CACHE_FILE_PATH = path.resolve(process.cwd(), 'src/content/resources-cache.json');
+const RETRY_ATTEMPTS = 3;
+const RETRY_BASE_DELAY_MS = 250;
 
 const ALLOWED_STATUS = new Set(['Needs Review', 'Writing', 'Needs Update', 'Up-to-Date']);
 const ALLOWED_LENGTH = new Set(['Short', 'Medium', 'Long']);
@@ -155,6 +157,66 @@ const sanitizeKnownFields = transformed => {
   return data;
 };
 
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+const getErrorStatus = error => {
+  if (!error || typeof error !== 'object') {
+    return undefined;
+  }
+
+  if ('status' in error && typeof error.status === 'number') {
+    return error.status;
+  }
+
+  if ('statusCode' in error && typeof error.statusCode === 'number') {
+    return error.statusCode;
+  }
+
+  return undefined;
+};
+
+const isRetryableError = error => {
+  const status = getErrorStatus(error);
+  if (status === 429 || (typeof status === 'number' && status >= 500 && status < 600)) {
+    return true;
+  }
+
+  const code =
+    error && typeof error === 'object' && 'code' in error && typeof error.code === 'string'
+      ? error.code.toLowerCase()
+      : '';
+  if (code === 'rate_limited') {
+    return true;
+  }
+
+  const message =
+    error && typeof error === 'object' && 'message' in error && typeof error.message === 'string'
+      ? error.message.toLowerCase()
+      : String(error ?? '').toLowerCase();
+
+  return message.includes('rate limit') || message.includes('429');
+};
+
+const retryWithBackoff = async (operation, maxAttempts = RETRY_ATTEMPTS, baseDelayMs = RETRY_BASE_DELAY_MS) => {
+  let attempt = 0;
+
+  while (attempt < maxAttempts) {
+    try {
+      return await operation();
+    } catch (error) {
+      attempt += 1;
+      if (attempt >= maxAttempts || !isRetryableError(error)) {
+        throw error;
+      }
+
+      const backoffMs = baseDelayMs * 2 ** (attempt - 1);
+      await sleep(backoffMs);
+    }
+  }
+
+  throw new Error('Retry operation exhausted attempts.');
+};
+
 const transformPageToCacheEntry = page => {
   const properties = page.properties && typeof page.properties === 'object' ? page.properties : {};
   const transformed = {};
@@ -169,12 +231,14 @@ const transformPageToCacheEntry = page => {
   const sanitized = sanitizeKnownFields(transformed);
 
   const payload = {
-    icon: page.icon ?? null,
-    cover: page.cover ?? null,
-    archived: Boolean(page.archived),
-    in_trash: Boolean(page.in_trash),
-    url: isString(page.url) ? page.url : '',
-    public_url: isString(page.public_url) ? page.public_url : null,
+    _meta: {
+      icon: page.icon ?? null,
+      cover: page.cover ?? null,
+      archived: Boolean(page.archived),
+      in_trash: Boolean(page.in_trash),
+      url: isString(page.url) ? page.url : '',
+      public_url: isString(page.public_url) ? page.public_url : null,
+    },
     properties,
     ...sanitized,
     rawTransformedProperties: transformed,
@@ -219,7 +283,7 @@ const main = async () => {
   });
 
   let dataSourceId = databaseId;
-  const database = await notion.databases.retrieve({ database_id: databaseId });
+  const database = await retryWithBackoff(() => notion.databases.retrieve({ database_id: databaseId }));
   const dataSources = Array.isArray(database.data_sources) ? database.data_sources : [];
 
   if (dataSources.length > 0 && isString(dataSources[0]?.id)) {
@@ -232,15 +296,17 @@ const main = async () => {
   let nextCursor = undefined;
 
   do {
-    const response = await notion.dataSources.query({
-      data_source_id: dataSourceId,
-      filter: {
-        property: 'Status',
-        status: { equals: 'Up-to-Date' },
-      },
-      page_size: 100,
-      start_cursor: nextCursor,
-    });
+    const response = await retryWithBackoff(() =>
+      notion.dataSources.query({
+        data_source_id: dataSourceId,
+        filter: {
+          property: 'Status',
+          status: { equals: 'Up-to-Date' },
+        },
+        page_size: 100,
+        start_cursor: nextCursor,
+      })
+    );
 
     for (const result of response.results) {
       if (result.object === 'page') {

@@ -11,6 +11,7 @@ import { UI } from 'astrowind:config';
   const eventRegistry = new WeakMap();
   const handlerRegistry = new WeakMap();
   let handlerCounter = 0;
+  const screenSize = window.matchMedia('(max-width: 767px)');
 
   function applyTheme(theme) {
     if (theme === 'dark') {
@@ -144,7 +145,6 @@ import { UI } from 'astrowind:config';
       'social-share-click'
     );
 
-    const screenSize = window.matchMedia('(max-width: 767px)');
     const handleScreenSizeChange = function () {
       document.querySelector('[data-aw-toggle-menu]')?.classList.remove('expanded');
       document.body.classList.remove('overflow-hidden');

@@ -63,6 +63,8 @@ const { page } = Astro.props as {
 const params = Astro.params as { category: string; page: string };
 
 const decodedCategory = params.category;
+// Note: this filter mirrors the one in getStaticPaths above. Both are needed:
+// getStaticPaths generates routes; this builds the full search dataset for client-side search.
 const allEntries = await getCollection('resources');
 const scopedEntries = allEntries.filter((entry: ResourceEntry) => {
   const categories = entry.data.Category;

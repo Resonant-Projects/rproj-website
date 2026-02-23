@@ -63,7 +63,11 @@ const { page } = Astro.props as {
 const params = Astro.params as { type: string; page: string };
 
 const decodedType = decodeURIComponent(params.type);
-const scopedEntries = page.data;
+const allEntries = await getCollection('resources');
+const scopedEntries = allEntries.filter((entry: ResourceEntry) => {
+  const entryTypes = entry.data.Type;
+  return Array.isArray(entryTypes) ? entryTypes.includes(decodedType) : entryTypes === decodedType;
+});
 const serializedEntries = scopedEntries.map(serializeResourceEntry);
 const serializedEntriesJson = JSON.stringify(serializedEntries).replace(/</g, '\\u003c');
 

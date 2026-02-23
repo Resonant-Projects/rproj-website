@@ -242,12 +242,12 @@ export function notionLoader({
                     digest: page.last_edited_time,
                     data,
                     rendered,
-                    filePath: `${VIRTUAL_CONTENT_ROOT}/${page.id}.md`, // 不重要，有就行
+                    filePath: `${VIRTUAL_CONTENT_ROOT}/${page.id}.md`, // Virtual file path — value doesn't matter, just needs to exist
                     assetImports: rendered?.metadata.imagePaths,
                   });
                   if (process?.env?.NOTION_TRACE === '1') {
-                    const propKeys = Object.keys((data as any)?.data?.properties ?? {});
-                    const titleSample = (data as any)?.data?.properties?.Name;
+                    const propKeys = Object.keys((data as any)?.properties ?? {});
+                    const titleSample = (data as any)?.properties?.Name;
                     const renderedLen = rendered?.html?.length ?? 0;
                     log_pg.debug(
                       `TRACE page saved id=${page.id.slice(0, 6)} props=${propKeys.length} keys=[${propKeys.slice(0, 8).join(', ')}${propKeys.length > 8 ? ', ...' : ''}] htmlLen=${renderedLen}`

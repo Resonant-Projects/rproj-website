@@ -13,7 +13,7 @@ interface ResourceListingEntry {
 }
 
 const isSafeUrl = (value: string): boolean => {
-  if (value.startsWith('/')) {
+  if (value.startsWith('/') && !value.startsWith('//')) {
     return true;
   }
 

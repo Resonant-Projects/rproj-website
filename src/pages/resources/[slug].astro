@@ -6,7 +6,8 @@ import { getCollection } from 'astro:content';
 import { getPermalink } from '~/utils/permalinks';
 import { getNotionEntryTitle } from '~/utils/notion';
 import { getResourceCanonicalSlug, getResourceLegacySlug } from '~/utils/resource-slug';
-import { type ResourceEntry, toStringArray } from '~/utils/resource-serialization';
+import { type ResourceEntry } from '~/utils/resource-serialization';
+import { toStringArray } from '~/utils/string-array';
 
 export const prerender = true;
 

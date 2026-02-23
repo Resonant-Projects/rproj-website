@@ -6,8 +6,6 @@ import { toStringArray } from '~/utils/string-array';
 
 export type ResourceEntry = CollectionEntry<'resources'>;
 
-export { toStringArray } from '~/utils/string-array';
-
 export const serializeResourceEntry = (entry: ResourceEntry) => {
   const data = entry.data;
   return {

@@ -22,6 +22,9 @@ export async function getStaticPaths({
   });
 }
 
+// Second fetch (separate from getStaticPaths above) is required because page.data only contains
+// the current page's 12 items, but the search dataset must include all resources for full-text
+// search to work across the entire collection. TODO: replace with a static JSON endpoint.
 const allEntries = await getCollection('resources');
 const serializedEntries = allEntries.map(serializeResourceEntry);
 const serializedEntriesJson = JSON.stringify(serializedEntries).replace(/</g, '\\u003c');

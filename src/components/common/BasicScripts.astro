@@ -50,14 +50,17 @@ import { UI } from 'astrowind:config';
     if (matches && matches.length) {
       matches.forEach(elem => {
         const target = elem;
-        const existing = eventRegistry.get(target) ?? new Set();
+        let existing = eventRegistry.get(target);
+        if (!existing) {
+          existing = new Set();
+          eventRegistry.set(target, existing);
+        }
         const dedupeKey = key ?? getHandlerKey(fn);
         const registryKey = `${event}:${dedupeKey}`;
         if (existing.has(registryKey)) {
           return;
         }
         existing.add(registryKey);
-        eventRegistry.set(target, existing);
         elem.addEventListener(event, e => fn(e, elem), false);
       });
     }

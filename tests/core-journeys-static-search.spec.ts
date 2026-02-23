@@ -27,9 +27,7 @@ const ensureArray = (value: unknown): string[] => {
     return [];
   }
 
-  return value
-    .map(item => String(item).trim())
-    .filter(Boolean);
+  return value.map(item => String(item).trim()).filter(Boolean);
 };
 
 const parseDataset = async <T>(page: Page, selector: string): Promise<T[]> => {
@@ -197,7 +195,10 @@ test.describe('TIL static search journey', () => {
     await page.goto('/til/all/1');
 
     const dataset = toTilDataset(await parseDataset<unknown>(page, 'script[data-til-dataset]'));
-    expect(dataset.length, 'TIL dataset is empty. Ensure local TIL content is present before running e2e tests.').toBeGreaterThan(0);
+    expect(
+      dataset.length,
+      'TIL dataset is empty. Ensure local TIL content is present before running e2e tests.'
+    ).toBeGreaterThan(0);
 
     const query = buildGuaranteedHitQuery(dataset[0].title);
     await page.goto(`/til/all/1?search=${encodeURIComponent(query)}`);

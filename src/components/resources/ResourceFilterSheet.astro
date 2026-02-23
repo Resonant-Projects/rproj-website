@@ -45,7 +45,10 @@ const searchQuery = urlParams.get(SEARCH_PARAM);
             {
               selectedCategory && (
                 <a
-                  href={buildResourcesUrl({ category: undefined, type: selectedType, page: 1 }, searchQuery || undefined)}
+                  href={buildResourcesUrl(
+                    { category: undefined, type: selectedType, page: 1 },
+                    searchQuery || undefined
+                  )}
                   class="hover:bg-primary/10 rounded-md px-3 py-1 text-sm font-medium text-primary transition-colors hover:text-accent"
                 >
                   Clear category

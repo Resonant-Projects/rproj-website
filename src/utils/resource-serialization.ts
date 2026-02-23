@@ -19,11 +19,7 @@ export const serializeResourceEntry = (entry: ResourceEntry) => {
   };
 };
 
-export const filterByCategoryAndType = (
-  entries: ResourceEntry[],
-  category: string,
-  type: string
-): ResourceEntry[] => {
+export const filterByCategoryAndType = (entries: ResourceEntry[], category: string, type: string): ResourceEntry[] => {
   return entries.filter(entry => {
     const entryCategories = toStringArray(entry.data.Category);
     const entryTypes = toStringArray(entry.data.Type);

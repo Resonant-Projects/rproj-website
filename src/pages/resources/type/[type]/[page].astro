@@ -81,7 +81,10 @@ const currentPage = Math.max(1, Math.min(Number.isNaN(parsedPage) ? 1 : parsedPa
 const title = 'RR Resources';
 const pageTitle = `${title}: ${decodedType} (Page ${currentPage} of ${totalPages})`;
 const seoDescription = `Resources of type ${decodedType}. ${page.total} resources found.`;
-const canonical = new URL(`/resources/type/${params.type}/${currentPage}`, Astro.site ?? 'https://www.resonantprojects.art').toString();
+const canonical = new URL(
+  `/resources/type/${params.type}/${currentPage}`,
+  Astro.site ?? 'https://www.resonantprojects.art'
+).toString();
 ---
 
 <Layout
@@ -143,7 +146,7 @@ const canonical = new URL(`/resources/type/${params.type}/${currentPage}`, Astro
               </p>
               <a
                 href="/resources/all/1"
-                class="inline-flex items-center justify-center rounded-md bg-primary px-6 py-3 text-primary-foreground transition-colors hover:bg-primary/90"
+                class="text-primary-foreground hover:bg-primary/90 inline-flex items-center justify-center rounded-md bg-primary px-6 py-3 transition-colors"
               >
                 Browse all resources
               </a>

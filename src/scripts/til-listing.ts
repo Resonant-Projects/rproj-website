@@ -45,7 +45,8 @@ const formatDate = (value: string): string => {
 
 const renderTilCard = (entry: TilListingEntry): string => {
   const maxLength = 150;
-  const description = entry.description.length > maxLength ? `${entry.description.slice(0, maxLength)}...` : entry.description;
+  const description =
+    entry.description.length > maxLength ? `${entry.description.slice(0, maxLength)}...` : entry.description;
 
   return `<article class="til-card" data-til-entry-id="${escapeHtml(entry.id)}" data-til-card>
     <div class="flex h-full flex-col rounded-lg border border-border bg-card p-6 transition-all duration-300 hover:shadow-md">
@@ -58,7 +59,10 @@ const renderTilCard = (entry: TilListingEntry): string => {
       <p class="mb-4 grow text-muted-foreground">${escapeHtml(description)}</p>
       <div class="mt-auto flex flex-wrap gap-2">
         ${entry.tags
-          .map(tag => `<a href="/til/${escapeHtml(slugifyTag(tag))}/1" class="relative z-10 rounded-md bg-primary/10 px-2 py-1 text-xs font-medium text-primary transition-colors hover:bg-primary/20">#${escapeHtml(tag)}</a>`)
+          .map(
+            tag =>
+              `<a href="/til/${escapeHtml(slugifyTag(tag))}/1" class="relative z-10 rounded-md bg-primary/10 px-2 py-1 text-xs font-medium text-primary transition-colors hover:bg-primary/20">#${escapeHtml(tag)}</a>`
+          )
           .join('')}
       </div>
     </div>

@@ -44,7 +44,8 @@ const serializedEntries = ALL_ENTRIES.map(entry => ({
   title: entry.data.title || '',
   description: entry.data.description || '',
   tags: entry.data.tags || [],
-  date: entry.data.date instanceof Date && !Number.isNaN(entry.data.date.valueOf()) ? entry.data.date.toISOString() : null,
+  date:
+    entry.data.date instanceof Date && !Number.isNaN(entry.data.date.valueOf()) ? entry.data.date.toISOString() : null,
 }));
 const serializedEntriesJson = JSON.stringify(serializedEntries).replace(/</g, '\\u003c');
 ---

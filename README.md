@@ -62,20 +62,20 @@ Access the Resources section at: [https://www.resonantprojects.art/resources](ht
 
 ## 🛠️ Tech Stack
 
-| Category | Technologies |
-|----------|-------------|
-| **Framework** | Astro 5, React 19 (interactive islands) |
-| **Styling** | Tailwind CSS 4, Starwind UI, PostCSS |
-| **Content** | Notion API (CMS), MDX, Remark/Rehype pipeline |
-| **Media** | Cloudinary (image CDN), Sharp |
-| **Search & SEO** | Pagefind, Astro Sitemap, RSS, structured metadata |
-| **Email** | React Email, Resend |
-| **Scheduling** | Cal.com embed |
-| **Analytics** | Vercel Analytics, Vercel Speed Insights |
-| **Testing** | Playwright, axe-core, Lighthouse |
-| **Deployment** | Vercel, CI/CD from GitHub |
-| **Language** | TypeScript |
-| **Package Manager** | Bun |
+| Category            | Technologies                                      |
+| ------------------- | ------------------------------------------------- |
+| **Framework**       | Astro 5, React 19 (interactive islands)           |
+| **Styling**         | Tailwind CSS 4, Starwind UI, PostCSS              |
+| **Content**         | Notion API (CMS), MDX, Remark/Rehype pipeline     |
+| **Media**           | Cloudinary (image CDN), Sharp                     |
+| **Search & SEO**    | Pagefind, Astro Sitemap, RSS, structured metadata |
+| **Email**           | React Email, Resend                               |
+| **Scheduling**      | Cal.com embed                                     |
+| **Analytics**       | Vercel Analytics, Vercel Speed Insights           |
+| **Testing**         | Playwright, axe-core, Lighthouse                  |
+| **Deployment**      | Vercel, CI/CD from GitHub                         |
+| **Language**        | TypeScript                                        |
+| **Package Manager** | Bun                                               |
 
 ---
 

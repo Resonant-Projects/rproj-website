@@ -133,7 +133,7 @@
     "eslint": "^9.39.3",
     "eslint-plugin-astro": "^1.6.0",
     "fs-extra": "^11.3.3",
-    "globals": "17.3.0",
+    "globals": "17.4.0",
     "hast-util-has-property": "^3.0.0",
     "hast-util-is-element": "^3.0.0",
     "hast-util-select": "^6.0.4",

@@ -33,6 +33,9 @@ jobs:
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
           NOTION_RR_RESOURCES_ID: ${{ secrets.NOTION_RR_RESOURCES_ID }}
+          CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
+          CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
+          PUBLIC_CLOUDINARY_CLOUD_NAME: ${{ secrets.PUBLIC_CLOUDINARY_CLOUD_NAME }}
 
   accessibility-tests:
     name: Accessibility Tests
@@ -50,7 +53,7 @@ jobs:
       - run: bun install --frozen-lockfile
 
       - name: Install Chrome
-        run: npx --yes browser-driver-manager@latest install chrome
+        run: bunx browser-driver-manager@latest install chrome
 
       - name: Start dev server
         id: dev

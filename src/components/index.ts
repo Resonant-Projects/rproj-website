@@ -1,6 +1,5 @@
 // Re-export all components
 export { default as Logo } from './Logo.astro';
-export { default as CustomStyles } from './CustomStyles.astro';
 export { default as Favicons } from './Favicons.astro';
 
 // Export from subdirectories with specific names to avoid conflicts

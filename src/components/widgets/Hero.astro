@@ -44,8 +44,8 @@ const {
             alt=""
             class={
               centerImage
-                ? 'absolute inset-0 h-full w-full object-cover object-center opacity-30'
-                : 'absolute bottom-0 left-1/2 min-h-full min-w-full -translate-x-1/2 object-cover object-bottom opacity-30'
+                ? 'absolute inset-0 h-full w-full max-w-none object-cover object-center opacity-30'
+                : 'absolute bottom-0 left-1/2 min-h-full min-w-full max-w-none -translate-x-1/2 object-cover object-bottom opacity-30'
             }
             loading="eager"
             decoding="async"
@@ -54,9 +54,10 @@ const {
           <Image
             class={
               centerImage
-                ? 'absolute inset-0 h-full w-full object-cover object-center opacity-30'
-                : 'absolute bottom-0 left-1/2 min-h-full min-w-full -translate-x-1/2 object-cover object-bottom opacity-30'
+                ? 'absolute inset-0 h-full w-full max-w-none object-cover object-center opacity-30'
+                : 'absolute bottom-0 left-1/2 min-h-full min-w-full max-w-none -translate-x-1/2 object-cover object-bottom opacity-30'
             }
+            style="max-width: none; max-height: none;"
             widths={[400, 768, 1024, 2040]}
             sizes="100vw"
             loading="eager"

@@ -51,8 +51,9 @@ const timelineClasses = (classes?.items ?? {}) as Record<string, string>;
               width={432}
               height={768}
               layout="cover"
-              src={image?.src}
-              alt={image?.alt || ''}
+              {...(typeof image === 'object' && image !== null ? image : {})}
+              src={typeof image === 'object' && image !== null ? image.src : ''}
+              alt={typeof image === 'object' && image !== null ? image.alt || '' : ''}
             />
           )}
         </div>

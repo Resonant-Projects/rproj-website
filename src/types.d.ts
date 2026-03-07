@@ -91,6 +91,10 @@ export interface MetaDataTwitter {
 export interface Image {
   src: string;
   alt?: string;
+  width?: number;
+  height?: number;
+  loading?: 'eager' | 'lazy';
+  decoding?: 'async' | 'auto' | 'sync';
 }
 
 export interface Video {

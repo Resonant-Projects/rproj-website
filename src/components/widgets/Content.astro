@@ -49,8 +49,8 @@ const relatedPages = showRelated ? getRelatedPages(Astro.url.pathname, 3) : [];
     }}
   />
   <div class="mx-auto max-w-7xl p-4 md:px-8">
-    <div class={`md:flex ${isReversed ? 'md:flex-row-reverse' : ''} md:gap-16`}>
-      <div class="self-center md:basis-1/2">
+    <div class:list={['md:gap-16', { 'md:flex': !!image, 'md:flex-row-reverse': !!image && isReversed }]}>
+      <div class:list={['self-center', { 'mx-auto max-w-4xl': !image, 'md:basis-1/2': !!image }]}>
         {content && <div class="text-foreground/70 mb-12 text-lg" set:html={content} />}
 
         {
@@ -75,15 +75,15 @@ const relatedPages = showRelated ? getRelatedPages(Astro.url.pathname, 3) : [];
           }}
         />
       </div>
-      <div aria-hidden="true" class="mt-10 md:mt-0 md:basis-1/2">
-        {
-          image && (
+      {
+        image && (
+          <div aria-hidden="true" class="mt-10 md:mt-0 md:basis-1/2">
             <div class="relative m-auto max-w-4xl">
               {typeof image === 'string' ? (
                 <Fragment set:html={image} />
               ) : (
                 <Image
-                  class="mx-auto w-full rounded-lg bg-gray-500 shadow-lg"
+                  class="mx-auto w-full rounded-lg shadow-lg"
                   width={500}
                   height={500}
                   widths={[400, 768]}
@@ -93,9 +93,9 @@ const relatedPages = showRelated ? getRelatedPages(Astro.url.pathname, 3) : [];
                 />
               )}
             </div>
-          )
-        }
-      </div>
+          </div>
+        )
+      }
     </div>
 
     {

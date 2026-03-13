@@ -137,7 +137,7 @@ const consultingFAQs = [
       alt: 'Illustration of duplicated tools, broken handoffs, and scattered software interfaces resolving into a clearer workflow',
       width: 1400,
       height: 1100,
-      loading: 'eager',
+      loading: 'lazy',
     }}
   />
 
@@ -151,7 +151,7 @@ const consultingFAQs = [
       alt: 'Styled portrait of Keith with subtle workflow and dashboard accents',
       width: 1200,
       height: 1400,
-      loading: 'eager',
+      loading: 'lazy',
     }}
     isReversed={true}
   />
@@ -220,7 +220,7 @@ const consultingFAQs = [
       alt: 'Vertical roadmap illustration for discovery, planning, setup, and ongoing support',
       width: 1024,
       height: 1536,
-      loading: 'eager',
+      loading: 'lazy',
     }}
     items={[
       {
@@ -243,25 +243,19 @@ const consultingFAQs = [
   />
 
   {/* 10. Testimonials */}
-  {
-    /* TODO: Testimonial names look like AI-generated placeholders ("Alex Rivera", "Morgan Lee", "Jamie Chen"). Replace with real client testimonials or anonymize (e.g., "Independent Creator", "Small Business Owner"). */
-  }
   <Testimonials
     title="What Clients Say"
     testimonials={[
       {
-        name: 'Alex Rivera',
-        job: 'Artist & Entrepreneur',
+        job: 'Independent Creator',
         testimonial:
           'Resonant Design transformed my creative workflow. I save hours every week and feel more in control of my business.',
       },
       {
-        name: 'Morgan Lee',
         job: 'Small Business Owner',
         testimonial: 'The personalized tech advice was a game changer. Highly recommend for any solopreneur.',
       },
       {
-        name: 'Jamie Chen',
         job: 'Content Creator',
         testimonial: 'I finally have a system that works for me, not against me. The ongoing support is invaluable.',
       },

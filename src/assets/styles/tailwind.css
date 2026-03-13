@@ -303,7 +303,8 @@
 
   .dark #header.scroll > div:first-child,
   #header.scroll.dark > div:first-child {
-    @apply border-gray-500/20 backdrop-blur-sm;
+    @apply backdrop-blur-sm;
+    border-color: color-mix(in srgb, var(--color-border) 20%, transparent);
     box-shadow: none;
   }
 
@@ -600,7 +601,7 @@
   }
 
   .success-checkmark {
-    animation: checkmark-scale 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    animation: checkmark-scale 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     will-change: transform, opacity;
     transform: translateZ(0);
   }
@@ -613,7 +614,10 @@
 
   /* Form state management classes */
   .error-message {
-    @apply hidden rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700 transition-all duration-300;
+    @apply hidden rounded-md border p-3 text-sm transition-all duration-300;
+    border-color: color-mix(in srgb, var(--color-error) 30%, transparent);
+    background-color: color-mix(in srgb, var(--color-error) 10%, transparent);
+    color: var(--color-error);
     will-change: opacity, transform;
     transform: translateZ(0);
   }
@@ -624,7 +628,10 @@
   }
 
   .success-message {
-    @apply hidden rounded-md border border-green-200 bg-green-50 p-3 text-sm text-green-700 transition-all duration-300;
+    @apply hidden rounded-md border p-3 text-sm transition-all duration-300;
+    border-color: color-mix(in srgb, var(--color-success) 30%, transparent);
+    background-color: color-mix(in srgb, var(--color-success) 10%, transparent);
+    color: var(--color-success);
     will-change: opacity, transform;
     transform: translateZ(0);
   }
@@ -636,7 +643,10 @@
 
   /* Loading message styling */
   .loading-message {
-    @apply hidden rounded-md border border-blue-200 bg-blue-50 p-3 text-sm text-blue-700 transition-all duration-300;
+    @apply hidden rounded-md border p-3 text-sm transition-all duration-300;
+    border-color: color-mix(in srgb, var(--color-info) 30%, transparent);
+    background-color: color-mix(in srgb, var(--color-info) 10%, transparent);
+    color: var(--color-info);
     will-change: opacity, transform;
     transform: translateZ(0);
   }
@@ -648,7 +658,8 @@
 
   .loading-message.show::before {
     content: '';
-    @apply h-4 w-4 rounded-full border-2 border-blue-300;
+    @apply h-4 w-4 rounded-full border-2;
+    border-color: color-mix(in srgb, var(--color-info) 50%, transparent);
     border-top-color: var(--color-primary);
     animation: spin 1s linear infinite;
     will-change: transform;
@@ -657,7 +668,8 @@
 
   /* Field-specific error messages */
   .field-error-message {
-    @apply mt-1 hidden text-sm text-red-600;
+    @apply mt-1 hidden text-sm;
+    color: var(--color-error);
     will-change: opacity, transform;
     transform: translateZ(0);
   }
@@ -669,7 +681,8 @@
 
   /* Field help text styling */
   .field-help-text {
-    @apply mt-1 text-xs text-gray-500;
+    @apply mt-1 text-xs;
+    color: var(--color-muted-foreground);
   }
 
   /* Enhanced form messages region */
@@ -726,16 +739,16 @@
 
   /* Focus Management Styles */
   .keyboard-navigation *:focus {
-    outline: 2px solid var(--color-primary, #0052ff) !important;
+    outline: 2px solid var(--color-primary) !important;
     outline-offset: 2px !important;
     border-radius: 4px;
   }
 
   .keyboard-focused {
-    outline: 2px solid var(--color-primary, #0052ff) !important;
+    outline: 2px solid var(--color-primary) !important;
     outline-offset: 2px !important;
     border-radius: 4px;
-    box-shadow: 0 0 0 4px rgba(0, 82, 255, 0.1) !important;
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-primary) 10%, transparent) !important;
   }
 
   /* Skip target focus indicator - simplified to avoid disruptive overlays */
@@ -765,7 +778,7 @@
   [role='menubar'] [role='menuitem']:focus {
     background-color: color-mix(in srgb, var(--color-primary) 10%, transparent);
     color: var(--color-primary);
-    outline: 2px solid var(--color-primary, #0052ff);
+    outline: 2px solid var(--color-primary);
     outline-offset: -2px;
   }
 
@@ -775,7 +788,7 @@
   }
 
   [role='dialog']:focus-within {
-    box-shadow: 0 0 0 3px rgba(0, 82, 255, 0.2);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 20%, transparent);
   }
 
   /* High contrast mode support */
@@ -814,7 +827,7 @@
   }
 
   .js-focus-visible .focus-visible {
-    outline: 2px solid var(--color-primary, #0052ff);
+    outline: 2px solid var(--color-primary);
     outline-offset: 2px;
   }
 
@@ -833,7 +846,7 @@
     content: '';
     position: absolute;
     inset: -2px;
-    border: 2px solid var(--color-primary, #0052ff);
+    border: 2px solid var(--color-primary);
     border-radius: 6px;
     pointer-events: none;
     opacity: 0.3;
@@ -851,9 +864,9 @@
   }
 
   [data-roving-item]:focus {
-    outline: 2px solid var(--color-primary, #0052ff);
+    outline: 2px solid var(--color-primary);
     outline-offset: 2px;
-    background-color: rgba(0, 82, 255, 0.1);
+    background-color: color-mix(in srgb, var(--color-primary) 10%, transparent);
   }
 
   /* Complex navigation components */
@@ -864,7 +877,8 @@
 
   [data-complex-navigation='grid'] [role='gridcell'],
   [data-complex-navigation='grid'] [data-grid-cell] {
-    @apply cursor-pointer rounded border border-gray-200 p-2;
+    @apply cursor-pointer rounded border p-2;
+    border-color: var(--color-border);
     transition: all 0.2s ease;
   }
 
@@ -872,14 +886,14 @@
   [data-complex-navigation='grid'] [data-grid-cell]:focus {
     border-color: var(--color-primary);
     background-color: color-mix(in srgb, var(--color-primary) 10%, transparent);
-    outline: 2px solid var(--color-primary, #0052ff);
+    outline: 2px solid var(--color-primary);
     outline-offset: 2px;
   }
 
   /* Tab list navigation */
   [data-complex-navigation='tab-list'] {
     display: flex;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid var(--color-border);
   }
 
   [data-complex-navigation='tab-list'] [role='tab'] {
@@ -890,7 +904,7 @@
   [data-complex-navigation='tab-list'] [role='tab']:focus {
     border-color: var(--color-primary);
     background-color: color-mix(in srgb, var(--color-primary) 5%, transparent);
-    outline: 2px solid var(--color-primary, #0052ff);
+    outline: 2px solid var(--color-primary);
     outline-offset: 2px;
   }
 
@@ -913,7 +927,7 @@
   [data-complex-navigation='tree'] [role='treeitem']:focus {
     background-color: color-mix(in srgb, var(--color-primary) 10%, transparent);
     color: var(--color-primary);
-    outline: 2px solid var(--color-primary, #0052ff);
+    outline: 2px solid var(--color-primary);
     outline-offset: 2px;
   }
 
@@ -939,7 +953,7 @@
     content: '';
     position: absolute;
     inset: -4px;
-    border: 2px dashed var(--color-primary, #0052FF);
+    border: 2px dashed var(--color-primary);
     border-radius: 8px;
     opacity: 0;
     animation: focusPulse 2s ease-in-out;
@@ -1000,8 +1014,8 @@
   .keyboard-navigation [role='tab']:focus,
   .keyboard-navigation [role='treeitem']:focus {
     box-shadow:
-      0 0 0 2px var(--color-primary, #0052ff),
-      0 0 0 4px rgba(0, 82, 255, 0.2);
+      0 0 0 2px var(--color-primary),
+      0 0 0 4px color-mix(in srgb, var(--color-primary) 20%, transparent);
   }
 
   /* Accessibility announcements styling - disabled to prevent disruptive overlays */
@@ -1175,10 +1189,12 @@
 
 @keyframes progress-fill {
   0% {
-    width: 0%;
+    transform: scaleX(0);
+    transform-origin: left;
   }
   100% {
-    width: 100%;
+    transform: scaleX(1);
+    transform-origin: left;
   }
 }
 

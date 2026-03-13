@@ -135,8 +135,8 @@ export function ContactFormReact({ title, subtitle, inputs, textarea, button, de
   // Show success message if redirect isn't happening
   if (state.data?.success && !state.data?.redirect) {
     return (
-      <div className="bg-accent/15 mx-auto flex w-full max-w-xl flex-col rounded-lg border border-accent p-4 shadow-md backdrop-blur-sm sm:p-6 lg:p-8">
-        <div className="rounded border border-green-200 bg-green-50 px-4 py-3 text-green-700">
+      <div className="mx-auto flex w-full max-w-xl flex-col rounded-lg border border-border bg-card p-4 shadow-md sm:p-6 lg:p-8">
+        <div className="border-success/30 bg-success/10 text-success rounded border px-4 py-3">
           <div className="flex items-center gap-2">
             <span className="text-xl">✅</span>
             <span>{state.data.message}</span>
@@ -147,7 +147,7 @@ export function ContactFormReact({ title, subtitle, inputs, textarea, button, de
   }
 
   return (
-    <div className="bg-accent/15 mx-auto flex w-full max-w-xl flex-col rounded-lg border border-accent p-4 shadow-md backdrop-blur-sm sm:p-6 lg:p-8">
+    <div className="mx-auto flex w-full max-w-xl flex-col rounded-lg border border-border bg-card p-4 shadow-md sm:p-6 lg:p-8">
       {/* Title and Subtitle */}
       {(title || subtitle) && (
         <div className="mb-6 text-center">
@@ -158,7 +158,7 @@ export function ContactFormReact({ title, subtitle, inputs, textarea, button, de
 
       {/* Error Display */}
       {state.error && (
-        <div className="mb-4 rounded-md border border-red-200 bg-red-100 px-4 py-2 text-sm text-red-800" role="alert">
+        <div className="border-error/30 bg-error/10 text-error mb-4 rounded-md border px-4 py-2 text-sm" role="alert">
           <div className="flex items-center gap-2">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -204,7 +204,7 @@ export function ContactFormReact({ title, subtitle, inputs, textarea, button, de
               <label htmlFor={input.name} className="mb-2 block text-sm font-medium text-foreground">
                 {input.label}
                 {input.required && (
-                  <span className="ml-1 text-red-500" aria-label="required">
+                  <span className="text-error ml-1" aria-label="required">
                     *
                   </span>
                 )}
@@ -246,7 +246,7 @@ export function ContactFormReact({ title, subtitle, inputs, textarea, button, de
             )}
 
             {state.data?.errors?.[input.name] && (
-              <div id={`${input.name}-error`} className="mt-1 text-sm text-red-600" role="alert" aria-live="assertive">
+              <div id={`${input.name}-error`} className="text-error mt-1 text-sm" role="alert" aria-live="assertive">
                 {state.data.errors[input.name]}
               </div>
             )}
@@ -265,7 +265,7 @@ export function ContactFormReact({ title, subtitle, inputs, textarea, button, de
                 <label htmlFor={textareaId} className="mb-2 block text-sm font-medium text-foreground">
                   {textarea.label}
                   {textarea.required && (
-                    <span className="ml-1 text-red-500" aria-label="required">
+                    <span className="text-error ml-1" aria-label="required">
                       *
                     </span>
                   )}
@@ -285,7 +285,7 @@ export function ContactFormReact({ title, subtitle, inputs, textarea, button, de
                 {state.data?.errors?.[textareaId] && (
                   <div
                     id={`${textareaId}-error`}
-                    className="mt-1 text-sm text-red-600"
+                    className="text-error mt-1 text-sm"
                     role="alert"
                     aria-live="assertive"
                   >

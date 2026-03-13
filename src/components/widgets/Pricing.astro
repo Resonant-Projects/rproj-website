@@ -27,7 +27,7 @@ const {
           prices.map(({ title, subtitle, price, period, items, callToAction, hasRibbon = false, ribbonTitle }) => (
             <div class="col-span-3 mx-auto flex w-full sm:col-span-1 md:col-span-1 lg:col-span-1 xl:col-span-1">
               {price && period && (
-                <div class="flex w-full max-w-sm flex-col justify-between rounded-lg border border-gray-200 bg-white px-6 py-8 text-center shadow-sm backdrop-blur-sm dark:border-gray-700 dark:bg-card">
+                <div class="flex w-full max-w-sm flex-col justify-between rounded-lg border border-border bg-card px-6 py-8 text-center shadow-sm">
                   {hasRibbon && ribbonTitle && (
                     <div class="z-1 absolute right-[-5px] top-[-5px] h-[100px] w-[100px] overflow-hidden text-right 2xl:right-[-8px] 2xl:top-[-10px] rtl:left-[-8px] rtl:right-auto 2xl:rtl:left-[-10px]">
                       <span class="absolute right-[-21px] top-[19px] block w-full rotate-45 bg-green-700 text-center text-[10px] font-bold uppercase leading-5 text-white shadow-[0_3px_10px_-5px_rgba(0,0,0,0.3)] before:absolute before:left-0 before:top-full before:z-[-1] before:border-[3px] before:border-b-transparent before:border-l-green-800 before:border-r-transparent before:border-t-green-800 before:content-[''] after:absolute after:right-0 after:top-full after:z-[-1] after:border-[3px] after:border-b-transparent after:border-l-transparent after:border-r-green-800 after:border-t-green-800 after:content-[''] rtl:left-[-21px] rtl:right-auto rtl:-rotate-45">
@@ -39,17 +39,13 @@ const {
                     {title && (
                       <h3 class="mb-2 text-center text-xl font-semibold uppercase leading-6 tracking-wider">{title}</h3>
                     )}
-                    {subtitle && (
-                      <p class="dark:text-muted-foreground font-light text-gray-600 sm:text-lg">{subtitle}</p>
-                    )}
+                    {subtitle && <p class="text-muted-foreground font-light sm:text-lg">{subtitle}</p>}
                     <div class="my-8">
                       <div class="mb-1 flex items-center justify-center text-center">
                         <span class="text-5xl">$</span>
                         <span class="text-6xl font-extrabold">{price}</span>
                       </div>
-                      <span class="dark:text-muted-foreground text-base lowercase leading-6 text-gray-600">
-                        {period}
-                      </span>
+                      <span class="text-muted-foreground text-base lowercase leading-6">{period}</span>
                     </div>
                     {items && (
                       <ul class="my-8 space-y-2 text-left md:my-10">

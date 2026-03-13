@@ -17,44 +17,33 @@ const { entries, class: className = '' } = Astro.props;
 </div>
 
 <script>
-  // Basic implementation of infinite scroll
-  // In a full implementation, this would load more entries via fetch
   document.addEventListener('DOMContentLoaded', () => {
     const feedContainer = document.getElementById('til-feed');
     if (!feedContainer) return;
 
-    // Function to check if we've scrolled to the bottom
-    const isBottomVisible = () => {
-      const feedRect = feedContainer.getBoundingClientRect();
-      return feedRect.bottom <= window.innerHeight + 100; // 100px buffer
-    };
-
-    // Placeholder for a function that would fetch more entries
     const loadMoreEntries = () => {
-      // In a real implementation, this would fetch more entries
-      // and append them to the feedContainer
-      // Intentionally no console logging in production
-
-      // For demo, create a visual indicator that more would load
       const loadingIndicator = document.getElementById('loading-indicator');
       if (loadingIndicator) {
         loadingIndicator.classList.remove('hidden');
-
-        // Simulate loading delay
         setTimeout(() => {
           loadingIndicator.classList.add('hidden');
         }, 1500);
       }
     };
 
-    // Scroll event listener
-    const handleScroll = () => {
-      if (isBottomVisible()) {
-        loadMoreEntries();
-      }
-    };
+    const sentinel = document.createElement('div');
+    sentinel.style.height = '1px';
+    feedContainer.after(sentinel);
 
-    // Add scroll listener
-    window.addEventListener('scroll', handleScroll, { passive: true });
+    const observer = new IntersectionObserver(
+      entries => {
+        if (entries[0].isIntersecting) {
+          loadMoreEntries();
+        }
+      },
+      { rootMargin: '100px' }
+    );
+
+    observer.observe(sentinel);
   });
 </script>

@@ -16,7 +16,7 @@ type Props = HTMLAttributes<'div'> & {
 export const accordionContent = tv({
   base: [
     'starwind-accordion-content',
-    'transform-gpu overflow-hidden',
+    'transform-gpu overflow-hidden will-change-[height] contain-layout',
     'data-[state=closed]:animate-accordion-up data-[state=closed]:h-0',
     'data-[state=open]:animate-accordion-down',
   ],

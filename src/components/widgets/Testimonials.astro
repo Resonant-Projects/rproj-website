@@ -27,7 +27,7 @@ const {
       testimonials &&
         testimonials.map(({ title, testimonial, name, job, image }) => (
           <div class="flex h-auto">
-            <div class="flex flex-col rounded-md p-4 shadow-xl dark:border dark:border-gray-600 dark:shadow-none md:p-6">
+            <div class="flex flex-col rounded-md p-4 shadow-xl dark:border dark:border-border dark:shadow-none md:p-6">
               {title && <h2 class="pb-4 text-lg font-medium leading-6">{title}</h2>}
               {testimonial && (
                 <blockquote class="flex-auto">
@@ -39,12 +39,12 @@ const {
 
               <div class="flex items-center">
                 {image && (
-                  <div class="h-10 w-10 rounded-full border border-gray-200 dark:border-gray-600">
+                  <div class="h-10 w-10 rounded-full border border-border dark:border-border">
                     {typeof image === 'string' ? (
                       <Fragment set:html={image} />
                     ) : (
                       <Image
-                        class="h-10 min-h-full w-10 min-w-full rounded-full border border-gray-200 dark:border-gray-600"
+                        class="h-10 min-h-full w-10 min-w-full rounded-full border border-border dark:border-border"
                         width={40}
                         height={40}
                         widths={[400, 768]}

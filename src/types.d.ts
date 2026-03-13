@@ -113,6 +113,7 @@ export interface Headline {
   title?: string;
   subtitle?: string;
   tagline?: string;
+  align?: 'center' | 'left';
   classes?: Record<string, string>;
 }
 

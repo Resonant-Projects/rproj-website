@@ -15,7 +15,7 @@ const { title, subtitle, description, backgroundImage, className = '' } = Astro.
     {
       backgroundImage && (
         <div class="absolute inset-0 z-0">
-          <img src={backgroundImage} alt={title} class="h-full w-full object-cover opacity-20" />
+          <img src={backgroundImage} alt="" aria-hidden="true" class="h-full w-full object-cover opacity-20" />
           <div class="from-[var(--aw-color-secondary)]/50 to-[var(--aw-color-primary)]/30 absolute inset-0 bg-gradient-to-r" />
         </div>
       )

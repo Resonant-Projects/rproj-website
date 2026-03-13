@@ -220,14 +220,7 @@ const { class: className, ...rest } = Astro.props;
       };
       this.boundBackdropHandler = (e: MouseEvent) => {
         if (!this.dialog) return;
-        const dialogDimensions = this.dialog.getBoundingClientRect();
-        const clickedInDialog =
-          e.clientX >= dialogDimensions.left &&
-          e.clientX <= dialogDimensions.right &&
-          e.clientY >= dialogDimensions.top &&
-          e.clientY <= dialogDimensions.bottom;
-
-        if (!clickedInDialog) {
+        if (e.target === this.dialog) {
           const openDialogs = document.querySelectorAll('dialog[open]');
           if (openDialogs.length > 0 && openDialogs[openDialogs.length - 1] === this.dialog) {
             this.close();

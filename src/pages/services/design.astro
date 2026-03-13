@@ -3,10 +3,13 @@ export const prerender = true;
 
 import PageLayout from '~/layouts/PageLayout.astro';
 import Hero from '~/components/widgets/Hero.astro';
+import Content from '~/components/widgets/Content.astro';
 import Stats from '~/components/widgets/Stats.astro';
 import Features from '~/components/widgets/Features.astro';
+import Features2 from '~/components/widgets/Features2.astro';
 import Steps from '~/components/widgets/Steps.astro';
 import Testimonials from '~/components/widgets/Testimonials.astro';
+import FAQsAccordion from '~/components/widgets/FAQsAccordion.astro';
 import CallToAction from '~/components/widgets/CallToAction.astro';
 import NotionContact from '~/components/widgets/NotionContact.astro';
 import RelatedPages from '~/components/ui/RelatedPages.astro';
@@ -44,21 +47,96 @@ const contextualLinks = [
     description: 'Learn about the journey behind Resonant Projects',
   },
 ];
+
+// Why Choose Us items for Features2 card grid
+const whyChooseUsItems = [
+  {
+    title: 'Decades of Cross-Industry Experience',
+    description:
+      'From music studios to small businesses, I bring a breadth of real-world knowledge that generic consultants simply cannot match.',
+    icon: 'tabler:history',
+  },
+  {
+    title: 'No Vendor Lock-In',
+    description:
+      'I recommend what actually works for you — not what pays me a referral fee. You keep full ownership of every tool and system we set up.',
+    icon: 'tabler:lock-open',
+  },
+  {
+    title: 'Implementation, Not Just Advice',
+    description:
+      'You won\'t get a PDF and a handshake. I build the systems with you, train you on them, and make sure everything works before I step back.',
+    icon: 'tabler:hammer',
+  },
+  {
+    title: 'Built for Solo & Small Teams',
+    description:
+      'Enterprise consultants over-engineer everything. I design lean, maintainable systems that a team of one can confidently run.',
+    icon: 'tabler:users-group',
+  },
+];
+
+// Consulting FAQs
+const consultingFAQs = [
+  {
+    title: 'What happens during the discovery call?',
+    description:
+      'We spend 30 minutes talking through your current workflow, pain points, and goals. No sales pitch — just an honest conversation about whether I can help and what that would look like.',
+  },
+  {
+    title: 'How long does a typical engagement last?',
+    description:
+      'Most projects wrap in 2–6 weeks depending on scope. A focused tool audit might take a single session, while a full workflow overhaul with training usually runs about a month.',
+  },
+  {
+    title: 'What kinds of tools and platforms do you work with?',
+    description:
+      'I am platform-agnostic. Whether it is Notion, Airtable, Google Workspace, automation tools like Zapier or Make, or something niche to your industry — I work with whatever fits your needs best.',
+  },
+  {
+    title: 'Do you work with businesses outside the creative industry?',
+    description:
+      'Absolutely. While many of my clients are creators and artists, the principles of workflow optimization and smart tool selection apply to any small business or solopreneur.',
+  },
+  {
+    title: 'What does "ongoing support" actually mean?',
+    description:
+      'After the initial engagement, you get a window of follow-up support for questions, tweaks, and troubleshooting. Beyond that, I offer monthly retainer options for businesses that want a long-term technology partner.',
+  },
+];
 ---
 
 <PageLayout metadata={metadata} showBreadcrumbs={false}>
+  {/* 1. Hero */}
   <Hero
     tagline="Resonant Design"
     title="Streamline Your Creative Workflow"
     subtitle="Get personalized consulting that saves time and boosts productivity. We help creators and small businesses choose the right tools and optimize their processes."
     actions={[{ text: 'Get Started', href: '#contact', variant: 'primary' }]}
     image={{ src: '~/assets/images/consulting_hero.png', alt: 'Consulting session' }}
+    gradientBg={true}
     showScrollIndicator={true}
   />
 
-  {/* Service Navigation */}
+  {/* 2. Service Navigation */}
   <ServiceNavigation currentService="design" variant="horizontal" />
 
+  {/* 3. Pain Points — narrative Content section */}
+  <Content
+    title="Does This Sound Familiar?"
+    subtitle="Common challenges creators and small businesses face with technology"
+    content="<ul class='pl-6 space-y-3 text-lg list-disc'><li><strong>Hours lost researching tools:</strong> You spend more time evaluating software than actually doing your work.</li><li><strong>Overlapping subscriptions:</strong> You are paying for three apps that do the same thing — and none of them do it well.</li><li><strong>Fragile cobbled-together workflows:</strong> Your system works until one thing breaks, and then everything falls apart.</li><li><strong>Feeling behind on tech:</strong> Everyone seems to have figured this out except you, and the landscape changes faster than you can keep up.</li><li><strong>Conflicting advice:</strong> Forums, YouTube, and AI tools all say different things — and none of them know your specific situation.</li></ul>"
+  />
+
+  {/* 4. Personal Intro — Keith introduction */}
+  <Content
+    title="Technology Should Work for You"
+    subtitle="I'm Keith, and I've spent over two decades helping creators and small businesses cut through the noise."
+    content="<p class='mb-4 text-lg'>My background spans music production, post-production, and technology integration across dozens of industries. I have seen firsthand how the right tools — set up the right way — can transform a chaotic workflow into something that feels effortless.</p><p class='text-lg'>This is not corporate consulting with decks and jargon. It is a hands-on, pragmatic partnership where I learn how you work, identify what is getting in the way, and build systems that actually stick.</p>"
+    isReversed={true}
+  />
+
+  {/* 5. Stats — repositioned after narrative context */}
   <Stats
     title="Proven Results from Years of Experience"
     stats={[
@@ -68,9 +146,10 @@ const contextualLinks = [
     ]}
   />
 
+  {/* 6. Features — Core Consulting Services */}
   <Features
-    title="What We Offer"
-    subtitle="Clear solutions that help your business thrive."
+    title="Core Consulting Services"
+    subtitle="Practical solutions tailored to how you actually work — not how a template says you should."
     items={[
       {
         title: 'Workflow Optimization',
@@ -97,6 +176,22 @@ const contextualLinks = [
     columns={2}
   />
 
+  {/* 7. Features2 — Why Resonant Design? */}
+  <Features2
+    title="Why Resonant Design?"
+    subtitle="More than advice — a partnership built on real-world experience"
+    items={whyChooseUsItems}
+    columns={2}
+  />
+
+  {/* 8. Mid-page CTA — relocated */}
+  <CallToAction
+    title="Ready to Optimize Your Workflow?"
+    subtitle="Let's work together to make your next technology investment truly resonate."
+    actions={[{ text: 'Contact Us', href: '#contact', variant: 'primary' }]}
+  />
+
+  {/* 9. Steps — &amp; bug fixed */}
   <Steps
     title="How It Works"
     subtitle="Four simple steps to transform your workflow."
@@ -110,7 +205,7 @@ const contextualLinks = [
         description: 'Get a clear roadmap designed specifically for your business. No generic solutions.',
       },
       {
-        title: 'Setup &amp; Training',
+        title: 'Setup & Training',
         description: 'We handle the technical setup. Then we train you so you feel confident using everything.',
       },
       {
@@ -120,6 +215,8 @@ const contextualLinks = [
     ]}
   />
 
+  {/* 10. Testimonials */}
+  {/* TODO: Testimonial names look like AI-generated placeholders ("Alex Rivera", "Morgan Lee", "Jamie Chen"). Replace with real client testimonials or anonymize (e.g., "Independent Creator", "Small Business Owner"). */}
   <Testimonials
     title="What Clients Say"
     testimonials={[
@@ -142,22 +239,41 @@ const contextualLinks = [
     ]}
   />
 
-  <CallToAction
-    title="Ready to Optimize Your Workflow?"
-    subtitle="Let's work together to make your next technology investment truly resonate."
-    actions={[{ text: 'Contact Us', href: '#contact', variant: 'primary' }]}
+  {/* 11. FAQs */}
+  <FAQsAccordion
+    title="Frequently Asked Questions"
+    subtitle="Everything you need to know about our consulting services"
+    items={consultingFAQs}
   />
 
-  {/* Related Services Section*/}
+  {/* 12. Final CTA */}
+  <CallToAction
+    title="Let's Talk About What's Possible"
+    subtitle="Whether you need a one-time audit or an ongoing partnership, the first step is a conversation."
+    actions={[{ text: 'Book a Free Consultation', href: '#contact', variant: 'primary' }]}
+  />
+
+  {/* 13. Cross-Service — enhanced to match rhythm's structure */}
   <section class="bg-muted/30 py-12">
     <div class="mx-auto max-w-7xl px-4 sm:px-6">
-      <RelatedPages pages={relatedServices} title="Explore Our Other Services" variant="cards" />
+      <div class="mb-8 text-center">
+        <h3 class="mb-2 text-2xl font-bold text-foreground">Complete Your Creative Vision</h3>
+        <p class="text-muted-foreground">Explore our other services to bring your projects to life</p>
+      </div>
 
-      <div class="mt-8">
-        <ContextualLinks links={contextualLinks} title="Continue Your Journey" />
+      <RelatedPages pages={relatedServices} title="Our Services" variant="cards" showIcon={true} />
+
+      <div class="mt-12">
+        <div class="mb-6 text-center">
+          <h4 class="mb-2 text-xl font-semibold text-foreground">Continue Your Journey</h4>
+          <p class="text-muted-foreground">Complementary resources and services</p>
+        </div>
+
+        <ContextualLinks links={contextualLinks} title="" />
       </div>
     </div>
   </section>
 
+  {/* 14. NotionContact */}
   <NotionContact id="contact" defaultService="Design" />
 </PageLayout>

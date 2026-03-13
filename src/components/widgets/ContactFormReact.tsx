@@ -204,9 +204,12 @@ export function ContactFormReact({ title, subtitle, inputs, textarea, button, de
               <label htmlFor={input.name} className="mb-2 block text-sm font-medium text-foreground">
                 {input.label}
                 {input.required && (
-                  <span className="text-error ml-1" aria-label="required">
-                    *
-                  </span>
+                  <>
+                    <span className="text-error ml-1" aria-hidden="true">
+                      *
+                    </span>
+                    <span className="sr-only">Required</span>
+                  </>
                 )}
               </label>
             )}
@@ -265,9 +268,12 @@ export function ContactFormReact({ title, subtitle, inputs, textarea, button, de
                 <label htmlFor={textareaId} className="mb-2 block text-sm font-medium text-foreground">
                   {textarea.label}
                   {textarea.required && (
-                    <span className="text-error ml-1" aria-label="required">
-                      *
-                    </span>
+                    <>
+                      <span className="text-error ml-1" aria-hidden="true">
+                        *
+                      </span>
+                      <span className="sr-only">Required</span>
+                    </>
                   )}
                 </label>
                 <textarea

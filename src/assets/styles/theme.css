@@ -21,7 +21,7 @@
   --color-popover-foreground: var(--color-brand-900, #1c101e);
   --color-primary: var(--color-brand-600, #5a2054);
   --color-primary-foreground: var(--color-brand-50, #f5f4f7);
-  --color-secondary: var(--color-brand-600, #5a2054);
+  --color-secondary: var(--color-brand-500, #6e2765);
   --color-secondary-foreground: var(--color-brand-50, #f5f4f7);
   --color-muted: var(--color-brand-200, #cdc8d6);
   --color-muted-foreground: var(--color-brand-700, #451844);

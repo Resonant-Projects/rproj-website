@@ -18,7 +18,7 @@ const { tags, class: className = 'text-sm', title = undefined, isCategory = fals
   tags && Array.isArray(tags) && (
     <>
       {title !== undefined && (
-        <span class="dark:text-muted-foreground align-super font-normal text-muted underline decoration-2 underline-offset-4">
+        <span class="text-muted-foreground align-super font-normal underline decoration-2 underline-offset-4">
           {title}
         </span>
       )}
@@ -30,7 +30,7 @@ const { tags, class: className = 'text-sm', title = undefined, isCategory = fals
             ) : (
               <a
                 href={getPermalink(tag.slug, isCategory ? 'category' : 'tag')}
-                class="dark:text-muted-foreground text-muted hover:text-primary dark:hover:text-gray-200"
+                class="text-muted-foreground hover:text-primary"
               >
                 {tag.title}
               </a>

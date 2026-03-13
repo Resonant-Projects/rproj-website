@@ -6,6 +6,7 @@ import Hero from '~/components/widgets/Hero.astro';
 import Content from '~/components/widgets/Content.astro';
 import Steps from '~/components/widgets/Steps.astro';
 import Features from '~/components/widgets/Features.astro';
+import Features2 from '~/components/widgets/Features2.astro';
 import CallToAction from '~/components/widgets/CallToAction.astro';
 import Testimonials from '~/components/widgets/Testimonials.astro';
 import FAQsAccordion from '~/components/widgets/FAQsAccordion.astro';
@@ -85,25 +86,96 @@ const serviceFeatures = [
   },
 ];
 
+// Right Fit items for Features2 card grid
+const rightFitItems = [
+  {
+    title: 'Personalized Expertise',
+    description:
+      'A professional audio engineer with over ten years of experience and exceptional technical expertise, tailored to your needs.',
+    icon: 'tabler:user-star',
+  },
+  {
+    title: 'From Frustration to Elation',
+    description:
+      "Swap feelings of frustration for elation — finish that hit song and get it into the hands of a record label.",
+    icon: 'tabler:mood-happy',
+  },
+  {
+    title: 'Tailored Support',
+    description:
+      'Musicians get support tailored to them to release their unique sound into the world.',
+    icon: 'tabler:adjustments',
+  },
+  {
+    title: 'Industry-Standard Equipment',
+    description:
+      "We'll meet virtually and evaluate your track using the best industry-standard audio equipment.",
+    icon: 'tabler:headphones',
+  },
+  {
+    title: 'Well-Trained Ear',
+    description:
+      "Throughout several remote sessions together, you'll receive feedback from my well-trained ear.",
+    icon: 'tabler:ear',
+  },
+  {
+    title: 'A Signable Track',
+    description:
+      "I'll coach you to implement changes until the production is 100% complete and you have a signable track you're wholeheartedly proud of.",
+    icon: 'tabler:certificate',
+  },
+];
+
+// Why Work With Me items for About Keith section
+const whyWorkWithMe = [
+  {
+    title: 'Cross-Genre Experience',
+    description: 'A wealth of experience across countless music genres.',
+    icon: 'tabler:music',
+  },
+  {
+    title: 'Bespoke Support',
+    description: 'Tailored to YOUR creative needs — never one-size-fits-all.',
+    icon: 'tabler:puzzle',
+  },
+  {
+    title: 'Industry-Lead Professional',
+    description: 'Collaborate with a technical and musical professional at the top of his craft.',
+    icon: 'tabler:award',
+  },
+  {
+    title: 'Battle-Tested Problem Solver',
+    description:
+      "There's not much I haven't seen in terms of roadblocks to perfecting that final mix — I've been there myself.",
+    icon: 'tabler:shield-check',
+  },
+  {
+    title: 'One Step Away',
+    description:
+      "You're just one step away from the helping hand you need to overcome those hurdles and finally finish that song.",
+    icon: 'tabler:arrow-right',
+  },
+];
+
 // Enhanced testimonials from the live website
 const enhancedTestimonials = [
   {
     testimonial:
       "It's unbelievable how much the song has improved. Everything is much more intense, feels really expanded on the high end but the low end is still in the middle as I like. Somehow I think now I really understand what you meant you could do with the bass, like round it you said. I have been testing it in different sound systems, and I really love it.",
     name: 'Independent Artist',
-    clientTitle: 'Electronic Producer',
+    job: 'Electronic Producer',
   },
   {
     testimonial:
       "I couldn't be happier with Keith's service. He provided me with very positive and in-depth feedback on my latest song, which has been incredibly helpful in improving my craft. He took the time to understand my needs and personal preferences, which made the experience feel personalized and tailored to my specific goals.",
     name: 'Singer-Songwriter',
-    clientTitle: 'Folk/Acoustic Artist',
+    job: 'Folk/Acoustic Artist',
   },
   {
     testimonial:
       "I highly recommend Keith's services to anyone looking to improve their music. He is a skilled professional who truly cares about his clients, and I am grateful for the guidance he provided me.",
     name: 'Band Leader',
-    clientTitle: 'Rock Band',
+    job: 'Rock Band',
   },
 ];
 
@@ -208,24 +280,18 @@ const comprehensiveFAQs = [
 
   {/* Finishing Service Features from live website*/}
   <Features
-    title="Resonant Rhythm's Finishing Service"
-    subtitle="What you'll walk away with"
+    title="Walk Away With a Finished, Label-Ready Hit"
+    subtitle="Our holistic approach to finishing music means a focus on the vision behind the song-in-progress. Resonant Rhythm will help you create that next hit with authenticity and meaning."
     items={serviceFeatures}
     columns={3}
   />
 
-  {/* Walk Away With Section from live website*/}
-  <Content
-    title="Walk Away With"
-    subtitle="A finished, fully-mastered hit song ready to send to labels or to be self-released"
-    content="<p class='text-lg'>Our holistic approach to finishing music means a focus on the vision behind the song-in-progress. Resonant Rhythm will help you create that next hit with authenticity and meaning.</p>"
-  />
-
-  {/* Right Fit Section from live website*/}
-  <Content
-    title="Is the Right Fit for You If:"
-    subtitle="We meet artists where they are and take the time to get to know the whole story behind their music"
-    content="<ul class='pl-6 space-y-3 text-lg list-disc'><li>You want a personalized service with a professional audio engineer with over ten years of experience & exceptional technical expertise.</li><li>You're ready to swap feelings of frustration for elation, finish that hit song, and get it into the hands of a record label.</li><li>Musicians need tailored-to-them support to release their unique sound into the world.</li><li>We'll meet virtually and evaluate your track using the best industry-standard audio equipment.</li><li>Throughout several remote sessions together, you'll receive feedback from my well-trained ear.</li><li>I'll coach you to implement changes until the production is 100% complete and you have a signable track that you're wholeheartedly proud of.</li></ul><p class='mt-4 text-lg'>With Resonant Rhythm, you get more than just another conveyor-belt mediocre track. Together, let's harness your vision for the music that resonates with you & make it a reality on playlists worldwide!</p>"
+  {/* Right Fit Section — Features2 card grid*/}
+  <Features2
+    title="Resonant Rhythm Is the Right Fit for You If:"
+    subtitle="With Resonant Rhythm, you get more than just another conveyor-belt mediocre track. Together, let's harness your vision for the music that resonates with you and make it a reality on playlists worldwide!"
+    items={rightFitItems}
+    columns={2}
   />
 
   {/* Call to Action*/}
@@ -247,45 +313,20 @@ const comprehensiveFAQs = [
     items={musicProcessSteps}
   />
 
-  {/* CTA after process steps*/}
-  <CallToAction
-    title="Start Your Journey Today"
-    subtitle="No matter where you are in your production process, I'm here to help you finish strong."
-    actions={[{ text: 'GET STARTED', href: '#contact' }]}
-  />
-
-  {/* Inspirational Section from live website*/}
-  <Content
-    title="Just imagine how you'll feel when you press play and those melodies roll out"
-    subtitle="From the chime of the first note of the intro through to the punchy vocals, your chart-topping song will get you (and your friends) dancing around your kitchen."
-    content="<p class='text-lg'>And YOU wrote it. It's YOUR song. All you needed was a little steering in the right direction.</p>"
-  />
-
   {/* Enhanced Testimonials*/}
   <Testimonials
     title="What Artists Are Saying"
-    subtitle="Real feedback from musicians who've worked with us"
+    subtitle="Just imagine pressing play and hearing those melodies roll out — polished, powerful, and unmistakably yours. Here's what artists who took the leap have to say."
     testimonials={enhancedTestimonials}
   />
-
-  {/* CTA after testimonials*/}
-  <div class="bg-accent/10 py-10 text-center">
-    <p class="mx-auto mb-4 max-w-2xl text-xl font-medium text-foreground">
-      Join the artists who've transformed their tracks into label-ready hits.
-    </p>
-    <a
-      href="#contact"
-      class="text-accent-foreground hover:bg-accent/90 inline-flex items-center gap-2 rounded-lg bg-accent px-8 py-4 text-lg font-bold transition-colors"
-    >
-      Start Your Transformation
-    </a>
-  </div>
 
   {/* About Keith Section from live website*/}
   <Content
     title="Who's behind Resonant Rhythm?"
     subtitle="I'm Keith, a music-infatuated post-production technical director, audio engineer, and entrepreneur"
     content="<p class='mb-4 text-lg'>I possess an uncanny intuition for anything electronic, and I help artists create music that resonates with their audience.</p><p class='mb-4 text-lg'>Throughout my career, I have seen countless creatives stop short of their potential due to hurdles and knocked confidence at the finishing stage of their music. I help musicians succeed by offering my ear and feedback, technical troubleshooting, and advice regarding the various aspects of the music production process.</p><p class='mb-4 text-lg'>Believe me when I say you absolutely CAN confidently release that record as a polished, finished masterpiece. The world needs your music!</p><p class='mb-4 text-lg'>In the same way that all musicians release unique sounds, I also understand that artists have different needs, timescales, goals, and styles of working. I always meet artists where they are at and take the time to get to know the whole story behind their music.</p><p class='text-lg'>When we work together I show you the necessary steps to complete your music so you can add them to your skillset and continue using them yourself moving forward.</p>"
+    items={whyWorkWithMe}
+    columns={2}
     image={{
       src: '~/assets/images/rhythm-keith-studio-portrait.png',
       alt: 'Illustrated portrait of Keith in a studio-inspired environment',
@@ -295,25 +336,18 @@ const comprehensiveFAQs = [
     }}
   />
 
-  {/* Why Work With Me Section from live website*/}
-  <Content
-    title="Why Work with me?"
-    subtitle="My primary goal is to produce music of outstanding quality"
-    content="<ul class='pl-6 space-y-2 text-lg list-disc'><li>Benefit from a wealth of experience across countless music genres</li><li>Get bespoke support tailored to YOUR creative needs</li><li>Collaborate with an industry-lead technical and musical professional</li><li>Throughout all my years in music production, there's not much I haven't seen in terms of roadblocks to perfecting that final mix (I also know because I've been there myself)</li><li>You're just one step away from getting the helping hand you need to help you overcome those hurdles and finally finish that song</li></ul>"
-  />
-
-  {/* Ready to Make the Leap Section from live website*/}
-  <Content
-    title="Ready to make the leap?"
-    subtitle="Whatever your goal, Resonant Rhythm is ready to help you reach it - YOUR way"
-    content="<p class='text-lg'>Let's work together and help you become a signed artist for your dream label today.</p>"
-  />
-
   {/* Comprehensive FAQ Section*/}
   <FAQsAccordion
     title="Frequently Asked Questions"
     subtitle="Everything you need to know about our music finishing services"
     items={comprehensiveFAQs}
+  />
+
+  {/* Final CTA*/}
+  <CallToAction
+    title="Ready to make the leap?"
+    subtitle="Whatever your goal, Resonant Rhythm is ready to help you reach it — YOUR way. Let's work together and help you become a signed artist for your dream label today."
+    actions={[{ text: 'START YOUR PROJECT', href: '#contact' }]}
   />
 
   {/* Cross-Service Promotion*/}

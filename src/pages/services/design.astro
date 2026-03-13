@@ -65,7 +65,7 @@ const whyChooseUsItems = [
   {
     title: 'Implementation, Not Just Advice',
     description:
-      'You won\'t get a PDF and a handshake. I build the systems with you, train you on them, and make sure everything works before I step back.',
+      "You won't get a PDF and a handshake. I build the systems with you, train you on them, and make sure everything works before I step back.",
     icon: 'tabler:hammer',
   },
   {
@@ -113,7 +113,13 @@ const consultingFAQs = [
     title="Streamline Your Creative Workflow"
     subtitle="Get personalized consulting that saves time and boosts productivity. We help creators and small businesses choose the right tools and optimize their processes."
     actions={[{ text: 'Get Started', href: '#contact', variant: 'primary' }]}
-    image={{ src: '~/assets/images/consulting_hero.png', alt: 'Consulting session' }}
+    image={{
+      src: '~/assets/images/design-hero-workflow-atmosphere.png',
+      alt: 'Editorial illustration of a connected creative workflow with tools, dashboard elements, and signal-like lines',
+      width: 1536,
+      height: 1024,
+      loading: 'eager',
+    }}
     gradientBg={true}
     showScrollIndicator={true}
   />
@@ -126,6 +132,13 @@ const consultingFAQs = [
     title="Does This Sound Familiar?"
     subtitle="Common challenges creators and small businesses face with technology"
     content="<ul class='pl-6 space-y-3 text-lg list-disc'><li><strong>Hours lost researching tools:</strong> You spend more time evaluating software than actually doing your work.</li><li><strong>Overlapping subscriptions:</strong> You are paying for three apps that do the same thing — and none of them do it well.</li><li><strong>Fragile cobbled-together workflows:</strong> Your system works until one thing breaks, and then everything falls apart.</li><li><strong>Feeling behind on tech:</strong> Everyone seems to have figured this out except you, and the landscape changes faster than you can keep up.</li><li><strong>Conflicting advice:</strong> Forums, YouTube, and AI tools all say different things — and none of them know your specific situation.</li></ul>"
+    image={{
+      src: '~/assets/images/design-pain-points-tool-chaos.png',
+      alt: 'Illustration of duplicated tools, broken handoffs, and scattered software interfaces resolving into a clearer workflow',
+      width: 1400,
+      height: 1100,
+      loading: 'eager',
+    }}
   />
 
   {/* 4. Personal Intro — Keith introduction */}
@@ -133,6 +146,13 @@ const consultingFAQs = [
     title="Technology Should Work for You"
     subtitle="I'm Keith, and I've spent over two decades helping creators and small businesses cut through the noise."
     content="<p class='mb-4 text-lg'>My background spans music production, post-production, and technology integration across dozens of industries. I have seen firsthand how the right tools — set up the right way — can transform a chaotic workflow into something that feels effortless.</p><p class='text-lg'>This is not corporate consulting with decks and jargon. It is a hands-on, pragmatic partnership where I learn how you work, identify what is getting in the way, and build systems that actually stick.</p>"
+    image={{
+      src: '~/assets/images/design-keith-consulting-portrait.png',
+      alt: 'Styled portrait of Keith with subtle workflow and dashboard accents',
+      width: 1200,
+      height: 1400,
+      loading: 'eager',
+    }}
     isReversed={true}
   />
 
@@ -195,6 +215,13 @@ const consultingFAQs = [
   <Steps
     title="How It Works"
     subtitle="Four simple steps to transform your workflow."
+    image={{
+      src: '~/assets/images/design-process-roadmap.png',
+      alt: 'Vertical roadmap illustration for discovery, planning, setup, and ongoing support',
+      width: 1024,
+      height: 1536,
+      loading: 'eager',
+    }}
     items={[
       {
         title: 'Discovery Call',
@@ -216,7 +243,9 @@ const consultingFAQs = [
   />
 
   {/* 10. Testimonials */}
-  {/* TODO: Testimonial names look like AI-generated placeholders ("Alex Rivera", "Morgan Lee", "Jamie Chen"). Replace with real client testimonials or anonymize (e.g., "Independent Creator", "Small Business Owner"). */}
+  {
+    /* TODO: Testimonial names look like AI-generated placeholders ("Alex Rivera", "Morgan Lee", "Jamie Chen"). Replace with real client testimonials or anonymize (e.g., "Independent Creator", "Small Business Owner"). */
+  }
   <Testimonials
     title="What Clients Say"
     testimonials={[

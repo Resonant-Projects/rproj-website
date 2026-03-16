@@ -107,7 +107,7 @@
     "@astrojs/markdown-remark": "6.3.10",
     "@astrojs/mdx": "4.3.13",
     "@astrojs/partytown": "^2.1.4",
-    "@astrojs/react": "4.4.2",
+    "@astrojs/react": "5.0.0",
     "@axe-core/playwright": "^4.11.1",
     "@axe-core/cli": "^4.11.1",
     "@chlorinec-pkgs/notion-astro-loader": "^1.1.2",

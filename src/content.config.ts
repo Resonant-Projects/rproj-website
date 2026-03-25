@@ -1,7 +1,7 @@
 import { defineCollection, z } from 'astro:content';
 import { file, glob, type Loader } from 'astro/loaders';
 import { existsSync } from 'node:fs';
-import type { NotionLoaderOptions } from '../../vendor/notion-astro-loader/src/loader.js';
+import type { NotionLoaderOptions } from '../vendor/notion-astro-loader/src/loader.js';
 
 const parseResourcesCache = (source: string): Array<Record<string, unknown>> => {
   let payload: unknown;
@@ -47,7 +47,7 @@ const isDevServer = import.meta.env.DEV;
 let notionLoaderFactory: ((options: NotionLoaderOptions) => Loader) | null = null;
 if (!isDevServer) {
   try {
-    const module = await import('../../vendor/notion-astro-loader/src/loader.js');
+    const module = await import('../vendor/notion-astro-loader/src/loader.js');
     notionLoaderFactory = module.notionLoader;
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
@@ -165,13 +165,12 @@ export const collections = {
   resources: defineCollection({
     loader: resourcesLoader,
     // Schema: start from Notion property types; refine as needed
-    schema: () =>
-      z.object({
+    schema: z.object({
         // Include raw Notion properties so we can derive titles when needed
         properties: z.any().optional(),
         // Flattened map of all property values for convenient access
-        flat: z.record(z.unknown()).optional(),
-        rawTransformedProperties: z.record(z.unknown()).optional(),
+        flat: z.record(z.string(), z.unknown()).optional(),
+        rawTransformedProperties: z.record(z.string(), z.unknown()).optional(),
         Name: z.string().optional(),
         Source: z.string().url().optional(),
         'User Defined URL': z.string().url().optional(),
@@ -200,3 +199,4 @@ export const collections = {
       }),
   }),
 };
+

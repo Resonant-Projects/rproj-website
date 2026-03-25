@@ -59,7 +59,7 @@ export const server = {
       name: z.string().min(1, 'Name is required').max(100, 'Name is too long'),
       email: z.string().email('Invalid email address'),
       service: z.enum(ALLOWED_SERVICES, {
-        errorMap: () => ({ message: 'Please select a valid service' }),
+        error: 'Please select a valid service',
       }),
       message: z.string().min(1, 'Message is required').max(5000, 'Message is too long (5000 characters max)'),
     }),

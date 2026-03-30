@@ -159,7 +159,7 @@
     "slug": "^11.0.1",
     "tailwind-merge": "^3.5.0",
     "tailwindcss": "^4.2.2",
-    "typescript": "^5.9.3",
+    "typescript": "^6.0.2",
     "typescript-eslint": "^8.57.2",
     "unified": "^11.0.5",
     "unist-util-inspect": "^8.1.0",

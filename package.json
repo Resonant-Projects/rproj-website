@@ -63,7 +63,7 @@
     "resources:cache:refresh": "node scripts/refresh-resources-cache.js"
   },
   "dependencies": {
-    "@astrojs/rss": "4.0.17",
+    "@astrojs/rss": "4.0.18",
     "@astrojs/sitemap": "3.7.1",
     "@astrojs/vercel": "10.0.2",
     "@astrolib/analytics": "^0.6.1",

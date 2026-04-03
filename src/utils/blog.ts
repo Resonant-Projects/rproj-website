@@ -104,8 +104,8 @@ const normalizeEditorialEntry = (entry: CollectionEntry<'editorial'>): Post => {
   const kind = entry.data.kind.replaceAll('_', ' ');
   return {
     id: entry.id,
-    slug: entry.data.slug,
-    permalink: `writing/${entry.data.slug}`,
+    slug: entry.id,
+    permalink: `writing/${entry.id}`,
     publishDate: entry.data.publishedAt,
     title: entry.data.title,
     excerpt: entry.data.dek,
@@ -231,12 +231,14 @@ export const getStaticPathsBlogList = async ({ paginate }: { paginate: PaginateF
 /** */
 export const getStaticPathsBlogPost = async () => {
   if (!isBlogEnabled || !isBlogPostRouteEnabled) return [];
-  return (await fetchPosts()).flatMap(post => ({
-    params: {
-      blog: post.permalink,
-    },
-    props: { post },
-  }));
+  return (await fetchPosts())
+    .filter(post => !post.permalink.startsWith('writing/'))
+    .flatMap(post => ({
+      params: {
+        blog: post.permalink,
+      },
+      props: { post },
+    }));
 };
 
 /** */

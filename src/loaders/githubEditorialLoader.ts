@@ -49,7 +49,7 @@ function parseMarkdownDocument(source: string): {
   frontmatter: Record<string, unknown>;
   body: string;
 } {
-  const match = source.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/);
+  const match = source.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/);
   if (!match) {
     throw new Error('Editorial markdown file is missing frontmatter.');
   }
@@ -62,7 +62,16 @@ function parseMarkdownDocument(source: string): {
 }
 
 async function fetchText(url: URL): Promise<string> {
-  const response = await fetch(url);
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 30_000);
+
+  let response: Response;
+  try {
+    response = await fetch(url, { signal: controller.signal });
+  } finally {
+    clearTimeout(timeoutId);
+  }
+
   if (!response.ok) {
     throw new Error(`Failed to fetch ${url.toString()}: ${response.status} ${response.statusText}`);
   }

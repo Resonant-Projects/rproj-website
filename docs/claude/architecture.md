@@ -4,7 +4,7 @@ Detailed architecture reference for Claude Code when working on this codebase.
 
 ## Content Collections
 
-Three collections defined in `src/content/config.ts`:
+Four collections defined in `src/content/config.ts`:
 
 | Collection     | Source                            | Loader                                                                     |
 | -------------- | --------------------------------- | -------------------------------------------------------------------------- |

@@ -2,6 +2,7 @@ import { defineCollection, z } from 'astro:content';
 import { file, glob, type Loader } from 'astro/loaders';
 import { existsSync } from 'node:fs';
 import type { NotionLoaderOptions } from '../vendor/notion-astro-loader/src/loader.js';
+import { githubEditorialLoader } from './loaders/githubEditorialLoader';
 
 const parseResourcesCache = (source: string): Array<Record<string, unknown>> => {
   let payload: unknown;
@@ -151,6 +152,23 @@ const tilCollection = defineCollection({
     }),
 });
 
+const editorialCollection = defineCollection({
+  loader: githubEditorialLoader(),
+  schema: z.object({
+    title: z.string(),
+    slug: z.string(),
+    kind: z.enum(['experiment_recap', 'what_changed_my_mind', 'campaign_summary', 'thesis_summary']),
+    publishedAt: z.coerce.date(),
+    dek: z.string(),
+    evidenceStatus: z.enum(['supported', 'mixed', 'speculative']),
+    uncertaintySummary: z.string(),
+    whyItMatters: z.string(),
+    campaignSlug: z.string().optional(),
+    thesisSlugs: z.array(z.string()).optional(),
+    canonicalAppUrl: z.string().url(),
+  }),
+});
+
 const notionToken = import.meta.env.NOTION_TOKEN;
 const notionResourcesDatabaseId = import.meta.env.NOTION_RR_RESOURCES_ID;
 
@@ -162,6 +180,7 @@ const resourcesLoader =
 export const collections = {
   post: postCollection,
   til: tilCollection,
+  editorial: editorialCollection,
   resources: defineCollection({
     loader: resourcesLoader,
     // Schema: start from Notion property types; refine as needed
@@ -199,4 +218,3 @@ export const collections = {
       }),
   }),
 };
-

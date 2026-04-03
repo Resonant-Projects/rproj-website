@@ -100,11 +100,29 @@ const getNormalizedPost = async (post: CollectionEntry<'post'>): Promise<Post> =
   };
 };
 
+const normalizeEditorialEntry = (entry: CollectionEntry<'editorial'>): Post => {
+  const kind = entry.data.kind.replaceAll('_', ' ');
+  return {
+    id: entry.id,
+    slug: entry.data.slug,
+    permalink: `writing/${entry.data.slug}`,
+    publishDate: entry.data.publishedAt,
+    title: entry.data.title,
+    excerpt: entry.data.dek,
+    category: { slug: 'writing', title: 'Writing' },
+    tags: [{ slug: entry.data.kind.replaceAll('_', '-'), title: kind.replace(/\b\w/g, c => c.toUpperCase()) }],
+    draft: false,
+    metadata: {},
+  };
+};
+
 const load = async function (): Promise<Array<Post>> {
   const posts = await getCollection('post');
+  const editorialEntries = await getCollection('editorial');
   const normalizedPosts = posts.map(async post => await getNormalizedPost(post));
+  const normalizedEditorial = editorialEntries.map(normalizeEditorialEntry);
 
-  const results = (await Promise.all(normalizedPosts))
+  const results = [...(await Promise.all(normalizedPosts)), ...normalizedEditorial]
     .sort((a, b) => b.publishDate.valueOf() - a.publishDate.valueOf())
     .filter(post => !post.draft);
 

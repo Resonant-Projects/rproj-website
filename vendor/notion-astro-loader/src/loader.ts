@@ -3,6 +3,7 @@ import type { Loader } from 'astro/loaders';
 
 import { Client, isFullPage } from '@notionhq/client';
 import { dim } from 'kleur/colors';
+import { existsSync } from 'node:fs';
 import * as path from 'node:path';
 
 import { propertiesSchemaForDatabase } from './database-properties.js';
@@ -133,10 +134,32 @@ export function notionLoader({
       }),
     async load(ctx) {
       const { store, logger: log_db, parseData } = ctx;
-      const existingEntries = new Map(store.entries());
-      const existingPageIds = new Set<string>(existingEntries.keys());
+      let existingEntries = new Map(store.entries());
+      let existingPageIds = new Set<string>(existingEntries.keys());
       const cachedPageCount = existingPageIds.size;
       const renderPromises: Promise<void>[] = [];
+
+      // Detect stale image references in cached entries (e.g., Vercel build cache
+      // restores content store but gitignored images directory is missing)
+      if (cachedPageCount > 0) {
+        const contentRoot = path.resolve(process.cwd(), VIRTUAL_CONTENT_ROOT);
+        let cacheInvalid = false;
+        for (const [, entry] of existingEntries) {
+          const assets = (entry as any).assetImports;
+          if (Array.isArray(assets) && assets.length > 0) {
+            if (!existsSync(path.resolve(contentRoot, assets[0]))) {
+              cacheInvalid = true;
+              break;
+            }
+          }
+        }
+        if (cacheInvalid) {
+          log_db.info('Cached image assets not found on disk — clearing store for full re-sync');
+          store.clear();
+          existingEntries = new Map();
+          existingPageIds = new Set();
+        }
+      }
 
       // Resolve data_source_id from database_id (API 2025-09-03)
       let data_source_id: string = database_id;

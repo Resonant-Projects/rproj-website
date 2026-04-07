@@ -32,10 +32,7 @@ type ManifestSource =
       manifest: EditorialManifest;
     };
 
-const DEFAULT_LOCAL_EXPORT_DIR = resolve(
-  process.cwd(),
-  '../frequency-music/exports/public-editorial/v1',
-);
+const DEFAULT_LOCAL_EXPORT_DIR = resolve(process.cwd(), '../frequency-music/exports/public-editorial/v1');
 
 function parseManifest(raw: string): EditorialManifest {
   const parsed = JSON.parse(raw) as Partial<EditorialManifest>;
@@ -94,8 +91,7 @@ async function loadManifestSource(): Promise<ManifestSource | null> {
     };
   }
 
-  const localBaseDir =
-    process.env.EDITORIAL_LOCAL_EXPORT_DIR ?? DEFAULT_LOCAL_EXPORT_DIR;
+  const localBaseDir = process.env.EDITORIAL_LOCAL_EXPORT_DIR ?? DEFAULT_LOCAL_EXPORT_DIR;
   const manifestPath = join(localBaseDir, 'manifest.json');
 
   let manifestRaw: string;
@@ -116,7 +112,7 @@ async function loadManifestSource(): Promise<ManifestSource | null> {
 
 async function loadMarkdownEntry(
   source: ManifestSource,
-  relativePath: string,
+  relativePath: string
 ): Promise<{ raw: string; fileUrl?: URL }> {
   if (source.mode === 'remote') {
     const url = new URL(relativePath, source.contentBaseUrl);
@@ -133,12 +129,13 @@ async function loadMarkdownEntry(
 export function githubEditorialLoader(): Loader {
   return {
     name: 'github-editorial-loader',
-    load: async (context) => {
+    load: async context => {
       const source = await loadManifestSource();
 
       if (!source) {
+        context.store.clear();
         context.logger.warn(
-          'No editorial manifest configured. Set EDITORIAL_MANIFEST_URL or provide a local export snapshot.',
+          'No editorial manifest configured. Set EDITORIAL_MANIFEST_URL or provide a local export snapshot.'
         );
         return;
       }
@@ -146,20 +143,26 @@ export function githubEditorialLoader(): Loader {
       context.store.clear();
 
       for (const item of source.manifest.items) {
-        const { raw, fileUrl } = await loadMarkdownEntry(source, item.path);
-        const { frontmatter, body } = parseMarkdownDocument(raw);
-        const parsedData = await context.parseData({
-          id: item.slug,
-          data: frontmatter,
-        });
-        const rendered = await context.renderMarkdown(body, { fileURL: fileUrl });
-        context.store.set({
-          id: item.slug,
-          data: parsedData,
-          body,
-          digest: context.generateDigest(raw),
-          rendered,
-        });
+        try {
+          const { raw, fileUrl } = await loadMarkdownEntry(source, item.path);
+          const { frontmatter, body } = parseMarkdownDocument(raw);
+          const parsedData = await context.parseData({
+            id: item.slug,
+            data: frontmatter,
+          });
+          const rendered = await context.renderMarkdown(body, { fileURL: fileUrl });
+          context.store.set({
+            id: item.slug,
+            data: parsedData,
+            body,
+            digest: context.generateDigest(raw),
+            rendered,
+          });
+        } catch (err) {
+          context.logger.error(
+            `Failed to load editorial entry "${item.slug}": ${err instanceof Error ? err.message : String(err)}`
+          );
+        }
       }
     },
   };

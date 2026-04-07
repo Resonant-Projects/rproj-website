@@ -4,7 +4,7 @@
  */
 
 export interface PageRelationship {
-  type: 'service' | 'blog' | 'til' | 'about' | 'landing';
+  type: 'service' | 'blog' | 'editorial' | 'til' | 'about' | 'landing';
   title: string;
   href: string;
   description: string;
@@ -108,6 +108,15 @@ export const SITE_STRUCTURE: Record<string, PageRelationship> = {
     icon: 'tabler:article',
     priority: 7,
     tags: ['blog', 'articles', 'insights', 'technology'],
+  },
+  '/writing': {
+    type: 'editorial',
+    title: 'Writing',
+    href: '/writing',
+    description: 'Public narrative snapshots from the Frequency Music research workflow',
+    icon: 'tabler:pencil',
+    priority: 7,
+    tags: ['writing', 'editorial', 'research', 'music', 'essays'],
   },
   '/til': {
     type: 'til',
@@ -219,6 +228,11 @@ export function generateLinkSuggestions(content: string, currentPath: string): L
     blog: '/blog',
     articles: '/blog',
     insights: '/blog',
+
+    writing: '/writing',
+    editorial: '/writing',
+    research: '/writing',
+    essays: '/writing',
 
     learn: '/til',
     'today i learned': '/til',
@@ -354,6 +368,12 @@ export function getBreadcrumbPath(pathname: string): Array<{ text: string; href?
         breadcrumbs.push({ text: 'Post' });
       }
     }
+  } else if (pathname.startsWith('/writing')) {
+    breadcrumbs.push({ text: 'Writing', href: '/writing', icon: 'tabler:pencil' });
+
+    if (segments.length > 1) {
+      breadcrumbs.push({ text: formatSegmentText(segments[1]) });
+    }
   } else if (pathname.startsWith('/til')) {
     breadcrumbs.push({ text: 'Today I Learned', href: '/til', icon: 'tabler:bulb' });
 
@@ -465,6 +485,12 @@ export function getNavigationContext(pathname: string): {
   // Blog posts have /blog as parent
   if (pathname.startsWith('/blog/') && pathname !== '/blog') {
     const parent = SITE_STRUCTURE['/blog'];
+    return { parent, siblings: [], children: [] };
+  }
+
+  // Writing entries have /writing as parent
+  if (pathname.startsWith('/writing/') && pathname !== '/writing') {
+    const parent = SITE_STRUCTURE['/writing'];
     return { parent, siblings: [], children: [] };
   }
 

@@ -100,11 +100,29 @@ const getNormalizedPost = async (post: CollectionEntry<'post'>): Promise<Post> =
   };
 };
 
+const normalizeEditorialEntry = (entry: CollectionEntry<'editorial'>): Post => {
+  const kind = entry.data.kind.replaceAll('_', ' ');
+  return {
+    id: entry.id,
+    slug: entry.id,
+    permalink: `writing/${entry.id}`,
+    publishDate: entry.data.publishedAt,
+    title: entry.data.title,
+    excerpt: entry.data.dek,
+    category: { slug: 'writing', title: 'Writing' },
+    tags: [{ slug: entry.data.kind.replaceAll('_', '-'), title: kind.replace(/\b\w/g, c => c.toUpperCase()) }],
+    draft: false,
+    metadata: {},
+  };
+};
+
 const load = async function (): Promise<Array<Post>> {
   const posts = await getCollection('post');
+  const editorialEntries = await getCollection('editorial');
   const normalizedPosts = posts.map(async post => await getNormalizedPost(post));
+  const normalizedEditorial = editorialEntries.map(normalizeEditorialEntry);
 
-  const results = (await Promise.all(normalizedPosts))
+  const results = [...(await Promise.all(normalizedPosts)), ...normalizedEditorial]
     .sort((a, b) => b.publishDate.valueOf() - a.publishDate.valueOf())
     .filter(post => !post.draft);
 
@@ -213,12 +231,14 @@ export const getStaticPathsBlogList = async ({ paginate }: { paginate: PaginateF
 /** */
 export const getStaticPathsBlogPost = async () => {
   if (!isBlogEnabled || !isBlogPostRouteEnabled) return [];
-  return (await fetchPosts()).flatMap(post => ({
-    params: {
-      blog: post.permalink,
-    },
-    props: { post },
-  }));
+  return (await fetchPosts())
+    .filter(post => !post.permalink.startsWith('writing/'))
+    .flatMap(post => ({
+      params: {
+        blog: post.permalink,
+      },
+      props: { post },
+    }));
 };
 
 /** */

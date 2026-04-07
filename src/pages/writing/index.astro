@@ -1,0 +1,56 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '~/layouts/PageLayout.astro';
+import { getFormattedDate } from '~/utils/utils';
+
+export const prerender = true;
+
+const entries = (await getCollection('editorial')).sort(
+  (left, right) => right.data.publishedAt.getTime() - left.data.publishedAt.getTime()
+);
+
+const metadata = {
+  title: 'Writing',
+  description: 'Public narrative snapshots exported from the Frequency Music research workflow.',
+};
+---
+
+<Layout metadata={metadata}>
+  <section class="mx-auto max-w-5xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
+    <div class="mb-10 max-w-3xl">
+      <p class="mb-3 text-sm uppercase tracking-[0.24em] text-primary">Writing</p>
+      <h1 class="mb-4 text-4xl font-bold tracking-tighter md:text-5xl">Public notes from the research-to-music loop</h1>
+      <p class="text-muted-foreground text-lg leading-8">
+        These entries are exported snapshots, not live database joins. Each piece is meant to say what was tried, what
+        changed, and what still remains uncertain.
+      </p>
+    </div>
+
+    {
+      entries.length === 0 ? (
+        <div class="text-muted-foreground rounded-2xl border border-border bg-card px-6 py-10">
+          No editorial snapshots are published yet.
+        </div>
+      ) : (
+        <div class="grid gap-4">
+          {entries.map(entry => (
+            <a
+              href={`/writing/${entry.id}`}
+              class="hover:border-primary/40 group rounded-2xl border border-border bg-card px-6 py-5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+            >
+              <div class="mb-3 flex flex-wrap items-center gap-2 text-xs uppercase tracking-[0.18em] text-primary">
+                <span>{entry.data.kind.replaceAll('_', ' ')}</span>
+                <span class="text-muted-foreground">•</span>
+                <span>{entry.data.evidenceStatus}</span>
+                <span class="text-muted-foreground">•</span>
+                <time datetime={entry.data.publishedAt.toISOString()}>{getFormattedDate(entry.data.publishedAt)}</time>
+              </div>
+              <h2 class="mb-2 text-2xl font-semibold tracking-tight group-hover:text-primary">{entry.data.title}</h2>
+              <p class="text-muted-foreground leading-7">{entry.data.dek}</p>
+            </a>
+          ))}
+        </div>
+      )
+    }
+  </section>
+</Layout>

@@ -1,10 +1,14 @@
-import { defineCollection, z } from 'astro:content';
-import { file, glob, type Loader } from 'astro/loaders';
-import { existsSync } from 'node:fs';
-import type { NotionLoaderOptions } from '../vendor/notion-astro-loader/src/loader.js';
-import { githubEditorialLoader } from './loaders/githubEditorialLoader';
+import { defineCollection, z } from "astro:content";
+import { file, glob, type Loader } from "astro/loaders";
+import { existsSync } from "node:fs";
+import type { NotionLoaderOptions } from "~/vendor/notionLoader";
+import { frequencyEssayLoader } from "~/loaders/frequencyEssayLoader";
+import { githubEditorialLoader } from "~/loaders/githubEditorialLoader";
+import { mergeLoaders } from "~/loaders/mergeLoaders";
 
-const parseResourcesCache = (source: string): Array<Record<string, unknown>> => {
+const parseResourcesCache = (
+  source: string,
+): Array<Record<string, unknown>> => {
   let payload: unknown;
   try {
     payload = JSON.parse(source) as unknown;
@@ -18,8 +22,10 @@ const parseResourcesCache = (source: string): Array<Record<string, unknown>> => 
 
   return payload.map((item, index) => {
     const value = item as Record<string, unknown>;
-    const id = typeof value.id === 'string' && value.id ? value.id : `cache-${index}`;
-    const sourceData = (value.data as Record<string, unknown> | undefined) ?? value;
+    const id =
+      typeof value.id === "string" && value.id ? value.id : `cache-${index}`;
+    const sourceData =
+      (value.data as Record<string, unknown> | undefined) ?? value;
     return {
       ...sourceData,
       id,
@@ -27,13 +33,13 @@ const parseResourcesCache = (source: string): Array<Record<string, unknown>> => 
   });
 };
 
-const resourcesCachePath = 'src/content/resources-cache.json';
+const resourcesCachePath = "src/content/resources-cache.json";
 const resourcesCacheFileLoader = file(resourcesCachePath, {
   parser: parseResourcesCache,
 });
 const fallbackResourcesLoader: Loader = {
-  name: 'resources-fallback-loader',
-  load: async context => {
+  name: "resources-fallback-loader",
+  load: async (context) => {
     const resourcesCacheUrl = new URL(resourcesCachePath, context.config.root);
     if (!existsSync(resourcesCacheUrl)) {
       context.store.clear();
@@ -45,18 +51,24 @@ const fallbackResourcesLoader: Loader = {
 };
 const isDevServer = import.meta.env.DEV;
 
-let notionLoaderFactory: ((options: NotionLoaderOptions) => Loader) | null = null;
+let notionLoaderFactory: ((options: NotionLoaderOptions) => Loader) | null =
+  null;
 if (!isDevServer) {
   try {
-    const module = await import('../vendor/notion-astro-loader/src/loader.js');
-    notionLoaderFactory = module.notionLoader;
+    const { notionLoader } = await import("~/vendor/notionLoader");
+    notionLoaderFactory = notionLoader;
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    console.warn(`[resources-notion-loader] Falling back to cache loader: ${message}`);
+    console.warn(
+      `[resources-notion-loader] Falling back to cache loader: ${message}`,
+    );
   }
 }
 
-const createNotionResourcesLoader = (auth: string, databaseId: string): Loader => {
+const createNotionResourcesLoader = (
+  auth: string,
+  databaseId: string,
+): Loader => {
   if (!notionLoaderFactory) {
     return fallbackResourcesLoader;
   }
@@ -64,10 +76,10 @@ const createNotionResourcesLoader = (auth: string, databaseId: string): Loader =
   return notionLoaderFactory({
     auth,
     database_id: databaseId,
-    imageSavePath: 'content/notion/images',
+    imageSavePath: "content/notion/images",
     filter: {
-      property: 'Status',
-      status: { equals: 'Up-to-Date' },
+      property: "Status",
+      status: { equals: "Up-to-Date" },
     },
   });
 };
@@ -100,7 +112,7 @@ const metadataDefinition = () =>
                 url: z.string(),
                 width: z.number().optional(),
                 height: z.number().optional(),
-              })
+              }),
             )
             .optional(),
           locale: z.string().optional(),
@@ -119,7 +131,10 @@ const metadataDefinition = () =>
     .optional();
 
 const postCollection = defineCollection({
-  loader: glob({ pattern: ['**/*.md', '**/*.mdx'], base: 'src/content/post' }),
+  loader: mergeLoaders(
+    glob({ pattern: ["**/*.md", "**/*.mdx"], base: "src/content/post" }),
+    frequencyEssayLoader(),
+  ),
   schema: ({ image }) =>
     z.object({
       publishDate: z.date().optional(),
@@ -133,13 +148,14 @@ const postCollection = defineCollection({
       category: z.string().optional(),
       tags: z.array(z.string()).optional(),
       author: z.string().optional(),
+      byline: z.string().optional(),
 
       metadata: metadataDefinition(),
     }),
 });
 
 const tilCollection = defineCollection({
-  loader: glob({ pattern: ['**/*.md', '**/*.mdx'], base: 'src/content/til' }),
+  loader: glob({ pattern: ["**/*.md", "**/*.mdx"], base: "src/content/til" }),
   schema: ({ image }) =>
     z.object({
       title: z.string(),
@@ -157,10 +173,15 @@ const editorialCollection = defineCollection({
   schema: z.object({
     title: z.string(),
     slug: z.string(),
-    kind: z.enum(['experiment_recap', 'what_changed_my_mind', 'campaign_summary', 'thesis_summary']),
+    kind: z.enum([
+      "experiment_recap",
+      "what_changed_my_mind",
+      "campaign_summary",
+      "thesis_summary",
+    ]),
     publishedAt: z.coerce.date(),
     dek: z.string(),
-    evidenceStatus: z.enum(['supported', 'mixed', 'speculative']),
+    evidenceStatus: z.enum(["supported", "mixed", "speculative"]),
     uncertaintySummary: z.string(),
     whyItMatters: z.string(),
     campaignSlug: z.string().optional(),
@@ -185,36 +206,40 @@ export const collections = {
     loader: resourcesLoader,
     // Schema: start from Notion property types; refine as needed
     schema: z.object({
-        // Include raw Notion properties so we can derive titles when needed
-        properties: z.any().optional(),
-        // Flattened map of all property values for convenient access
-        flat: z.record(z.string(), z.unknown()).optional(),
-        rawTransformedProperties: z.record(z.string(), z.unknown()).optional(),
-        Name: z.string().optional(),
-        Source: z.string().url().optional(),
-        'User Defined URL': z.string().url().optional(),
-        Category: z.array(z.string()).optional(),
-        Type: z.array(z.string()).optional(),
-        Tags: z.array(z.string()).optional(),
-        Keywords: z.array(z.string()).optional(),
-        Status: z.enum(['Needs Review', 'Writing', 'Needs Update', 'Up-to-Date']).optional(),
-        Length: z.enum(['Short', 'Medium', 'Long']).optional(),
-        'AI summary': z.string().optional(),
-        'Last Updated': z
-          .union([
-            z.date(),
-            z.string(),
-            z
-              .object({
-                start: z.date().optional(),
-                end: z.date().nullable(),
-                time_zone: z.string().nullable(),
-              })
-              .nullable(),
-          ])
-          .optional(),
-        'Skill Level': z.enum(['Beginner', 'Intermediate', 'Advanced', 'Any']).optional(),
-        Favorite: z.boolean().optional(),
-      }),
+      // Include raw Notion properties so we can derive titles when needed
+      properties: z.any().optional(),
+      // Flattened map of all property values for convenient access
+      flat: z.record(z.string(), z.unknown()).optional(),
+      rawTransformedProperties: z.record(z.string(), z.unknown()).optional(),
+      Name: z.string().optional(),
+      Source: z.string().url().optional(),
+      "User Defined URL": z.string().url().optional(),
+      Category: z.array(z.string()).optional(),
+      Type: z.array(z.string()).optional(),
+      Tags: z.array(z.string()).optional(),
+      Keywords: z.array(z.string()).optional(),
+      Status: z
+        .enum(["Needs Review", "Writing", "Needs Update", "Up-to-Date"])
+        .optional(),
+      Length: z.enum(["Short", "Medium", "Long"]).optional(),
+      "AI summary": z.string().optional(),
+      "Last Updated": z
+        .union([
+          z.date(),
+          z.string(),
+          z
+            .object({
+              start: z.date().optional(),
+              end: z.date().nullable(),
+              time_zone: z.string().nullable(),
+            })
+            .nullable(),
+        ])
+        .optional(),
+      "Skill Level": z
+        .enum(["Beginner", "Intermediate", "Advanced", "Any"])
+        .optional(),
+      Favorite: z.boolean().optional(),
+    }),
   }),
 };

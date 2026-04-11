@@ -1,22 +1,21 @@
 import type { Loader } from 'astro/loaders';
 import { readFile } from 'node:fs/promises';
-import { join, resolve } from 'node:path';
+import { join, resolve, sep } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { load as loadYaml } from 'js-yaml';
 
-type EditorialManifestEntry = {
+type EssayManifestItem = {
   slug: string;
   path: string;
   title: string;
-  kind: 'experiment_recap' | 'what_changed_my_mind' | 'campaign_summary' | 'thesis_summary';
-  publishedAt: number;
-  evidenceStatus: 'supported' | 'mixed' | 'speculative';
+  publishDate: string | null;
+  category: string;
 };
 
-type EditorialManifest = {
-  version: 'public_editorial_v1';
-  generatedAt?: string;
-  items: EditorialManifestEntry[];
+type EssayManifest = {
+  version: 'frequency_essays_v1';
+  generatedAt: string;
+  items: EssayManifestItem[];
 };
 
 type ManifestSource =
@@ -24,22 +23,22 @@ type ManifestSource =
       mode: 'remote';
       manifestUrl: URL;
       contentBaseUrl: URL;
-      manifest: EditorialManifest;
+      manifest: EssayManifest;
     }
   | {
       mode: 'local';
       baseDir: string;
-      manifest: EditorialManifest;
+      manifest: EssayManifest;
     };
 
-const DEFAULT_LOCAL_EXPORT_DIR = resolve(process.cwd(), '../frequency-music/exports/public-editorial/v1');
+const DEFAULT_LOCAL_EXPORT_DIR = resolve(process.cwd(), '../frequency-music/exports/blog');
 
-function parseManifest(raw: string): EditorialManifest {
-  const parsed = JSON.parse(raw) as Partial<EditorialManifest>;
-  if (parsed.version !== 'public_editorial_v1' || !Array.isArray(parsed.items)) {
-    throw new Error('Editorial manifest is missing the public_editorial_v1 contract.');
+function parseManifest(raw: string): EssayManifest {
+  const parsed = JSON.parse(raw) as Partial<EssayManifest>;
+  if (parsed.version !== 'frequency_essays_v1' || !Array.isArray(parsed.items)) {
+    throw new Error('Essay manifest is missing the frequency_essays_v1 contract.');
   }
-  return parsed as EditorialManifest;
+  return parsed as EssayManifest;
 }
 
 function parseMarkdownDocument(source: string): {
@@ -48,12 +47,11 @@ function parseMarkdownDocument(source: string): {
 } {
   const match = source.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/);
   if (!match) {
-    throw new Error('Editorial markdown file is missing frontmatter.');
+    throw new Error('Essay markdown file is missing frontmatter.');
   }
 
-  const frontmatter = loadYaml(match[1] ?? '') as Record<string, unknown>;
   return {
-    frontmatter,
+    frontmatter: loadYaml(match[1] ?? '') as Record<string, unknown>,
     body: match[2] ?? '',
   };
 }
@@ -76,10 +74,10 @@ async function fetchText(url: URL): Promise<string> {
 }
 
 async function loadManifestSource(): Promise<ManifestSource | null> {
-  const manifestUrl = process.env.EDITORIAL_MANIFEST_URL;
+  const manifestUrl = process.env.ESSAY_MANIFEST_URL;
   if (manifestUrl) {
     const manifestLocation = new URL(manifestUrl);
-    const rawContentBaseUrl = process.env.EDITORIAL_CONTENT_BASE_URL;
+    const rawContentBaseUrl = process.env.ESSAY_CONTENT_BASE_URL;
     let contentBaseUrl: URL;
     if (rawContentBaseUrl) {
       const parsedUrl = new URL(rawContentBaseUrl);
@@ -99,7 +97,7 @@ async function loadManifestSource(): Promise<ManifestSource | null> {
     };
   }
 
-  const localBaseDir = process.env.EDITORIAL_LOCAL_EXPORT_DIR ?? DEFAULT_LOCAL_EXPORT_DIR;
+  const localBaseDir = process.env.ESSAY_LOCAL_EXPORT_DIR ?? DEFAULT_LOCAL_EXPORT_DIR;
   const manifestPath = join(localBaseDir, 'manifest.json');
 
   let manifestRaw: string;
@@ -110,11 +108,10 @@ async function loadManifestSource(): Promise<ManifestSource | null> {
     throw err;
   }
 
-  const manifest = parseManifest(manifestRaw);
   return {
     mode: 'local',
     baseDir: localBaseDir,
-    manifest,
+    manifest: parseManifest(manifestRaw),
   };
 }
 
@@ -124,52 +121,60 @@ async function loadMarkdownEntry(
 ): Promise<{ raw: string; fileUrl?: URL }> {
   if (source.mode === 'remote') {
     const url = new URL(relativePath, source.contentBaseUrl);
+    const basePath = source.contentBaseUrl.pathname.endsWith('/')
+      ? source.contentBaseUrl.pathname
+      : `${source.contentBaseUrl.pathname}/`;
+    if (url.origin !== source.contentBaseUrl.origin || !url.pathname.startsWith(basePath)) {
+      throw new Error(`Essay path escapes content base: ${relativePath}`);
+    }
     return { raw: await fetchText(url), fileUrl: url };
   }
 
-  const filePath = join(source.baseDir, relativePath);
+  const baseDir = resolve(source.baseDir);
+  const filePath = resolve(baseDir, relativePath);
+  if (filePath !== baseDir && !filePath.startsWith(`${baseDir}${sep}`)) {
+    throw new Error(`Essay path escapes export directory: ${relativePath}`);
+  }
   return {
     raw: await readFile(filePath, 'utf8'),
     fileUrl: pathToFileURL(filePath),
   };
 }
 
-export function githubEditorialLoader(): Loader {
+export function frequencyEssayLoader(): Loader {
   return {
-    name: 'github-editorial-loader',
+    name: 'frequency-essay-loader',
     load: async context => {
       const source = await loadManifestSource();
 
       if (!source) {
-        context.store.clear();
         context.logger.warn(
-          'No editorial manifest configured. Set EDITORIAL_MANIFEST_URL or provide a local export snapshot.'
+          'No essay manifest found. Set ESSAY_MANIFEST_URL or run export-essays.ts in frequency-music.'
         );
         return;
       }
-
-      context.store.clear();
 
       for (const item of source.manifest.items) {
         try {
           const { raw, fileUrl } = await loadMarkdownEntry(source, item.path);
           const { frontmatter, body } = parseMarkdownDocument(raw);
           const parsedData = await context.parseData({
-            id: item.slug,
+            id: `essay/${item.slug}`,
             data: frontmatter,
           });
-          const rendered = await context.renderMarkdown(body, { fileURL: fileUrl });
+          const rendered = await context.renderMarkdown(body, {
+            fileURL: fileUrl,
+          });
           context.store.set({
-            id: item.slug,
+            id: `essay/${item.slug}`,
             data: parsedData,
             body,
             digest: context.generateDigest(raw),
             rendered,
           });
-        } catch (err) {
-          context.logger.error(
-            `Failed to load editorial entry "${item.slug}": ${err instanceof Error ? err.message : String(err)}`
-          );
+        } catch (error) {
+          const message = error instanceof Error ? error.message : String(error);
+          context.logger.error(`Failed to load essay ${item.slug}: ${message}`);
         }
       }
     },

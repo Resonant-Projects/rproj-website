@@ -3,6 +3,7 @@ import { readFile } from 'node:fs/promises';
 import { join, resolve, sep } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { load as loadYaml } from 'js-yaml';
+import { FREQUENCY_EXPORTS_DIR, getEssayContentBaseUrl, getEssayManifestUrl } from '~/utils/frequency';
 
 type EssayManifestItem = {
   slug: string;
@@ -30,8 +31,6 @@ type ManifestSource =
       baseDir: string;
       manifest: EssayManifest;
     };
-
-const DEFAULT_LOCAL_EXPORT_DIR = resolve(process.cwd(), '../frequency-music/exports/blog');
 
 function parseManifest(raw: string): EssayManifest {
   const parsed = JSON.parse(raw) as Partial<EssayManifest>;
@@ -74,20 +73,9 @@ async function fetchText(url: URL): Promise<string> {
 }
 
 async function loadManifestSource(): Promise<ManifestSource | null> {
-  const manifestUrl = process.env.ESSAY_MANIFEST_URL;
-  if (manifestUrl) {
-    const manifestLocation = new URL(manifestUrl);
-    const rawContentBaseUrl = process.env.ESSAY_CONTENT_BASE_URL;
-    let contentBaseUrl: URL;
-    if (rawContentBaseUrl) {
-      const parsedUrl = new URL(rawContentBaseUrl);
-      if (!parsedUrl.pathname.endsWith('/')) {
-        parsedUrl.pathname += '/';
-      }
-      contentBaseUrl = parsedUrl;
-    } else {
-      contentBaseUrl = new URL('./', manifestLocation);
-    }
+  const manifestLocation = getEssayManifestUrl();
+  const contentBaseUrl = getEssayContentBaseUrl();
+  try {
     const manifest = parseManifest(await fetchText(manifestLocation));
     return {
       mode: 'remote',
@@ -95,24 +83,29 @@ async function loadManifestSource(): Promise<ManifestSource | null> {
       contentBaseUrl,
       manifest,
     };
+  } catch {
+    // Remote fetch failed
   }
 
-  const localBaseDir = process.env.ESSAY_LOCAL_EXPORT_DIR ?? DEFAULT_LOCAL_EXPORT_DIR;
-  const manifestPath = join(localBaseDir, 'manifest.json');
+  if (FREQUENCY_EXPORTS_DIR !== null) {
+    const manifestPath = join(FREQUENCY_EXPORTS_DIR, 'blog', 'manifest.json');
 
-  let manifestRaw: string;
-  try {
-    manifestRaw = await readFile(manifestPath, 'utf8');
-  } catch (err: unknown) {
-    if ((err as NodeJS.ErrnoException).code === 'ENOENT') return null;
-    throw err;
+    let manifestRaw: string;
+    try {
+      manifestRaw = await readFile(manifestPath, 'utf8');
+    } catch (err: unknown) {
+      if ((err as NodeJS.ErrnoException).code === 'ENOENT') return null;
+      throw err;
+    }
+
+    return {
+      mode: 'local',
+      baseDir: join(FREQUENCY_EXPORTS_DIR, 'blog'),
+      manifest: parseManifest(manifestRaw),
+    };
   }
 
-  return {
-    mode: 'local',
-    baseDir: localBaseDir,
-    manifest: parseManifest(manifestRaw),
-  };
+  return null;
 }
 
 async function loadMarkdownEntry(
@@ -149,7 +142,7 @@ export function frequencyEssayLoader(): Loader {
 
       if (!source) {
         context.logger.warn(
-          'No essay manifest found. Set ESSAY_MANIFEST_URL or run export-essays.ts in frequency-music.'
+          'No essay manifest found. Check network access or set FREQUENCY_LOCAL_EXPORT_DIR for local development.'
         );
         return;
       }
@@ -163,7 +156,7 @@ export function frequencyEssayLoader(): Loader {
             data: frontmatter,
           });
           const rendered = await context.renderMarkdown(body, {
-            fileURL: fileUrl,
+            fileURL: source.mode === 'local' ? fileUrl : undefined,
           });
           context.store.set({
             id: `essay/${item.slug}`,

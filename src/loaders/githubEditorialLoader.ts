@@ -1,8 +1,9 @@
 import type { Loader } from 'astro/loaders';
 import { readFile } from 'node:fs/promises';
-import { join, resolve } from 'node:path';
+import { join, resolve, sep } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { load as loadYaml } from 'js-yaml';
+import { FREQUENCY_EXPORTS_DIR, getEditorialContentBaseUrl, getEditorialManifestUrl } from '~/utils/frequency';
 
 type EditorialManifestEntry = {
   slug: string;
@@ -31,8 +32,6 @@ type ManifestSource =
       baseDir: string;
       manifest: EditorialManifest;
     };
-
-const DEFAULT_LOCAL_EXPORT_DIR = resolve(process.cwd(), '../frequency-music/exports/public-editorial/v1');
 
 function parseManifest(raw: string): EditorialManifest {
   const parsed = JSON.parse(raw) as Partial<EditorialManifest>;
@@ -76,20 +75,9 @@ async function fetchText(url: URL): Promise<string> {
 }
 
 async function loadManifestSource(): Promise<ManifestSource | null> {
-  const manifestUrl = process.env.EDITORIAL_MANIFEST_URL;
-  if (manifestUrl) {
-    const manifestLocation = new URL(manifestUrl);
-    const rawContentBaseUrl = process.env.EDITORIAL_CONTENT_BASE_URL;
-    let contentBaseUrl: URL;
-    if (rawContentBaseUrl) {
-      const parsedUrl = new URL(rawContentBaseUrl);
-      if (!parsedUrl.pathname.endsWith('/')) {
-        parsedUrl.pathname += '/';
-      }
-      contentBaseUrl = parsedUrl;
-    } else {
-      contentBaseUrl = new URL('./', manifestLocation);
-    }
+  const manifestLocation = getEditorialManifestUrl();
+  const contentBaseUrl = getEditorialContentBaseUrl();
+  try {
     const manifest = parseManifest(await fetchText(manifestLocation));
     return {
       mode: 'remote',
@@ -97,25 +85,30 @@ async function loadManifestSource(): Promise<ManifestSource | null> {
       contentBaseUrl,
       manifest,
     };
+  } catch {
+    // Remote fetch failed
   }
 
-  const localBaseDir = process.env.EDITORIAL_LOCAL_EXPORT_DIR ?? DEFAULT_LOCAL_EXPORT_DIR;
-  const manifestPath = join(localBaseDir, 'manifest.json');
+  if (FREQUENCY_EXPORTS_DIR !== null) {
+    const manifestPath = join(FREQUENCY_EXPORTS_DIR, 'public-editorial', 'v1', 'manifest.json');
 
-  let manifestRaw: string;
-  try {
-    manifestRaw = await readFile(manifestPath, 'utf8');
-  } catch (err: unknown) {
-    if ((err as NodeJS.ErrnoException).code === 'ENOENT') return null;
-    throw err;
+    let manifestRaw: string;
+    try {
+      manifestRaw = await readFile(manifestPath, 'utf8');
+    } catch (err: unknown) {
+      if ((err as NodeJS.ErrnoException).code === 'ENOENT') return null;
+      throw err;
+    }
+
+    const manifest = parseManifest(manifestRaw);
+    return {
+      mode: 'local',
+      baseDir: join(FREQUENCY_EXPORTS_DIR, 'public-editorial', 'v1'),
+      manifest,
+    };
   }
 
-  const manifest = parseManifest(manifestRaw);
-  return {
-    mode: 'local',
-    baseDir: localBaseDir,
-    manifest,
-  };
+  return null;
 }
 
 async function loadMarkdownEntry(
@@ -124,10 +117,20 @@ async function loadMarkdownEntry(
 ): Promise<{ raw: string; fileUrl?: URL }> {
   if (source.mode === 'remote') {
     const url = new URL(relativePath, source.contentBaseUrl);
+    const basePath = source.contentBaseUrl.pathname.endsWith('/')
+      ? source.contentBaseUrl.pathname
+      : `${source.contentBaseUrl.pathname}/`;
+    if (url.origin !== source.contentBaseUrl.origin || !url.pathname.startsWith(basePath)) {
+      throw new Error(`Editorial path escapes content base: ${relativePath}`);
+    }
     return { raw: await fetchText(url), fileUrl: url };
   }
 
-  const filePath = join(source.baseDir, relativePath);
+  const baseDir = resolve(source.baseDir);
+  const filePath = resolve(baseDir, relativePath);
+  if (filePath !== baseDir && !filePath.startsWith(`${baseDir}${sep}`)) {
+    throw new Error(`Editorial path escapes export directory: ${relativePath}`);
+  }
   return {
     raw: await readFile(filePath, 'utf8'),
     fileUrl: pathToFileURL(filePath),
@@ -143,7 +146,7 @@ export function githubEditorialLoader(): Loader {
       if (!source) {
         context.store.clear();
         context.logger.warn(
-          'No editorial manifest configured. Set EDITORIAL_MANIFEST_URL or provide a local export snapshot.'
+          'No editorial manifest found. Check network access or set FREQUENCY_LOCAL_EXPORT_DIR for local development.'
         );
         return;
       }
@@ -158,7 +161,9 @@ export function githubEditorialLoader(): Loader {
             id: item.slug,
             data: frontmatter,
           });
-          const rendered = await context.renderMarkdown(body, { fileURL: fileUrl });
+          const rendered = await context.renderMarkdown(body, {
+            fileURL: source.mode === 'local' ? fileUrl : undefined,
+          });
           context.store.set({
             id: item.slug,
             data: parsedData,

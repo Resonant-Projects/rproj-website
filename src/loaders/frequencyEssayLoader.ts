@@ -84,10 +84,10 @@ async function loadManifestSource(): Promise<ManifestSource | null> {
       manifest,
     };
   } catch {
-    // Remote fetch failed, try local mode if FREQUENCY_LOCAL_EXPORT_DIR is set
+    // Remote fetch failed
   }
 
-  if (FREQUENCY_EXPORTS_DIR) {
+  if (FREQUENCY_EXPORTS_DIR !== null) {
     const manifestPath = join(FREQUENCY_EXPORTS_DIR, 'blog', 'manifest.json');
 
     let manifestRaw: string;
@@ -156,7 +156,7 @@ export function frequencyEssayLoader(): Loader {
             data: frontmatter,
           });
           const rendered = await context.renderMarkdown(body, {
-            fileURL: fileUrl,
+            fileURL: source.mode === 'local' ? fileUrl : undefined,
           });
           context.store.set({
             id: `essay/${item.slug}`,

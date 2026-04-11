@@ -1,6 +1,6 @@
 import type { Loader } from 'astro/loaders';
 import { readFile } from 'node:fs/promises';
-import { join, resolve } from 'node:path';
+import { join, resolve, sep } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { load as loadYaml } from 'js-yaml';
 
@@ -77,8 +77,9 @@ async function loadManifestSource(): Promise<ManifestSource | null> {
   const manifestUrl = process.env.ESSAY_MANIFEST_URL;
   if (manifestUrl) {
     const manifestLocation = new URL(manifestUrl);
-    const contentBaseUrl = process.env.ESSAY_CONTENT_BASE_URL
-      ? new URL(process.env.ESSAY_CONTENT_BASE_URL)
+    const rawContentBaseUrl = process.env.ESSAY_CONTENT_BASE_URL;
+    const contentBaseUrl = rawContentBaseUrl
+      ? new URL(rawContentBaseUrl.endsWith('/') ? rawContentBaseUrl : `${rawContentBaseUrl}/`)
       : new URL('./', manifestLocation);
     const manifest = parseManifest(await fetchText(manifestLocation));
     return {
@@ -113,10 +114,20 @@ async function loadMarkdownEntry(
 ): Promise<{ raw: string; fileUrl?: URL }> {
   if (source.mode === 'remote') {
     const url = new URL(relativePath, source.contentBaseUrl);
+    const basePath = source.contentBaseUrl.pathname.endsWith('/')
+      ? source.contentBaseUrl.pathname
+      : `${source.contentBaseUrl.pathname}/`;
+    if (url.origin !== source.contentBaseUrl.origin || !url.pathname.startsWith(basePath)) {
+      throw new Error(`Essay path escapes content base: ${relativePath}`);
+    }
     return { raw: await fetchText(url), fileUrl: url };
   }
 
-  const filePath = join(source.baseDir, relativePath);
+  const baseDir = resolve(source.baseDir);
+  const filePath = resolve(baseDir, relativePath);
+  if (filePath !== baseDir && !filePath.startsWith(`${baseDir}${sep}`)) {
+    throw new Error(`Essay path escapes export directory: ${relativePath}`);
+  }
   return {
     raw: await readFile(filePath, 'utf8'),
     fileUrl: pathToFileURL(filePath),

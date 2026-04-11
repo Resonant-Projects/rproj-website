@@ -79,8 +79,9 @@ async function loadManifestSource(): Promise<ManifestSource | null> {
   const manifestUrl = process.env.EDITORIAL_MANIFEST_URL;
   if (manifestUrl) {
     const manifestLocation = new URL(manifestUrl);
-    const contentBaseUrl = process.env.EDITORIAL_CONTENT_BASE_URL
-      ? new URL(process.env.EDITORIAL_CONTENT_BASE_URL)
+    const rawContentBaseUrl = process.env.EDITORIAL_CONTENT_BASE_URL;
+    const contentBaseUrl = rawContentBaseUrl
+      ? new URL(rawContentBaseUrl.endsWith('/') ? rawContentBaseUrl : `${rawContentBaseUrl}/`)
       : new URL('./', manifestLocation);
     const manifest = parseManifest(await fetchText(manifestLocation));
     return {

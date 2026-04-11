@@ -1,10 +1,10 @@
 import { defineCollection, z } from "astro:content";
 import { file, glob, type Loader } from "astro/loaders";
 import { existsSync } from "node:fs";
-import type { NotionLoaderOptions } from "../vendor/notion-astro-loader/src/loader.js";
-import { frequencyEssayLoader } from "./loaders/frequencyEssayLoader";
-import { githubEditorialLoader } from "./loaders/githubEditorialLoader";
-import { mergeLoaders } from "./loaders/mergeLoaders";
+import type { NotionLoaderOptions } from "~/vendor/notionLoader";
+import { frequencyEssayLoader } from "~/loaders/frequencyEssayLoader";
+import { githubEditorialLoader } from "~/loaders/githubEditorialLoader";
+import { mergeLoaders } from "~/loaders/mergeLoaders";
 
 const parseResourcesCache = (
   source: string,
@@ -55,8 +55,8 @@ let notionLoaderFactory: ((options: NotionLoaderOptions) => Loader) | null =
   null;
 if (!isDevServer) {
   try {
-    const module = await import("../vendor/notion-astro-loader/src/loader.js");
-    notionLoaderFactory = module.notionLoader;
+    const { notionLoader } = await import("~/vendor/notionLoader");
+    notionLoaderFactory = notionLoader;
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     console.warn(

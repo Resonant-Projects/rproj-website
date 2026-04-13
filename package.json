@@ -127,7 +127,7 @@
     "@types/react": "^19.2.14",
     "@typescript-eslint/eslint-plugin": "^8.58.1",
     "@typescript-eslint/parser": "^8.58.1",
-    "astro-compress": "2.4.0",
+    "astro-compress": "2.4.1",
     "astro-eslint-parser": "^1.4.0",
     "axe-core": "^4.11.2",
     "eslint": "^10.2.0",

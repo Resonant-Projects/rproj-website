@@ -80,10 +80,6 @@ export const headerData = {
       ],
     },
     {
-      text: 'Writing',
-      href: getPermalink('/writing'),
-    },
-    {
       text: 'Resources',
       href: getPermalink('/resources/all/1'),
     },
@@ -116,7 +112,6 @@ export const footerData = {
       title: 'Content',
       links: [
         { text: 'Blog', href: getBlogPermalink() },
-        { text: 'Writing', href: getPermalink('/writing') },
         { text: 'Resources', href: getPermalink('/resources/all/1') },
         { text: 'TIL', href: getPermalink('/til/all/1') },
         { text: 'Categories', href: getBlogCategoryPermalink() },

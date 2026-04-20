@@ -165,7 +165,7 @@
     "unist-util-inspect": "^8.1.0",
     "unist-util-visit": "^5.1.0",
     "unist-util-visit-parents": "^6.0.2",
-    "vercel": "^50.43.0",
+    "vercel": "^51.7.0",
     "vfile": "^6.0.3",
     "vfile-reporter": "^8.1.1"
   },

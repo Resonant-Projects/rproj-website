@@ -13,7 +13,7 @@ import { UI } from 'astrowind:config';
     const handlerRegistry = new WeakMap();
     let handlerCounter = 0;
     let themeTransitionTimeout;
-    const screenSize = window.matchMedia('(max-width: 767px)');
+    const screenSize = window.matchMedia('(width < 48rem)');
 
     function applyTheme(theme) {
       if (theme === 'dark') {
@@ -68,21 +68,24 @@ import { UI } from 'astrowind:config';
       }
     }
 
+    // The toggle's aria-expanded is the mobile menu's only state; tailwind.css derives
+    // the panel, scroll lock and hidden page from it.
+    function setMenuOpen(open) {
+      document.querySelector('[data-aw-toggle-menu]')?.setAttribute('aria-expanded', String(open));
+    }
+
     const onLoad = function () {
       let lastKnownScrollPosition = window.scrollY;
       let ticking = true;
 
       attachEvent(
-        '#header nav',
+        '#navigation',
         'click',
-        function () {
-          document.querySelector('[data-aw-toggle-menu]')?.classList.remove('expanded');
-          document.body.classList.remove('overflow-hidden');
-          document.getElementById('header')?.classList.remove('h-screen');
-          document.getElementById('header')?.classList.remove('expanded');
-          document.getElementById('header')?.classList.remove('bg-page');
-          document.querySelector('#header nav')?.classList.add('hidden');
-          document.querySelector('#header > div > div:last-child')?.classList.add('hidden');
+        function (event) {
+          // Only close after following a link; dropdown toggles live inside the nav too.
+          if (event.target.closest('a[href]')) {
+            setMenuOpen(false);
+          }
         },
         'header-nav-click'
       );
@@ -91,13 +94,7 @@ import { UI } from 'astrowind:config';
         '[data-aw-toggle-menu]',
         'click',
         function (_, elem) {
-          elem.classList.toggle('expanded');
-          document.body.classList.toggle('overflow-hidden');
-          document.getElementById('header')?.classList.toggle('h-screen');
-          document.getElementById('header')?.classList.toggle('expanded');
-          document.getElementById('header')?.classList.toggle('bg-page');
-          document.querySelector('#header nav')?.classList.toggle('hidden');
-          document.querySelector('#header > div > div:last-child')?.classList.toggle('hidden');
+          setMenuOpen(elem.getAttribute('aria-expanded') !== 'true');
         },
         'toggle-menu-click'
       );
@@ -158,16 +155,7 @@ import { UI } from 'astrowind:config';
         'social-share-click'
       );
 
-      const handleScreenSizeChange = function () {
-        document.querySelector('[data-aw-toggle-menu]')?.classList.remove('expanded');
-        document.body.classList.remove('overflow-hidden');
-        document.getElementById('header')?.classList.remove('h-screen');
-        document.getElementById('header')?.classList.remove('expanded');
-        document.getElementById('header')?.classList.remove('bg-page');
-        document.querySelector('#header nav')?.classList.add('hidden');
-        document.querySelector('#header > div > div:last-child')?.classList.add('hidden');
-      };
-      attachEvent([screenSize], 'change', handleScreenSizeChange, 'screen-size-change');
+      attachEvent([screenSize], 'change', () => setMenuOpen(false), 'screen-size-change');
 
       function applyHeaderStylesOnScroll() {
         const header = document.querySelector('#header[data-aw-sticky-header]');
@@ -199,14 +187,7 @@ import { UI } from 'astrowind:config';
     };
     const onPageShow = function () {
       document.documentElement.classList.add('motion-safe:scroll-smooth');
-      const elem = document.querySelector('[data-aw-toggle-menu]');
-      if (elem) {
-        elem.classList.remove('expanded');
-      }
-      document.body.classList.remove('overflow-hidden');
-      document.getElementById('header')?.classList.remove('h-screen');
-      document.getElementById('header')?.classList.remove('expanded');
-      document.querySelector('#header nav')?.classList.add('hidden');
+      setMenuOpen(false);
     };
 
     window.addEventListener('load', onLoad);

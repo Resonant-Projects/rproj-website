@@ -85,7 +85,7 @@ const {
         {title && (
           <h1
             class={`mb-4 whitespace-normal break-words font-heading font-bold leading-tight tracking-tighter text-foreground ${
-              gradientBg ? 'text-5xl md:text-7xl' : 'text-xl sm:text-3xl md:text-5xl lg:text-6xl'
+              gradientBg ? 'text-5xl md:text-7xl' : 'text-4xl sm:text-5xl lg:text-6xl'
             }`}
             set:html={title}
           />
@@ -93,7 +93,7 @@ const {
         <div class="mx-auto max-w-3xl">
           {subtitle && (
             <p
-              class={`text-foreground/80 mb-6 leading-relaxed ${gradientBg ? 'text-xl md:text-2xl' : 'text-xl'}`}
+              class={`text-foreground/80 mb-6 leading-relaxed ${gradientBg ? 'text-xl md:text-2xl' : 'text-lg sm:text-xl'}`}
               set:html={subtitle}
             />
           )}

@@ -14,6 +14,7 @@
   "assignees": ["keithce"],
   "reviewers": ["keithce"],
   "automerge": false,
+  "separateMinorPatch": true,
   "github-actions": {
     "enabled": false
   },
@@ -54,6 +55,16 @@
       "matchUpdateTypes": ["minor", "patch"],
       "matchPackageNames": ["!astro", "!@astrojs/**"],
       "groupName": "dev dependencies (non-major)"
+    },
+    {
+      "description": "Patches: automerge once required checks pass. Last so it overrides the group rules above. 0.x versions excluded because their patches can break.",
+      "matchUpdateTypes": ["patch"],
+      "matchCurrentVersion": "!/^0\\./",
+      "automerge": true,
+      "automergeType": "pr",
+      "platformAutomerge": true,
+      "minimumReleaseAge": "3 days",
+      "schedule": ["at any time"]
     }
   ],
   "lockFileMaintenance": {

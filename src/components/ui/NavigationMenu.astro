@@ -26,51 +26,49 @@ const currentPath = new URL(Astro.url).pathname;
 
 <nav class={`navigation-menu ${className}`} aria-label="Main navigation">
   <ul class={`nav-list nav-list--${orientation}`}>
-    {
-      links.map((link, index) => (
-        <li class={`nav-item ${link.links?.length ? 'nav-item--dropdown' : ''}`}>
-          {link.links?.length ? (
-            <>
-              <button
-                type="button"
-                class="nav-link nav-link--dropdown"
-                aria-expanded="false"
-                aria-haspopup="true"
-                id={`nav-dropdown-trigger-${index}`}
-                aria-controls={`nav-dropdown-menu-${index}`}
-              >
-                <span class="nav-link-text">{link.text}</span>
-                {showChevrons && <Icon name="tabler:chevron-down" class="nav-chevron" aria-hidden="true" />}
-              </button>
-              <ul class="dropdown-menu" role="menu" id={`nav-dropdown-menu-${index}`}>
-                {link.links.map(subLink => (
-                  <li class="dropdown-item" role="none">
-                    <a
-                      href={subLink.href}
-                      class={`dropdown-link ${subLink.href === currentPath ? 'dropdown-link--active' : ''}`}
-                      role="menuitem"
-                      aria-label={subLink.ariaLabel}
-                    >
-                      {subLink.icon && <Icon name={subLink.icon} class="dropdown-icon" aria-hidden="true" />}
-                      {subLink.text}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </>
-          ) : (
-            <a
-              href={link.href}
-              class={`nav-link ${link.href === currentPath ? 'nav-link--active' : ''}`}
-              aria-label={link.ariaLabel}
+    {links.map((link, index) => (
+      <li class={`nav-item ${link.links?.length ? 'nav-item--dropdown' : ''}`}>
+        {link.links?.length ? (
+          <>
+            <button
+              type="button"
+              class="nav-link nav-link--dropdown"
+              aria-expanded="false"
+              aria-haspopup="true"
+              id={`nav-dropdown-trigger-${index}`}
+              aria-controls={`nav-dropdown-menu-${index}`}
             >
-              {link.icon && <Icon name={link.icon} class="nav-icon" aria-hidden="true" />}
               <span class="nav-link-text">{link.text}</span>
-            </a>
-          )}
-        </li>
-      ))
-    }
+              {showChevrons && <Icon name="tabler:chevron-down" class="nav-chevron" aria-hidden="true" />}
+            </button>
+            <ul class="dropdown-menu" role="menu" id={`nav-dropdown-menu-${index}`}>
+              {link.links.map(subLink => (
+                <li class="dropdown-item" role="none">
+                  <a
+                    href={subLink.href}
+                    class={`dropdown-link ${subLink.href === currentPath ? 'dropdown-link--active' : ''}`}
+                    role="menuitem"
+                    aria-label={subLink.ariaLabel}
+                  >
+                    {subLink.icon && <Icon name={subLink.icon} class="dropdown-icon" aria-hidden="true" />}
+                    {subLink.text}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </>
+        ) : (
+          <a
+            href={link.href}
+            class={`nav-link ${link.href === currentPath ? 'nav-link--active' : ''}`}
+            aria-label={link.ariaLabel}
+          >
+            {link.icon && <Icon name={link.icon} class="nav-icon" aria-hidden="true" />}
+            <span class="nav-link-text">{link.text}</span>
+          </a>
+        )}
+      </li>
+    ))}
   </ul>
 </nav>
 

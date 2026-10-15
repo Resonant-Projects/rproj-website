@@ -12,7 +12,9 @@ const { entries, class: className = '' } = Astro.props;
 
 <div class={`til-social-feed ${className}`} id="til-feed">
   <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-    {entries.map(entry => <TilCard entry={entry} class="h-full" />)}
+    {entries.map(entry => (
+      <TilCard entry={entry} class="h-full" />
+    ))}
   </div>
 </div>
 

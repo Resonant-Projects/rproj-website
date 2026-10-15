@@ -55,28 +55,24 @@ const href = `/resources/${canonicalSlug}`;
 
   <div class="flex items-center justify-between">
     <div class="text-muted-foreground text-xs">
-      {
-        type && category && (
-          <span>
-            Type: {type} · Category: {category}
-          </span>
-        )
-      }
+      {type && category && (
+        <span>
+          Type: {type} · Category: {category}
+        </span>
+      )}
       {type && !category && <span>Type: {type}</span>}
       {!type && category && <span>Category: {category}</span>}
     </div>
 
-    {
-      safeSource && (
-        <a
-          href={safeSource}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="text-xs font-medium text-primary transition-colors hover:text-accent"
-        >
-          View Source →
-        </a>
-      )
-    }
+    {safeSource && (
+      <a
+        href={safeSource}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="text-xs font-medium text-primary transition-colors hover:text-accent"
+      >
+        View Source →
+      </a>
+    )}
   </div>
 </article>

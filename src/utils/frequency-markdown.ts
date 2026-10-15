@@ -2,7 +2,11 @@ import { readFile } from 'node:fs/promises';
 import { resolve, sep } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { createMarkdownProcessor } from '@astrojs/markdown-remark';
-import { load as loadYaml } from 'js-yaml';
+import { CORE_SCHEMA, load as loadYaml, mergeTag, timestampTag } from 'js-yaml';
+
+// js-yaml 5 loads with the YAML 1.2 core schema (no timestamps, no `<<` merge keys). Frontmatter
+// relies on `publishDate: 2026-01-02` becoming a Date, so restore the js-yaml 4 behaviour explicitly.
+const FRONTMATTER_SCHEMA = CORE_SCHEMA.withTags([timestampTag, mergeTag]);
 
 let markdownProcessorPromise: ReturnType<typeof createMarkdownProcessor> | undefined;
 
@@ -20,7 +24,7 @@ export function parseMarkdownDocument(source: string): {
     throw new Error('Markdown file is missing frontmatter.');
   }
 
-  const frontmatter = loadYaml(match[1] ?? '');
+  const frontmatter = loadYaml(match[1] ?? '', { schema: FRONTMATTER_SCHEMA });
   if (frontmatter === null || typeof frontmatter !== 'object' || Array.isArray(frontmatter)) {
     throw new Error('Markdown frontmatter must be a YAML mapping.');
   }

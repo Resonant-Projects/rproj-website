@@ -311,23 +311,6 @@
     box-shadow: none;
   }
 
-  /* Mobile menu styles */
-  #header.expanded nav {
-    position: fixed;
-    top: 70px;
-    left: 0;
-    right: 0;
-    bottom: 70px !important;
-    padding: 0 5px;
-  }
-
-  /* Dropdown menu interactions */
-  .dropdown:focus .dropdown-menu,
-  .dropdown:focus-within .dropdown-menu,
-  .dropdown:hover .dropdown-menu {
-    display: block;
-  }
-
   /* Icon styling utilities */
   [astro-icon].icon-light > * {
     stroke-width: 1.2;
@@ -335,19 +318,6 @@
 
   [astro-icon].icon-bold > * {
     stroke-width: 2.4;
-  }
-
-  /* Mobile menu toggle animations */
-  [data-aw-toggle-menu] path {
-    @apply transition-transform duration-200;
-  }
-
-  [data-aw-toggle-menu].expanded g > path:first-child {
-    @apply translate-x-[-3px] translate-y-[15px] -rotate-45;
-  }
-
-  [data-aw-toggle-menu].expanded g > path:last-child {
-    @apply translate-x-[14px] translate-y-[-8px] rotate-45;
   }
 
   .dd *:first-child {
@@ -1265,5 +1235,47 @@
   .btn-loading .loading-spinner {
     opacity: 0.7;
     transform: translateZ(0);
+  }
+}
+
+/*
+ * Mobile menu panel. Its only state is the toggle's aria-expanded (flipped by
+ * BasicScripts, and reset by Layout's global Escape handler), so everything here
+ * derives from it. Unlayered so it outranks the header's `sticky` utility.
+ */
+@media (width < 48rem) {
+  #header:not(:has([data-aw-toggle-menu][aria-expanded='true'])) :is(#navigation, #header-actions) {
+    display: none;
+  }
+
+  #header:has([data-aw-toggle-menu][aria-expanded='true']) {
+    position: fixed;
+    inset: 0;
+    background-color: var(--aw-color-bg-page);
+
+    /* Logo row and actions keep their size; the links scroll between them */
+    .header-bar {
+      display: flex;
+      flex-direction: column;
+      block-size: 100%;
+    }
+
+    #navigation {
+      flex: 1;
+      min-block-size: 0;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      padding-block: 0.5rem;
+    }
+  }
+
+  /* Lock the page and take it, and the skip links into it, out of the tab order while the panel covers it */
+  body:has(#header [data-aw-toggle-menu][aria-expanded='true']) {
+    overflow: hidden;
+
+    .skip-links,
+    #focus-trap-container > :not(#header, :has(#header)) {
+      visibility: hidden;
+    }
   }
 }

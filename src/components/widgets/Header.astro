@@ -59,7 +59,6 @@ if (currentPath.startsWith('/services/')) {
   class:list={[
     { sticky: isSticky, relative: !isSticky, dark: isDark },
     'top-0 z-40 mx-auto w-full flex-none border-b border-transparent transition-all duration-300 ease-in-out',
-    'header-bg',
   ]}
   {...isSticky ? { 'data-aw-sticky-header': true } : {}}
   {...id ? { id } : {}}
@@ -67,7 +66,7 @@ if (currentPath.startsWith('/services/')) {
   <div class="absolute inset-0"></div>
   <div
     class:list={[
-      'relative mx-auto w-full px-3 py-3 text-foreground md:px-6',
+      'header-bar relative mx-auto w-full px-3 py-3 text-foreground md:px-6',
       {
         'md:flex md:justify-between': position !== 'center',
       },
@@ -89,16 +88,16 @@ if (currentPath.startsWith('/services/')) {
     </div>
     <nav
       id="navigation"
-      role="navigation"
       aria-label="Main navigation"
-      class="hidden w-full items-center text-foreground md:mx-5 md:flex md:w-auto md:justify-self-center"
+      class="w-full items-center text-foreground md:mx-5 md:flex md:w-auto md:justify-self-center"
     >
       <NavigationMenu links={links} orientation="horizontal" showChevrons={true} className="w-full" />
     </nav>
     <div
+      id="header-actions"
       class:list={[
         { 'ml-auto rtl:ml-0 rtl:mr-auto': position === 'left' },
-        'fixed bottom-0 left-0 hidden w-full items-center justify-end p-3 md:static md:mb-0 md:flex md:w-auto md:self-center md:justify-self-end md:p-0 rtl:left-auto rtl:right-0',
+        'flex items-center justify-end p-3 md:w-auto md:self-center md:justify-self-end md:p-0',
       ]}
     >
       <div class="flex w-full items-center justify-between md:w-auto">

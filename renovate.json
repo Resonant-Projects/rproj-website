@@ -10,6 +10,10 @@
   "dependencyDashboardOSVVulnerabilitySummary": "all",
   "dependencyDashboardReportAbandonment": true,
   "osvVulnerabilityAlerts": true,
+  "vulnerabilityAlerts": {
+    "description": "Security fixes skip the schedule but keep the 3-day release age, because patch fixes can automerge.",
+    "minimumReleaseAge": "3 days"
+  },
   "labels": ["dependencies"],
   "assignees": ["keithce"],
   "reviewers": ["keithce"],

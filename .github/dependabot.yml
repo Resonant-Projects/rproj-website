@@ -1,10 +1,8 @@
+# Dependabot owns GitHub Actions only. Renovate (see /renovate.json) owns npm/bun
+# dependencies so bun.lock is regenerated together with package.json.
 version: 2
 updates:
   - package-ecosystem: 'github-actions'
-    directory: '/'
-    schedule:
-      interval: 'weekly'
-  - package-ecosystem: 'npm'
     directory: '/'
     schedule:
       interval: 'weekly'

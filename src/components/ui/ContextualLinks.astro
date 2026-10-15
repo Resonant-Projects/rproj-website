@@ -19,56 +19,54 @@ export interface Props {
 const { links, title, inline = false, className = '' } = Astro.props;
 ---
 
-{
-  links.length > 0 && (
-    <div class={`contextual-links ${className}`}>
-      {title && (
-        <h4 class="mb-3 flex items-center gap-2 text-lg font-semibold text-foreground">
-          <Icon name="tabler:external-link" class="h-4 w-4 text-primary" aria-hidden="true" />
-          {title}
-        </h4>
-      )}
+{links.length > 0 && (
+  <div class={`contextual-links ${className}`}>
+    {title && (
+      <h4 class="mb-3 flex items-center gap-2 text-lg font-semibold text-foreground">
+        <Icon name="tabler:external-link" class="h-4 w-4 text-primary" aria-hidden="true" />
+        {title}
+      </h4>
+    )}
 
-      <div class={inline ? 'flex flex-wrap gap-2' : 'space-y-2'}>
-        {links.map(link => (
-          <a
-            href={link.href}
-            class={`inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors duration-200 ${
-              inline
-                ? 'bg-primary/10 hover:bg-primary/20 hover:text-primary-foreground text-primary'
-                : 'hover:bg-accent/10 hover:border-primary/20 border border-transparent text-primary hover:text-accent'
-            }`}
-            {...(link.external
-              ? {
-                  target: '_blank',
-                  rel: 'noopener noreferrer',
-                  'aria-label': `${link.text} (opens in new tab)`,
-                }
-              : {})}
-          >
-            {link.icon && <Icon name={link.icon} class="h-4 w-4" aria-hidden="true" />}
+    <div class={inline ? 'flex flex-wrap gap-2' : 'space-y-2'}>
+      {links.map(link => (
+        <a
+          href={link.href}
+          class={`inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors duration-200 ${
+            inline
+              ? 'bg-primary/10 hover:bg-primary/20 hover:text-primary-foreground text-primary'
+              : 'hover:bg-accent/10 hover:border-primary/20 border border-transparent text-primary hover:text-accent'
+          }`}
+          {...(link.external
+            ? {
+                target: '_blank',
+                rel: 'noopener noreferrer',
+                'aria-label': `${link.text} (opens in new tab)`,
+              }
+            : {})}
+        >
+          {link.icon && <Icon name={link.icon} class="h-4 w-4" aria-hidden="true" />}
 
-            <span>{link.text}</span>
+          <span>{link.text}</span>
 
-            {link.external && <Icon name="tabler:external-link" class="h-3 w-3 opacity-70" aria-hidden="true" />}
-          </a>
-        ))}
-      </div>
-
-      {!inline && (
-        <div class="mt-4 space-y-1">
-          {links
-            .filter(link => link.description)
-            .map(link => (
-              <div class="text-muted-foreground pl-6 text-xs">
-                <strong>{link.text}:</strong> {link.description}
-              </div>
-            ))}
-        </div>
-      )}
+          {link.external && <Icon name="tabler:external-link" class="h-3 w-3 opacity-70" aria-hidden="true" />}
+        </a>
+      ))}
     </div>
-  )
-}
+
+    {!inline && (
+      <div class="mt-4 space-y-1">
+        {links
+          .filter(link => link.description)
+          .map(link => (
+            <div class="text-muted-foreground pl-6 text-xs">
+              <strong>{link.text}:</strong> {link.description}
+            </div>
+          ))}
+      </div>
+    )}
+  </div>
+)}
 
 <style>
   .contextual-links a:focus-visible {

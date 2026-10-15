@@ -38,26 +38,24 @@ const timelineClasses = (classes?.items ?? {}) as Record<string, string>;
       />
       <Timeline items={items} classes={timelineClasses} />
     </div>
-    {
-      image && (
-        <div class="relative md:basis-1/2">
-          {typeof image === 'string' ? (
-            <Fragment set:html={image} />
-          ) : (
-            <Image
-              class="inset-0 w-full rounded-md object-cover object-top shadow-lg md:absolute md:h-full"
-              widths={[400, 768]}
-              sizes="(max-width: 768px) 100vw, 432px"
-              width={432}
-              height={768}
-              layout="cover"
-              {...(typeof image === 'object' && image !== null ? image : {})}
-              src={typeof image === 'object' && image !== null ? image.src : ''}
-              alt={typeof image === 'object' && image !== null ? image.alt || '' : ''}
-            />
-          )}
-        </div>
-      )
-    }
+    {image && (
+      <div class="relative md:basis-1/2">
+        {typeof image === 'string' ? (
+          <Fragment set:html={image} />
+        ) : (
+          <Image
+            class="inset-0 w-full rounded-md object-cover object-top shadow-lg md:absolute md:h-full"
+            widths={[400, 768]}
+            sizes="(max-width: 768px) 100vw, 432px"
+            width={432}
+            height={768}
+            layout="cover"
+            {...(typeof image === 'object' && image !== null ? image : {})}
+            src={typeof image === 'object' && image !== null ? image.src : ''}
+            alt={typeof image === 'object' && image !== null ? image.alt || '' : ''}
+          />
+        )}
+      </div>
+    )}
   </div>
 </WidgetWrapper>

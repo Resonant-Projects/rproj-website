@@ -128,10 +128,16 @@ export function notionLoader({
 
   return {
     name: collectionName ? `notion-loader/${collectionName}` : 'notion-loader',
-    schema: async () =>
-      notionPageSchema({
+    // Astro >=6 no longer accepts a function for `schema` (it is ignored with a warning);
+    // dynamic schemas go through `createSchema()`, which must also return the TypeScript
+    // source of an `Entry` type. The collection in src/content.config.ts defines its own
+    // schema (which takes precedence), so the generated type is intentionally loose.
+    createSchema: async () => ({
+      schema: notionPageSchema({
         properties: await propertiesSchemaForDatabase(notionClient, database_id),
       }),
+      types: 'export type Entry = Record<string, unknown>;',
+    }),
     async load(ctx) {
       const { store, logger: log_db, parseData } = ctx;
       let existingEntries = new Map(store.entries());

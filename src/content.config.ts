@@ -1,4 +1,6 @@
-import { defineCollection, z } from "astro:content";
+import { defineCollection } from 'astro:content';
+import { z } from 'astro/zod';
+import { NOTION_RR_RESOURCES_ID, NOTION_TOKEN } from 'astro:env/server';
 import { file, glob, type Loader } from "astro/loaders";
 import { existsSync } from "node:fs";
 import type { NotionLoaderOptions } from "~/vendor/notionLoader";
@@ -91,7 +93,7 @@ const metadataDefinition = () =>
       title: z.string().optional(),
       ignoreTitleTemplate: z.boolean().optional(),
 
-      canonical: z.string().url().optional(),
+      canonical: z.url().optional(),
 
       robots: z
         .object({
@@ -186,12 +188,12 @@ const editorialCollection = defineCollection({
     whyItMatters: z.string(),
     campaignSlug: z.string().optional(),
     thesisSlugs: z.array(z.string()).optional(),
-    canonicalAppUrl: z.string().url(),
+    canonicalAppUrl: z.url(),
   }),
 });
 
-const notionToken = import.meta.env.NOTION_TOKEN;
-const notionResourcesDatabaseId = import.meta.env.NOTION_RR_RESOURCES_ID;
+const notionToken = NOTION_TOKEN;
+const notionResourcesDatabaseId = NOTION_RR_RESOURCES_ID;
 
 const resourcesLoader =
   notionToken && notionResourcesDatabaseId
@@ -212,8 +214,8 @@ export const collections = {
       flat: z.record(z.string(), z.unknown()).optional(),
       rawTransformedProperties: z.record(z.string(), z.unknown()).optional(),
       Name: z.string().optional(),
-      Source: z.string().url().optional(),
-      "User Defined URL": z.string().url().optional(),
+      Source: z.url().optional(),
+      "User Defined URL": z.url().optional(),
       Category: z.array(z.string()).optional(),
       Type: z.array(z.string()).optional(),
       Tags: z.array(z.string()).optional(),

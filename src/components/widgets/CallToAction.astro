@@ -42,20 +42,18 @@ const {
         subtitle: 'text-xl text-muted-foreground',
       }}
     />
-    {
-      actions && (
-        <div class="m-auto mt-6 flex max-w-xs flex-col flex-nowrap gap-4 sm:max-w-md sm:flex-row sm:justify-center">
-          {Array.isArray(actions) ? (
-            actions.map(action => (
-              <div class="flex w-full sm:w-auto">
-                <Button {...(action || {})} class="w-full sm:mb-0" />
-              </div>
-            ))
-          ) : (
-            <Fragment set:html={actions} />
-          )}
-        </div>
-      )
-    }
+    {actions && (
+      <div class="m-auto mt-6 flex max-w-xs flex-col flex-nowrap gap-4 sm:max-w-md sm:flex-row sm:justify-center">
+        {Array.isArray(actions) ? (
+          actions.map(action => (
+            <div class="flex w-full sm:w-auto">
+              <Button {...(action || {})} class="w-full sm:mb-0" />
+            </div>
+          ))
+        ) : (
+          <Fragment set:html={actions} />
+        )}
+      </div>
+    )}
   </div>
 </WidgetWrapper>

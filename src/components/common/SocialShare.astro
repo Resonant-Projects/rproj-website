@@ -41,18 +41,16 @@ const shareLinks = [
 
 <div class={className}>
   <span class="align-super font-bold text-primary">Share:</span>
-  {
-    shareLinks.map(link => (
-      <Button
-        variant="tertiary"
-        class="ml-2 rtl:ml-0 rtl:mr-2"
-        title={link.title}
-        data-aw-social-share={link.provider}
-        data-aw-url={url}
-        data-aw-text={text}
-      >
-        <Icon name={link.icon} class="h-6 w-6" />
-      </Button>
-    ))
-  }
+  {shareLinks.map(link => (
+    <Button
+      variant="tertiary"
+      class="ml-2 rtl:ml-0 rtl:mr-2"
+      title={link.title}
+      data-aw-social-share={link.provider}
+      data-aw-url={url}
+      data-aw-text={text}
+    >
+      <Icon name={link.icon} class="h-6 w-6" />
+    </Button>
+  ))}
 </div>

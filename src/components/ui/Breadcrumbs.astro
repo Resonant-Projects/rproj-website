@@ -26,29 +26,27 @@ breadcrumbItems.push(...items);
 
 <nav aria-label="Breadcrumb navigation" class={`breadcrumbs ${className}`}>
   <ol class="flex items-center space-x-2 text-sm">
-    {
-      breadcrumbItems.map((item, index) => (
-        <li class="flex items-center">
-          {index > 0 && <Icon name={separator} class="text-muted-foreground mx-2 h-4 w-4" aria-hidden="true" />}
+    {breadcrumbItems.map((item, index) => (
+      <li class="flex items-center">
+        {index > 0 && <Icon name={separator} class="text-muted-foreground mx-2 h-4 w-4" aria-hidden="true" />}
 
-          {item.href ? (
-            <a
-              href={item.href}
-              class="text-muted-foreground flex items-center gap-1 font-medium transition-colors duration-200 hover:text-primary"
-              {...(index === breadcrumbItems.length - 1 ? { 'aria-current': 'page' } : {})}
-            >
-              {item.icon && <Icon name={item.icon} class="h-4 w-4" aria-hidden="true" />}
-              <span>{item.text}</span>
-            </a>
-          ) : (
-            <span class="flex items-center gap-1 font-semibold text-foreground" aria-current="page">
-              {item.icon && <Icon name={item.icon} class="h-4 w-4" aria-hidden="true" />}
-              <span>{item.text}</span>
-            </span>
-          )}
-        </li>
-      ))
-    }
+        {item.href ? (
+          <a
+            href={item.href}
+            class="text-muted-foreground flex items-center gap-1 font-medium transition-colors duration-200 hover:text-primary"
+            {...(index === breadcrumbItems.length - 1 ? { 'aria-current': 'page' } : {})}
+          >
+            {item.icon && <Icon name={item.icon} class="h-4 w-4" aria-hidden="true" />}
+            <span>{item.text}</span>
+          </a>
+        ) : (
+          <span class="flex items-center gap-1 font-semibold text-foreground" aria-current="page">
+            {item.icon && <Icon name={item.icon} class="h-4 w-4" aria-hidden="true" />}
+            <span>{item.text}</span>
+          </span>
+        )}
+      </li>
+    ))}
   </ol>
 </nav>
 

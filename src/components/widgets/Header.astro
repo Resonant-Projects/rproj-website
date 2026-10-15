@@ -61,8 +61,8 @@ if (currentPath.startsWith('/services/')) {
     'top-0 z-40 mx-auto w-full flex-none border-b border-transparent transition-all duration-300 ease-in-out',
     'header-bg',
   ]}
-  {...isSticky ? { 'data-aw-sticky-header': true } : {}}
-  {...id ? { id } : {}}
+  {...(isSticky ? { 'data-aw-sticky-header': true } : {})}
+  {...(id ? { id } : {})}
 >
   <div class="absolute inset-0"></div>
   <div
@@ -104,32 +104,28 @@ if (currentPath.startsWith('/services/')) {
       <div class="flex w-full items-center justify-between md:w-auto">
         <div class="flex items-center gap-2">
           {showToggleTheme && <ToggleTheme iconClass="w-6 h-6 md:w-5 md:h-5 md:inline-block" />}
-          {
-            showRssFeed && (
-              <a
-                class="text-muted-foreground inline-flex items-center rounded-lg p-3 text-sm hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-                aria-label="RSS Feed"
-                href={getAsset('/rss.xml')}
-              >
-                <Icon name="tabler:rss" class="h-5 w-5" />
-              </a>
-            )
-          }
+          {showRssFeed && (
+            <a
+              class="text-muted-foreground inline-flex items-center rounded-lg p-3 text-sm hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+              aria-label="RSS Feed"
+              href={getAsset('/rss.xml')}
+            >
+              <Icon name="tabler:rss" class="h-5 w-5" />
+            </a>
+          )}
         </div>
-        {
-          actions?.length ? (
-            <span class="ml-4 rtl:ml-0 rtl:mr-4">
-              {actions.map(btnProps => (
-                <Button
-                  {...btnProps}
-                  class="px-5.5 ml-2 w-auto whitespace-nowrap py-2.5 text-sm font-semibold shadow-none md:px-6"
-                />
-              ))}
-            </span>
-          ) : (
-            ''
-          )
-        }
+        {actions?.length ? (
+          <span class="ml-4 rtl:ml-0 rtl:mr-4">
+            {actions.map(btnProps => (
+              <Button
+                {...btnProps}
+                class="px-5.5 ml-2 w-auto whitespace-nowrap py-2.5 text-sm font-semibold shadow-none md:px-6"
+              />
+            ))}
+          </span>
+        ) : (
+          ''
+        )}
       </div>
     </div>
 

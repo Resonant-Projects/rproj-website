@@ -72,67 +72,57 @@ const serviceLinks = [
       <div class="mx-auto mb-2 mt-0 flex max-w-3xl flex-col justify-between px-4 sm:flex-row sm:items-center sm:px-6">
         <p>
           <Icon name="tabler:clock" class="text-muted-foreground -mt-0.5 inline-block h-4 w-4" />
-          <time datetime={getISODateString(post.publishDate)} class="inline-block"
-            >{getFormattedDate(post.publishDate)}</time
-          >
-          {
-            post.author && (
-              <>
-                {' '}
-                · <Icon name="tabler:user" class="text-muted-foreground -mt-0.5 inline-block h-4 w-4" />
-                <span class="inline-block">{post.author}</span>
-              </>
-            )
-          }
-          {
-            post.category && (
-              <>
-                {' '}
-                ·{' '}
-                <a class="inline-block hover:underline" href={getPermalink(post.category.slug, 'category')}>
-                  {post.category.title}
-                </a>
-              </>
-            )
-          }
-          {
-            post.readingTime && (
-              <>
-                &nbsp;· <span>{post.readingTime}</span> min read
-              </>
-            )
-          }
+          <time datetime={getISODateString(post.publishDate)} class="inline-block">
+            {getFormattedDate(post.publishDate)}
+          </time>
+          {post.author && (
+            <>
+              {' '}
+              · <Icon name="tabler:user" class="text-muted-foreground -mt-0.5 inline-block h-4 w-4" />
+              <span class="inline-block">{post.author}</span>
+            </>
+          )}
+          {post.category && (
+            <>
+              {' '}
+              ·{' '}
+              <a class="inline-block hover:underline" href={getPermalink(post.category.slug, 'category')}>
+                {post.category.title}
+              </a>
+            </>
+          )}
+          {post.readingTime && (
+            <>
+              &nbsp;· <span>{post.readingTime}</span> min read
+            </>
+          )}
         </p>
       </div>
 
-      <h1
-        class="leading-tighter mx-auto max-w-3xl px-4 font-heading text-4xl font-bold tracking-tighter sm:px-6 md:text-5xl"
-      >
+      <h1 class="leading-tighter mx-auto max-w-3xl px-4 font-heading text-4xl font-bold tracking-tighter sm:px-6 md:text-5xl">
         {post.title}
       </h1>
       <p class="text-muted-foreground mx-auto mb-8 mt-4 max-w-3xl px-4 text-justify text-xl sm:px-6 md:text-2xl">
         {post.excerpt}
       </p>
 
-      {
-        post.image ? (
-          <Image
-            src={post.image}
-            class="mx-auto mb-6 max-w-full bg-muted sm:rounded-md lg:max-w-[900px]"
-            widths={[400, 900]}
-            sizes="(max-width: 900px) 400px, 900px"
-            alt={post?.excerpt || ''}
-            width={900}
-            height={506}
-            loading="eager"
-            decoding="async"
-          />
-        ) : (
-          <div class="mx-auto max-w-3xl px-4 sm:px-6">
-            <div class="border-t border-border" />
-          </div>
-        )
-      }
+      {post.image ? (
+        <Image
+          src={post.image}
+          class="mx-auto mb-6 max-w-full bg-muted sm:rounded-md lg:max-w-[900px]"
+          widths={[400, 900]}
+          sizes="(max-width: 900px) 400px, 900px"
+          alt={post?.excerpt || ''}
+          width={900}
+          height={506}
+          loading="eager"
+          decoding="async"
+        />
+      ) : (
+        <div class="mx-auto max-w-3xl px-4 sm:px-6">
+          <div class="border-t border-border" />
+        </div>
+      )}
     </header>
     <div class="prose prose-lg mx-auto mt-8 max-w-3xl px-6 dark:prose-invert sm:px-6">
       <slot />

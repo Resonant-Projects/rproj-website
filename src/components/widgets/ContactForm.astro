@@ -22,7 +22,10 @@ const { className = '' } = Astro.props;
         <form class="space-y-6" action="/api/contact" method="POST">
           <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
-              <label for="firstName" class="mb-2 block text-sm font-medium text-foreground"> First Name * </label>
+              <label for="firstName" class="mb-2 block text-sm font-medium text-foreground">
+                {' '}
+                First Name *{' '}
+              </label>
               <input
                 type="text"
                 id="firstName"
@@ -32,7 +35,10 @@ const { className = '' } = Astro.props;
               />
             </div>
             <div>
-              <label for="lastName" class="mb-2 block text-sm font-medium text-foreground"> Last Name * </label>
+              <label for="lastName" class="mb-2 block text-sm font-medium text-foreground">
+                {' '}
+                Last Name *{' '}
+              </label>
               <input
                 type="text"
                 id="lastName"
@@ -44,7 +50,10 @@ const { className = '' } = Astro.props;
           </div>
 
           <div>
-            <label for="email" class="mb-2 block text-sm font-medium text-foreground"> Email Address * </label>
+            <label for="email" class="mb-2 block text-sm font-medium text-foreground">
+              {' '}
+              Email Address *{' '}
+            </label>
             <input
               type="email"
               id="email"
@@ -55,7 +64,10 @@ const { className = '' } = Astro.props;
           </div>
 
           <div>
-            <label for="phone" class="mb-2 block text-sm font-medium text-foreground"> Phone Number </label>
+            <label for="phone" class="mb-2 block text-sm font-medium text-foreground">
+              {' '}
+              Phone Number{' '}
+            </label>
             <input
               type="tel"
               id="phone"
@@ -107,7 +119,8 @@ const { className = '' } = Astro.props;
               required
               rows="4"
               class="w-full rounded-md border border-input bg-background px-3 py-2 shadow-sm focus:border-transparent focus:outline-none focus:ring-2 focus:ring-primary"
-              placeholder="Describe your photography needs, vision, or any specific requirements..."></textarea>
+              placeholder="Describe your photography needs, vision, or any specific requirements..."
+            ></textarea>
           </div>
 
           <button
@@ -155,12 +168,14 @@ const { className = '' } = Astro.props;
                   stroke-linecap="round"
                   stroke-linejoin="round"
                   stroke-width="2"
-                  d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                  d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                ></path>
                 <path
                   stroke-linecap="round"
                   stroke-linejoin="round"
                   stroke-width="2"
-                  d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                  d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                ></path>
               </svg>
               <span class="text-muted-foreground">San Francisco Bay Area</span>
             </div>
@@ -174,8 +189,8 @@ const { className = '' } = Astro.props;
           </p>
           <div class="bg-info/10 rounded-lg p-4">
             <p class="text-info-foreground text-sm">
-              <strong>Pro Tip:</strong> The more details you provide about your vision and requirements, the better we can
-              tailor our response to your needs.
+              <strong>Pro Tip:</strong> The more details you provide about your vision and requirements, the better we
+              can tailor our response to your needs.
             </p>
           </div>
         </div>

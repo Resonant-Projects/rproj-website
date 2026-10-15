@@ -56,7 +56,9 @@ const serializedEntriesJson = JSON.stringify(serializedEntries).replace(/</g, '\
       <h1 class="leading-tighter mb-4 text-3xl font-bold tracking-tighter md:mb-0 md:text-4xl">
         {title}
         <span data-search-query-display class="hidden text-primary"></span>
-        <span class="text-muted-foreground text-lg font-normal">(Page {currentPage} of {totalPages})</span>
+        <span class="text-muted-foreground text-lg font-normal">
+          (Page {currentPage} of {totalPages})
+        </span>
       </h1>
       <p class="text-muted-foreground mt-2 hidden text-sm" data-search-summary></p>
     </div>

@@ -14,6 +14,7 @@ import BasicScripts from '~/components/common/BasicScripts.astro';
 
 // Comment the line below to disable View Transitions
 import { ClientRouter } from 'astro:transitions';
+import { Font } from 'astro:assets';
 
 import type { MetaData as MetaDataType } from '~/types';
 import themeStylesheetHref from '~/assets/styles/theme.css?url';
@@ -30,6 +31,9 @@ const { language, textDirection } = I18N;
 <html lang={language} dir={textDirection} class="2xl:text-[20px]">
   <head>
     <link rel="stylesheet" href={themeStylesheetHref} data-theme-styles transition:persist />
+    <Font cssVariable="--font-source-sans-3" />
+    <Font cssVariable="--font-playfair-display" />
+    <Font cssVariable="--font-inter" />
     <CommonMeta />
     <Favicons />
     <Metadata {...metadata} />
@@ -44,10 +48,18 @@ const { language, textDirection } = I18N;
   <body class="bg-page tracking-tight text-default antialiased">
     <!-- Skip Links for Keyboard Navigation -->
     <div class="skip-links">
-      <a href="#main-content" class="skip-link">Skip to main content</a>
-      <a href="#navigation" class="skip-link">Skip to navigation</a>
-      <a href="#footer" class="skip-link">Skip to footer</a>
-      <a href="#search" class="skip-link">Skip to search</a>
+      <a href="#main-content" class="skip-link">
+        Skip to main content
+      </a>
+      <a href="#navigation" class="skip-link">
+        Skip to navigation
+      </a>
+      <a href="#footer" class="skip-link">
+        Skip to footer
+      </a>
+      <a href="#search" class="skip-link">
+        Skip to search
+      </a>
     </div>
 
     <!-- Focus Management Container -->

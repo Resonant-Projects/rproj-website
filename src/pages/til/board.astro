@@ -81,17 +81,15 @@ const metadata = {
 
       <TilBoardControls currentDate={currentDate} class="mb-8" />
 
-      {
-        weekEntries.length > 0 ? (
-          <TilKanbanView entries={weekEntries} />
-        ) : (
-          <div class="bg-muted/30 rounded-lg p-8 text-center">
-            <Icon name="tabler:mood-empty" class="text-muted-foreground mx-auto h-16 w-16" />
-            <h3 class="mt-4 text-xl font-medium text-foreground">No entries this week</h3>
-            <p class="text-muted-foreground mt-2">There are no TIL entries for the week of {dateRangeFormatted}</p>
-          </div>
-        )
-      }
+      {weekEntries.length > 0 ? (
+        <TilKanbanView entries={weekEntries} />
+      ) : (
+        <div class="bg-muted/30 rounded-lg p-8 text-center">
+          <Icon name="tabler:mood-empty" class="text-muted-foreground mx-auto h-16 w-16" />
+          <h3 class="mt-4 text-xl font-medium text-foreground">No entries this week</h3>
+          <p class="text-muted-foreground mt-2">There are no TIL entries for the week of {dateRangeFormatted}</p>
+        </div>
+      )}
     </div>
   </section>
 </Layout>

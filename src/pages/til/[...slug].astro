@@ -51,16 +51,14 @@ const metadata = {
         </span>
 
         <div class="flex flex-wrap gap-2">
-          {
-            tags.map(tag => (
-              <a
-                href={`/til?tag=${normalizeTagSlug(tag)}`}
-                class="bg-primary/10 dark:bg-primary/20 hover:bg-primary/20 dark:hover:bg-primary/30 rounded-md px-2 py-1 text-xs font-medium text-primary transition-colors"
-              >
-                #{tag}
-              </a>
-            ))
-          }
+          {tags.map(tag => (
+            <a
+              href={`/til?tag=${normalizeTagSlug(tag)}`}
+              class="bg-primary/10 dark:bg-primary/20 hover:bg-primary/20 dark:hover:bg-primary/30 rounded-md px-2 py-1 text-xs font-medium text-primary transition-colors"
+            >
+              #{tag}
+            </a>
+          ))}
         </div>
       </div>
     </div>
@@ -68,13 +66,11 @@ const metadata = {
     <div class="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
       <div class="p-6 sm:p-8">
         <div class="prose-enhanced max-w-none dark:prose-invert">
-          {
-            renderedHtml ? (
-              <Fragment set:html={renderedHtml} />
-            ) : (
-              <p class="text-muted-foreground text-sm">{description || 'No content available.'}</p>
-            )
-          }
+          {renderedHtml ? (
+            <Fragment set:html={renderedHtml} />
+          ) : (
+            <p class="text-muted-foreground text-sm">{description || 'No content available.'}</p>
+          )}
         </div>
       </div>
     </div>

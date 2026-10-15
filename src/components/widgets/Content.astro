@@ -53,13 +53,11 @@ const relatedPages = showRelated ? getRelatedPages(Astro.url.pathname, 3) : [];
       <div class:list={['self-center', { 'mx-auto max-w-4xl': !image, 'md:basis-1/2': !!image }]}>
         {content && <div class="text-foreground/70 mb-12 text-lg" set:html={content} />}
 
-        {
-          callToAction && (
-            <div class="mb-8 mt-[-40px] text-primary">
-              <Button variant="link" {...callToAction} />
-            </div>
-          )
-        }
+        {callToAction && (
+          <div class="mb-8 mt-[-40px] text-primary">
+            <Button variant="link" {...callToAction} />
+          </div>
+        )}
 
         <ItemGrid
           items={items}
@@ -75,35 +73,31 @@ const relatedPages = showRelated ? getRelatedPages(Astro.url.pathname, 3) : [];
           }}
         />
       </div>
-      {
-        image && (
-          <div aria-hidden="true" class="mt-10 md:mt-0 md:basis-1/2">
-            <div class="relative m-auto max-w-4xl">
-              {typeof image === 'string' ? (
-                <Fragment set:html={image} />
-              ) : (
-                <Image
-                  class="mx-auto w-full rounded-lg shadow-lg"
-                  width={500}
-                  height={500}
-                  widths={[400, 768]}
-                  sizes="(max-width: 768px) 100vw, 432px"
-                  layout="responsive"
-                  {...(typeof image === 'object' && image !== null ? image : {})}
-                />
-              )}
-            </div>
+      {image && (
+        <div aria-hidden="true" class="mt-10 md:mt-0 md:basis-1/2">
+          <div class="relative m-auto max-w-4xl">
+            {typeof image === 'string' ? (
+              <Fragment set:html={image} />
+            ) : (
+              <Image
+                class="mx-auto w-full rounded-lg shadow-lg"
+                width={500}
+                height={500}
+                widths={[400, 768]}
+                sizes="(max-width: 768px) 100vw, 432px"
+                layout="responsive"
+                {...(typeof image === 'object' && image !== null ? image : {})}
+              />
+            )}
           </div>
-        )
-      }
+        </div>
+      )}
     </div>
 
-    {
-      showRelated && relatedPages.length > 0 && (
-        <div class="mt-12 border-t border-border pt-8">
-          <RelatedPages pages={relatedPages} title={relatedTitle} variant="compact" />
-        </div>
-      )
-    }
+    {showRelated && relatedPages.length > 0 && (
+      <div class="mt-12 border-t border-border pt-8">
+        <RelatedPages pages={relatedPages} title={relatedTitle} variant="compact" />
+      </div>
+    )}
   </div>
 </WidgetWrapper>

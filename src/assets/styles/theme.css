@@ -1,13 +1,9 @@
-@import '@fontsource-variable/playfair-display';
-@import '@fontsource-variable/source-sans-3';
-@import '@fontsource-variable/inter';
-
 :root {
   /* Font Variables - Editorial Typography System */
-  --font-family-primary: 'Source Sans 3 Variable', ui-sans-serif, system-ui;
-  --font-family-serif: 'Playfair Display Variable', ui-serif, Georgia;
-  --font-family-heading: 'Playfair Display Variable', ui-serif, Georgia;
-  --font-family-ui: 'Inter Variable', ui-sans-serif, system-ui;
+  --font-family-primary: var(--font-source-sans-3);
+  --font-family-serif: var(--font-playfair-display);
+  --font-family-heading: var(--font-playfair-display);
+  --font-family-ui: var(--font-inter);
 
   /* Design System Variables */
   --radius: 0.5rem;

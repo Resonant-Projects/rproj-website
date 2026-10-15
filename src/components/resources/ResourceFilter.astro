@@ -21,33 +21,29 @@ const searchQuery = urlParams.get(SEARCH_PARAM);
   <div class="mb-6">
     <div class="mb-4 flex items-center justify-between">
       <h2 class="text-xl font-bold text-foreground">Filter by Category</h2>
-      {
-        selectedCategory && (
-          <a
-            href={buildResourcesUrl({ category: undefined, type: selectedType, page: 1 }, searchQuery || undefined)}
-            class="text-sm text-primary transition-colors hover:text-accent"
-          >
-            Clear category
-          </a>
-        )
-      }
+      {selectedCategory && (
+        <a
+          href={buildResourcesUrl({ category: undefined, type: selectedType, page: 1 }, searchQuery || undefined)}
+          class="text-sm text-primary transition-colors hover:text-accent"
+        >
+          Clear category
+        </a>
+      )}
     </div>
 
     <div class="flex flex-wrap gap-2">
-      {
-        categories.map(category => (
-          <a
-            href={buildResourcesUrl({ category, type: selectedType, page: 1 }, searchQuery || undefined)}
-            class={`rounded-full px-3 py-2 text-sm font-medium transition-colors ${
-              selectedCategory === category
-                ? 'bg-primary text-white'
-                : 'hover:bg-muted-foreground/20 bg-muted text-foreground'
-            }`}
-          >
-            {category}
-          </a>
-        ))
-      }
+      {categories.map(category => (
+        <a
+          href={buildResourcesUrl({ category, type: selectedType, page: 1 }, searchQuery || undefined)}
+          class={`rounded-full px-3 py-2 text-sm font-medium transition-colors ${
+            selectedCategory === category
+              ? 'bg-primary text-white'
+              : 'hover:bg-muted-foreground/20 bg-muted text-foreground'
+          }`}
+        >
+          {category}
+        </a>
+      ))}
     </div>
   </div>
 
@@ -55,45 +51,39 @@ const searchQuery = urlParams.get(SEARCH_PARAM);
   <div class="mb-6">
     <div class="mb-4 flex items-center justify-between">
       <h2 class="text-xl font-bold text-foreground">Filter by Type</h2>
-      {
-        selectedType && (
-          <a
-            href={buildResourcesUrl({ category: selectedCategory, type: undefined, page: 1 }, searchQuery || undefined)}
-            class="text-sm text-primary transition-colors hover:text-accent"
-          >
-            Clear type
-          </a>
-        )
-      }
+      {selectedType && (
+        <a
+          href={buildResourcesUrl({ category: selectedCategory, type: undefined, page: 1 }, searchQuery || undefined)}
+          class="text-sm text-primary transition-colors hover:text-accent"
+        >
+          Clear type
+        </a>
+      )}
     </div>
 
     <div class="flex flex-wrap gap-2">
-      {
-        types.map(type => (
-          <a
-            href={buildResourcesUrl({ category: selectedCategory, type, page: 1 }, searchQuery || undefined)}
-            class={`rounded-full px-3 py-2 text-sm font-medium transition-colors ${
-              selectedType === type ? 'bg-primary text-white' : 'hover:bg-muted-foreground/20 bg-muted text-foreground'
-            }`}
-          >
-            {type}
-          </a>
-        ))
-      }
+      {types.map(type => (
+        <a
+          href={buildResourcesUrl({ category: selectedCategory, type, page: 1 }, searchQuery || undefined)}
+          class={`rounded-full px-3 py-2 text-sm font-medium transition-colors ${
+            selectedType === type ? 'bg-primary text-white' : 'hover:bg-muted-foreground/20 bg-muted text-foreground'
+          }`}
+        >
+          {type}
+        </a>
+      ))}
     </div>
   </div>
 
   <!-- Clear All Filters -->
-  {
-    (selectedCategory || selectedType) && (
-      <div class="border-t border-border pt-4">
-        <a
-          href={buildResourcesUrl({ category: undefined, type: undefined, page: 1 }, searchQuery || undefined)}
-          class="text-sm font-medium text-primary transition-colors hover:text-accent"
-        >
-          Clear all filters
-        </a>
-      </div>
-    )
-  }
+  {(selectedCategory || selectedType) && (
+    <div class="border-t border-border pt-4">
+      <a
+        href={buildResourcesUrl({ category: undefined, type: undefined, page: 1 }, searchQuery || undefined)}
+        class="text-sm font-medium text-primary transition-colors hover:text-accent"
+      >
+        Clear all filters
+      </a>
+    </div>
+  )}
 </div>

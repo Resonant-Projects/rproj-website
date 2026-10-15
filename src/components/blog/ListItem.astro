@@ -22,27 +22,9 @@ const link = APP_BLOG?.post?.isEnabled ? getPermalink(post.permalink, 'post') : 
 ---
 
 <article class={`max-w-md mx-auto md:max-w-none grid gap-6 md:gap-8 ${image ? 'md:grid-cols-2' : ''}`}>
-  {
-    image &&
-      (link ? (
-        <a class="group relative block" href={link}>
-          <div class="relative h-0 overflow-hidden rounded-sm bg-muted pb-[56.25%] shadow-lg md:h-72 md:pb-[75%] lg:pb-[56.25%]">
-            {image && (
-              <Image
-                src={image}
-                class="absolute inset-0 mb-6 h-full w-full rounded-sm bg-muted object-cover shadow-lg"
-                widths={[400, 900]}
-                width={900}
-                sizes="(max-width: 900px) 400px, 900px"
-                alt={post.title}
-                aspectRatio="16:9"
-                loading="lazy"
-                decoding="async"
-              />
-            )}
-          </div>
-        </a>
-      ) : (
+  {image &&
+    (link ? (
+      <a class="group relative block" href={link}>
         <div class="relative h-0 overflow-hidden rounded-sm bg-muted pb-[56.25%] shadow-lg md:h-72 md:pb-[75%] lg:pb-[56.25%]">
           {image && (
             <Image
@@ -58,58 +40,68 @@ const link = APP_BLOG?.post?.isEnabled ? getPermalink(post.permalink, 'post') : 
             />
           )}
         </div>
-      ))
-  }
+      </a>
+    ) : (
+      <div class="relative h-0 overflow-hidden rounded-sm bg-muted pb-[56.25%] shadow-lg md:h-72 md:pb-[75%] lg:pb-[56.25%]">
+        {image && (
+          <Image
+            src={image}
+            class="absolute inset-0 mb-6 h-full w-full rounded-sm bg-muted object-cover shadow-lg"
+            widths={[400, 900]}
+            width={900}
+            sizes="(max-width: 900px) 400px, 900px"
+            alt={post.title}
+            aspectRatio="16:9"
+            loading="lazy"
+            decoding="async"
+          />
+        )}
+      </div>
+    ))}
   <div class="mt-2">
     <header>
       <div class="mb-1">
         <span class="text-sm">
           <Icon name="tabler:clock" class="text-muted-foreground -mt-0.5 inline-block h-3.5 w-3.5" />
-          <time datetime={String(post.publishDate)} class="inline-block">{getFormattedDate(post.publishDate)}</time>
-          {
-            post.author && (
-              <>
-                {' '}
-                · <Icon name="tabler:user" class="text-muted-foreground -mt-0.5 inline-block h-3.5 w-3.5" />
-                <span>{post.author.replaceAll('-', ' ')}</span>
-              </>
-            )
-          }
-          {
-            post.category && (
-              <>
-                {' '}
-                ·{' '}
-                <a class="hover:underline" href={getPermalink(post.category.slug, 'category')}>
-                  {post.category.title}
-                </a>
-              </>
-            )
-          }
+          <time datetime={String(post.publishDate)} class="inline-block">
+            {getFormattedDate(post.publishDate)}
+          </time>
+          {post.author && (
+            <>
+              {' '}
+              · <Icon name="tabler:user" class="text-muted-foreground -mt-0.5 inline-block h-3.5 w-3.5" />
+              <span>{post.author.replaceAll('-', ' ')}</span>
+            </>
+          )}
+          {post.category && (
+            <>
+              {' '}
+              ·{' '}
+              <a class="hover:underline" href={getPermalink(post.category.slug, 'category')}>
+                {post.category.title}
+              </a>
+            </>
+          )}
         </span>
       </div>
       <h2 class="mb-2 font-heading text-xl font-bold leading-tight text-foreground sm:text-2xl">
-        {
-          link ? (
-            <a class="inline-block transition duration-200 ease-in hover:text-primary" href={link}>
-              {post.title}
-            </a>
-          ) : (
-            post.title
-          )
-        }
+        {link ? (
+          <a class="inline-block transition duration-200 ease-in hover:text-primary" href={link}>
+            {post.title}
+          </a>
+        ) : (
+          post.title
+        )}
       </h2>
     </header>
 
     {post.excerpt && <p class="text-muted-foreground grow text-lg">{post.excerpt}</p>}
-    {
-      post.tags && Array.isArray(post.tags) ? (
-        <footer class="mt-5">
-          <PostTags tags={post.tags} />
-        </footer>
-      ) : (
-        <Fragment />
-      )
-    }
+    {post.tags && Array.isArray(post.tags) ? (
+      <footer class="mt-5">
+        <PostTags tags={post.tags} />
+      </footer>
+    ) : (
+      <Fragment />
+    )}
   </div>
 </article>

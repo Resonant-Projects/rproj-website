@@ -52,44 +52,42 @@ const getVariantClasses = () => {
 const classes = getVariantClasses();
 ---
 
-{
-  pages.length > 0 && (
-    <section class={`related-pages ${className}`}>
-      <h3 class="mb-6 flex items-center gap-2 text-xl font-bold text-foreground">
-        <Icon name="tabler:link" class="h-5 w-5 text-primary" aria-hidden="true" />
-        {title}
-      </h3>
+{pages.length > 0 && (
+  <section class={`related-pages ${className}`}>
+    <h3 class="mb-6 flex items-center gap-2 text-xl font-bold text-foreground">
+      <Icon name="tabler:link" class="h-5 w-5 text-primary" aria-hidden="true" />
+      {title}
+    </h3>
 
-      <div class={classes.container}>
-        {pages.map(page => (
-          <article class={classes.item}>
-            <a href={page.href} class="block min-w-0">
-              <div class={`flex items-start gap-3 ${classes.content}`}>
-                {showIcon && page.icon && (
-                  <div class="mt-1 flex-shrink-0">
-                    <Icon name={page.icon} class="h-5 w-5 text-primary" aria-hidden="true" />
-                  </div>
-                )}
-
-                <div class="min-w-0 flex-1">
-                  <h4 class={classes.title}>{page.title}</h4>
-
-                  {page.description && <p class={classes.description}>{page.description}</p>}
-
-                  {page.category && variant === 'cards' && (
-                    <span class="bg-primary/10 mt-2 inline-block rounded-full px-2 py-1 text-xs text-primary">
-                      {page.category}
-                    </span>
-                  )}
+    <div class={classes.container}>
+      {pages.map(page => (
+        <article class={classes.item}>
+          <a href={page.href} class="block min-w-0">
+            <div class={`flex items-start gap-3 ${classes.content}`}>
+              {showIcon && page.icon && (
+                <div class="mt-1 flex-shrink-0">
+                  <Icon name={page.icon} class="h-5 w-5 text-primary" aria-hidden="true" />
                 </div>
+              )}
+
+              <div class="min-w-0 flex-1">
+                <h4 class={classes.title}>{page.title}</h4>
+
+                {page.description && <p class={classes.description}>{page.description}</p>}
+
+                {page.category && variant === 'cards' && (
+                  <span class="bg-primary/10 mt-2 inline-block rounded-full px-2 py-1 text-xs text-primary">
+                    {page.category}
+                  </span>
+                )}
               </div>
-            </a>
-          </article>
-        ))}
-      </div>
-    </section>
-  )
-}
+            </div>
+          </a>
+        </article>
+      ))}
+    </div>
+  </section>
+)}
 
 <style>
   .related-pages a {

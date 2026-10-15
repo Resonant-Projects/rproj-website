@@ -3,17 +3,17 @@
  * Uses React useActionState integration for enhanced form experiences
  */
 import { defineAction, ActionError } from 'astro:actions';
-import { z } from 'astro:schema';
+import { z } from 'astro/zod';
 import { Client } from '@notionhq/client';
+import { NOTION_DATABASE_ID, NOTION_TOKEN, RESEND_API_KEY } from 'astro:env/server';
 import { Resend } from 'resend';
 import { render } from '@react-email/render';
 import React from 'react';
 import ResonantWelcomeEmail from '~/utils/welcome-email';
 import { resolveDataSourceId } from '~/utils/notion-datasource';
 
-const resend = new Resend(import.meta.env.RESEND_API_KEY);
 const notion = new Client({
-  auth: import.meta.env.NOTION_TOKEN,
+  auth: NOTION_TOKEN,
   notionVersion: '2025-09-03',
 });
 
@@ -57,7 +57,7 @@ export const server = {
     accept: 'form',
     input: z.object({
       name: z.string().min(1, 'Name is required').max(100, 'Name is too long'),
-      email: z.string().email('Invalid email address'),
+      email: z.email('Invalid email address'),
       service: z.enum(ALLOWED_SERVICES, {
         error: 'Please select a valid service',
       }),
@@ -78,8 +78,17 @@ export const server = {
       }
 
       try {
+        // Checked up front so a misconfigured deploy fails before anything is written to Notion. The Resend
+        // client is built per request because its constructor throws without a key, which must not break the build.
+        if (!RESEND_API_KEY) {
+          throw new ActionError({
+            code: 'INTERNAL_SERVER_ERROR',
+            message: 'Missing email configuration.',
+          });
+        }
+
         // Resolve data_source_id from database_id (API 2025-09-03)
-        const databaseId = import.meta.env.NOTION_DATABASE_ID;
+        const databaseId = NOTION_DATABASE_ID;
         if (!databaseId) {
           throw new ActionError({
             code: 'INTERNAL_SERVER_ERROR',
@@ -131,6 +140,7 @@ export const server = {
 
         const html = await render(React.createElement(ResonantWelcomeEmail, { steps }));
 
+        const resend = new Resend(RESEND_API_KEY);
         await resend.emails.send({
           from: 'info@rproj.art',
           to: email,

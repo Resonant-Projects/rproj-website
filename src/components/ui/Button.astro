@@ -21,33 +21,31 @@ const variants = {
 };
 ---
 
-{
-  type === 'button' || type === 'submit' || type === 'reset' ? (
-    <button
-      type={type}
-      class={twMerge(variants[variant] || '', className)}
-      data-original-text={text}
-      aria-describedby={type === 'submit' ? 'submit-button-help' : undefined}
-      {...rest}
-    >
-      <span class="btn-text">
-        <Fragment set:html={text} />
-      </span>
-      {icon && <Icon name={icon} class="-mr-1.5 ml-1 inline-block h-5 w-5 rtl:-ml-1.5 rtl:mr-1" />}
-      {type === 'submit' && (
-        <span id="submit-button-help" class="sr-only">
-          Submit the contact form to send your message
-        </span>
-      )}
-    </button>
-  ) : (
-    <a
-      class={twMerge(variants[variant] || '', className)}
-      {...(target ? { target: target, rel: 'noopener noreferrer' } : {})}
-      {...rest}
-    >
+{type === 'button' || type === 'submit' || type === 'reset' ? (
+  <button
+    type={type}
+    class={twMerge(variants[variant] || '', className)}
+    data-original-text={text}
+    aria-describedby={type === 'submit' ? 'submit-button-help' : undefined}
+    {...rest}
+  >
+    <span class="btn-text">
       <Fragment set:html={text} />
-      {icon && <Icon name={icon} class="-mr-1.5 ml-1 inline-block h-5 w-5 rtl:-ml-1.5 rtl:mr-1" />}
-    </a>
-  )
-}
+    </span>
+    {icon && <Icon name={icon} class="-mr-1.5 ml-1 inline-block h-5 w-5 rtl:-ml-1.5 rtl:mr-1" />}
+    {type === 'submit' && (
+      <span id="submit-button-help" class="sr-only">
+        Submit the contact form to send your message
+      </span>
+    )}
+  </button>
+) : (
+  <a
+    class={twMerge(variants[variant] || '', className)}
+    {...(target ? { target: target, rel: 'noopener noreferrer' } : {})}
+    {...rest}
+  >
+    <Fragment set:html={text} />
+    {icon && <Icon name={icon} class="-mr-1.5 ml-1 inline-block h-5 w-5 rtl:-ml-1.5 rtl:mr-1" />}
+  </a>
+)}

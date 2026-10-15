@@ -30,20 +30,18 @@ const itemsWithValues = items.map((item, index) => ({
   <Headline title={title} subtitle={subtitle} tagline={tagline} />
 
   <Accordion type="single" defaultValue={defaultValue} class="w-full">
-    {
-      itemsWithValues.map(item => (
-        <AccordionItem value={item.value} defaultOpen={item.isDefaultOpen} class="border-border">
-          <AccordionTrigger
-            defaultOpen={item.isDefaultOpen}
-            class="text-lg font-semibold text-foreground hover:text-primary"
-          >
-            {item.title}
-          </AccordionTrigger>
-          <AccordionContent defaultOpen={item.isDefaultOpen} class="text-muted-foreground">
-            {item.description && <Fragment set:html={item.description} />}
-          </AccordionContent>
-        </AccordionItem>
-      ))
-    }
+    {itemsWithValues.map(item => (
+      <AccordionItem value={item.value} defaultOpen={item.isDefaultOpen} class="border-border">
+        <AccordionTrigger
+          defaultOpen={item.isDefaultOpen}
+          class="text-lg font-semibold text-foreground hover:text-primary"
+        >
+          {item.title}
+        </AccordionTrigger>
+        <AccordionContent defaultOpen={item.isDefaultOpen} class="text-muted-foreground">
+          {item.description && <Fragment set:html={item.description} />}
+        </AccordionContent>
+      </AccordionItem>
+    ))}
   </Accordion>
 </WidgetWrapper>

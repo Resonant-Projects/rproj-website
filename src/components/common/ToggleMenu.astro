@@ -26,10 +26,14 @@ const bar =
   data-aw-toggle-menu
 >
   <slot>
-    <span aria-hidden="true" class:list={[bar, 'group-aria-expanded:translate-y-2.5 group-aria-expanded:rotate-45']}
+    <span
+      aria-hidden="true"
+      class:list={[bar, 'group-aria-expanded:translate-y-2.5 group-aria-expanded:rotate-45']}
     ></span>
     <span aria-hidden="true" class:list={[bar, 'group-aria-expanded:opacity-0']}></span>
-    <span aria-hidden="true" class:list={[bar, 'group-aria-expanded:-translate-y-2.5 group-aria-expanded:-rotate-45']}
+    <span
+      aria-hidden="true"
+      class:list={[bar, 'group-aria-expanded:-translate-y-2.5 group-aria-expanded:-rotate-45']}
     ></span>
   </slot>
 </button>

@@ -105,7 +105,9 @@ const canonical = new URL(
           <h1 class="leading-tighter text-3xl font-bold tracking-tighter md:text-4xl">
             {title}: {decodedCategory} - {decodedType}
             <span data-search-query-display class="hidden text-primary"></span>
-            <span class="text-muted-foreground text-lg font-normal">(Page {currentPage} of {totalPages})</span>
+            <span class="text-muted-foreground text-lg font-normal">
+              (Page {currentPage} of {totalPages})
+            </span>
           </h1>
           <p class="text-muted-foreground mt-2">
             {page.total} resources in the {decodedCategory} category of type {decodedType}
@@ -126,48 +128,46 @@ const canonical = new URL(
     </div>
 
     <div data-resources-default-content>
-      {
-        page.data.length > 0 ? (
-          <div>
-            <ResourceGrid entries={page.data} />
-            <div class="mt-8" data-resources-pagination>
-              <Pagination
-                currentPage={currentPage}
-                lastPage={totalPages}
-                prevUrl={page.url.prev}
-                nextUrl={page.url.next}
-                firstUrl={page.url.first}
-                lastUrl={page.url.last}
-                baseUrl={`/resources/category/${encodeURIComponent(decodedCategory)}/type/${encodeURIComponent(decodedType)}`}
-                queryParams={Astro.url.searchParams}
-              />
+      {page.data.length > 0 ? (
+        <div>
+          <ResourceGrid entries={page.data} />
+          <div class="mt-8" data-resources-pagination>
+            <Pagination
+              currentPage={currentPage}
+              lastPage={totalPages}
+              prevUrl={page.url.prev}
+              nextUrl={page.url.next}
+              firstUrl={page.url.first}
+              lastUrl={page.url.last}
+              baseUrl={`/resources/category/${encodeURIComponent(decodedCategory)}/type/${encodeURIComponent(decodedType)}`}
+              queryParams={Astro.url.searchParams}
+            />
+          </div>
+        </div>
+      ) : (
+        <div class="py-16 text-center">
+          <div class="mx-auto max-w-md">
+            <h2 class="mb-2 text-2xl font-semibold text-foreground">No resources in this combination</h2>
+            <p class="text-muted-foreground mb-6">
+              We don't have any resources in the {decodedCategory} category of type {decodedType} yet.
+            </p>
+            <div class="flex flex-col justify-center gap-3 sm:flex-row">
+              <a
+                href={`/resources/category/${encodeURIComponent(decodedCategory)}/1`}
+                class="text-primary-foreground hover:bg-primary/90 inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 transition-colors"
+              >
+                View all {decodedCategory} resources
+              </a>
+              <a
+                href={`/resources/type/${encodeURIComponent(decodedType)}/1`}
+                class="text-secondary-foreground hover:bg-secondary/90 inline-flex items-center justify-center rounded-md bg-secondary px-4 py-2 transition-colors"
+              >
+                View all {decodedType} resources
+              </a>
             </div>
           </div>
-        ) : (
-          <div class="py-16 text-center">
-            <div class="mx-auto max-w-md">
-              <h2 class="mb-2 text-2xl font-semibold text-foreground">No resources in this combination</h2>
-              <p class="text-muted-foreground mb-6">
-                We don't have any resources in the {decodedCategory} category of type {decodedType} yet.
-              </p>
-              <div class="flex flex-col justify-center gap-3 sm:flex-row">
-                <a
-                  href={`/resources/category/${encodeURIComponent(decodedCategory)}/1`}
-                  class="text-primary-foreground hover:bg-primary/90 inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 transition-colors"
-                >
-                  View all {decodedCategory} resources
-                </a>
-                <a
-                  href={`/resources/type/${encodeURIComponent(decodedType)}/1`}
-                  class="text-secondary-foreground hover:bg-secondary/90 inline-flex items-center justify-center rounded-md bg-secondary px-4 py-2 transition-colors"
-                >
-                  View all {decodedType} resources
-                </a>
-              </div>
-            </div>
-          </div>
-        )
-      }
+        </div>
+      )}
     </div>
 
     <div class="hidden" data-resources-search-results></div>

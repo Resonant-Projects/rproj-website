@@ -52,9 +52,7 @@ const metadata = {
         <span class="text-muted-foreground">•</span>
         <span>{entry.data.evidenceStatus}</span>
         <span class="text-muted-foreground">•</span>
-        <time datetime={entry.data.publishedAt.toISOString()}>
-          {getFormattedDate(entry.data.publishedAt)}
-        </time>
+        <time datetime={entry.data.publishedAt.toISOString()}>{getFormattedDate(entry.data.publishedAt)}</time>
       </div>
 
       <h1 class="mb-4 text-4xl font-bold tracking-tighter md:text-5xl">{entry.data.title}</h1>

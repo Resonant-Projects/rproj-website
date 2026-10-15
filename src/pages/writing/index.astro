@@ -36,31 +36,29 @@ const metadata = {
       </p>
     </div>
 
-    {
-      entries.length === 0 ? (
-        <div class="text-muted-foreground rounded-2xl border border-border bg-card px-6 py-10">
-          No editorial snapshots are published yet.
-        </div>
-      ) : (
-        <div class="grid gap-4">
-          {entries.map(entry => (
-            <a
-              href={`/writing/${entry.id}`}
-              class="hover:border-primary/40 group rounded-2xl border border-border bg-card px-6 py-5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-            >
-              <div class="mb-3 flex flex-wrap items-center gap-2 text-xs uppercase tracking-[0.18em] text-primary">
-                <span>{entry.data.kind.replaceAll('_', ' ')}</span>
-                <span class="text-muted-foreground">•</span>
-                <span>{entry.data.evidenceStatus}</span>
-                <span class="text-muted-foreground">•</span>
-                <time datetime={entry.data.publishedAt.toISOString()}>{getFormattedDate(entry.data.publishedAt)}</time>
-              </div>
-              <h2 class="mb-2 text-2xl font-semibold tracking-tight group-hover:text-primary">{entry.data.title}</h2>
-              <p class="text-muted-foreground leading-7">{entry.data.dek}</p>
-            </a>
-          ))}
-        </div>
-      )
-    }
+    {entries.length === 0 ? (
+      <div class="text-muted-foreground rounded-2xl border border-border bg-card px-6 py-10">
+        No editorial snapshots are published yet.
+      </div>
+    ) : (
+      <div class="grid gap-4">
+        {entries.map(entry => (
+          <a
+            href={`/writing/${entry.id}`}
+            class="hover:border-primary/40 group rounded-2xl border border-border bg-card px-6 py-5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+          >
+            <div class="mb-3 flex flex-wrap items-center gap-2 text-xs uppercase tracking-[0.18em] text-primary">
+              <span>{entry.data.kind.replaceAll('_', ' ')}</span>
+              <span class="text-muted-foreground">•</span>
+              <span>{entry.data.evidenceStatus}</span>
+              <span class="text-muted-foreground">•</span>
+              <time datetime={entry.data.publishedAt.toISOString()}>{getFormattedDate(entry.data.publishedAt)}</time>
+            </div>
+            <h2 class="mb-2 text-2xl font-semibold tracking-tight group-hover:text-primary">{entry.data.title}</h2>
+            <p class="text-muted-foreground leading-7">{entry.data.dek}</p>
+          </a>
+        ))}
+      </div>
+    )}
   </section>
 </Layout>

@@ -14,30 +14,28 @@ export interface Props {
 const { tags, class: className = 'text-sm', title = undefined, isCategory = false } = Astro.props;
 ---
 
-{
-  tags && Array.isArray(tags) && (
-    <>
-      {title !== undefined && (
-        <span class="text-muted-foreground align-super font-normal underline decoration-2 underline-offset-4">
-          {title}
-        </span>
-      )}
-      <ul class={className}>
-        {tags.map(tag => (
-          <li class="bg-primary/10 dark:bg-primary/20 mb-2 mr-2 inline-block px-2 py-0.5 font-medium lowercase rtl:ml-2 rtl:mr-0">
-            {!APP_BLOG?.tag?.isEnabled ? (
-              tag.title
-            ) : (
-              <a
-                href={getPermalink(tag.slug, isCategory ? 'category' : 'tag')}
-                class="text-muted-foreground hover:text-primary"
-              >
-                {tag.title}
-              </a>
-            )}
-          </li>
-        ))}
-      </ul>
-    </>
-  )
-}
+{tags && Array.isArray(tags) && (
+  <>
+    {title !== undefined && (
+      <span class="text-muted-foreground align-super font-normal underline decoration-2 underline-offset-4">
+        {title}
+      </span>
+    )}
+    <ul class={className}>
+      {tags.map(tag => (
+        <li class="bg-primary/10 dark:bg-primary/20 mb-2 mr-2 inline-block px-2 py-0.5 font-medium lowercase rtl:ml-2 rtl:mr-0">
+          {!APP_BLOG?.tag?.isEnabled ? (
+            tag.title
+          ) : (
+            <a
+              href={getPermalink(tag.slug, isCategory ? 'category' : 'tag')}
+              class="text-muted-foreground hover:text-primary"
+            >
+              {tag.title}
+            </a>
+          )}
+        </li>
+      ))}
+    </ul>
+  </>
+)}

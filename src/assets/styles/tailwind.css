@@ -1,4 +1,8 @@
-@import 'tailwindcss';
+/*
+  Reference (not import) Tailwind via starwind.css: a second `@import 'tailwindcss'` re-emits the default
+  theme and preflight after starwind.css, resetting --font-sans and the html font-family to the system stack.
+*/
+@reference './starwind.css';
 
 /* Keep hashed /_astro CSS filenames unique after disabling astro-compress CSS. */
 

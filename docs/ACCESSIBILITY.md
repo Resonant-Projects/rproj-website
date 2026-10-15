@@ -227,7 +227,9 @@ When creating new components, follow these accessibility guidelines:
 
 ```astro
 <!-- Good -->
-<button type="button" aria-label="Close dialog">×</button>
+<button type="button" aria-label="Close dialog">
+  ×
+</button>
 
 <!-- Bad -->
 <div onclick="closeDialog()">×</div>

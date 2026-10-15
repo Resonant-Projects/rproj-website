@@ -77,16 +77,16 @@ const serializedEntriesJson = JSON.stringify(serializedEntries).replace(/</g, '\
       <h1 class="leading-tighter mb-4 text-3xl font-bold tracking-tighter md:mb-0 md:text-4xl">
         {title}
         <span data-search-query-display class="hidden text-primary"></span>
-        <span class="text-muted-foreground text-lg font-normal">(Page {currentPage} of {totalPages})</span>
+        <span class="text-muted-foreground text-lg font-normal">
+          (Page {currentPage} of {totalPages})
+        </span>
       </h1>
 
-      {
-        currentTag && (
-          <p class="text-muted-foreground mb-4">
-            {page.total} entries tagged with #{currentTag.title}
-          </p>
-        )
-      }
+      {currentTag && (
+        <p class="text-muted-foreground mb-4">
+          {page.total} entries tagged with #{currentTag.title}
+        </p>
+      )}
       <p class="text-muted-foreground mt-2 hidden text-sm" data-search-summary></p>
     </div>
 
@@ -96,33 +96,31 @@ const serializedEntriesJson = JSON.stringify(serializedEntries).replace(/</g, '\
     </div>
 
     <div data-til-default-content>
-      {
-        page.data.length > 0 ? (
-          <div>
-            <TilSocialFeed entries={page.data} />
-            <div class="mt-8" data-til-pagination>
-              <Pagination
-                currentPage={currentPage}
-                lastPage={totalPages}
-                prevUrl={page.url.prev}
-                nextUrl={page.url.next}
-                firstUrl={page.url.first}
-                lastUrl={page.url.last}
-                baseUrl={`/til/${params.tag}`}
-                queryParams={Astro.url.searchParams}
-              />
-            </div>
+      {page.data.length > 0 ? (
+        <div>
+          <TilSocialFeed entries={page.data} />
+          <div class="mt-8" data-til-pagination>
+            <Pagination
+              currentPage={currentPage}
+              lastPage={totalPages}
+              prevUrl={page.url.prev}
+              nextUrl={page.url.next}
+              firstUrl={page.url.first}
+              lastUrl={page.url.last}
+              baseUrl={`/til/${params.tag}`}
+              queryParams={Astro.url.searchParams}
+            />
           </div>
-        ) : (
-          <div class="py-12 text-center">
-            <h2 class="text-muted-foreground mb-2 text-xl font-semibold">No entries found</h2>
-            <p class="text-muted-foreground mb-4">No entries found for this tag.</p>
-            <a href="/til/all/1" class="mt-4 inline-block text-primary hover:text-accent">
-              View all entries
-            </a>
-          </div>
-        )
-      }
+        </div>
+      ) : (
+        <div class="py-12 text-center">
+          <h2 class="text-muted-foreground mb-2 text-xl font-semibold">No entries found</h2>
+          <p class="text-muted-foreground mb-4">No entries found for this tag.</p>
+          <a href="/til/all/1" class="mt-4 inline-block text-primary hover:text-accent">
+            View all entries
+          </a>
+        </div>
+      )}
     </div>
 
     <div class="hidden" data-til-search-results></div>

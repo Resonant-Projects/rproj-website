@@ -23,109 +23,93 @@ const {
 
 <section
   class="not-prose relative flex min-h-screen w-full items-center justify-center overflow-hidden"
-  {...id ? { id } : {}}
+  {...(id ? { id } : {})}
 >
   <!-- Gradient Background (when gradientBg is true) -->
-  {
-    gradientBg && (
-      <div class="pointer-events-none absolute inset-0 z-0 h-full w-full overflow-hidden" aria-hidden="true">
-        <div class="h-full w-full bg-gradient-to-br from-accent via-muted to-background dark:from-background dark:via-secondary dark:to-card" />
-      </div>
-    )
-  }
+  {gradientBg && (
+    <div class="pointer-events-none absolute inset-0 z-0 h-full w-full overflow-hidden" aria-hidden="true">
+      <div class="h-full w-full bg-gradient-to-br from-accent via-muted to-background dark:from-background dark:via-secondary dark:to-card" />
+    </div>
+  )}
 
   <!-- Background Image Layer -->
-  {
-    image && (
-      <div class="pointer-events-none absolute inset-0 z-[1] h-full w-full overflow-hidden" aria-hidden="true">
-        {typeof image === 'string' ? (
-          <img
-            src={image}
-            alt=""
-            class={
-              centerImage
-                ? 'absolute inset-0 h-full w-full max-w-none object-cover object-center opacity-30'
-                : 'absolute bottom-0 left-1/2 min-h-full min-w-full max-w-none -translate-x-1/2 object-cover object-bottom opacity-30'
-            }
-            loading="eager"
-            decoding="async"
-          />
-        ) : (
-          <Image
-            class={
-              centerImage
-                ? 'absolute inset-0 h-full w-full max-w-none object-cover object-center opacity-30'
-                : 'absolute bottom-0 left-1/2 min-h-full min-w-full max-w-none -translate-x-1/2 object-cover object-bottom opacity-30'
-            }
-            style="max-width: none; max-height: none;"
-            widths={[400, 768, 1024, 2040]}
-            sizes="100vw"
-            loading="eager"
-            width={1024}
-            height={576}
-            alt=""
-            {...(typeof image === 'object' && image !== null ? image : {})}
-          />
-        )}
-      </div>
-    )
-  }
+  {image && (
+    <div class="pointer-events-none absolute inset-0 z-[1] h-full w-full overflow-hidden" aria-hidden="true">
+      {typeof image === 'string' ? (
+        <img
+          src={image}
+          alt=""
+          class={
+            centerImage
+              ? 'absolute inset-0 h-full w-full max-w-none object-cover object-center opacity-30'
+              : 'absolute bottom-0 left-1/2 min-h-full min-w-full max-w-none -translate-x-1/2 object-cover object-bottom opacity-30'
+          }
+          loading="eager"
+          decoding="async"
+        />
+      ) : (
+        <Image
+          class={
+            centerImage
+              ? 'absolute inset-0 h-full w-full max-w-none object-cover object-center opacity-30'
+              : 'absolute bottom-0 left-1/2 min-h-full min-w-full max-w-none -translate-x-1/2 object-cover object-bottom opacity-30'
+          }
+          style="max-width: none; max-height: none;"
+          widths={[400, 768, 1024, 2040]}
+          sizes="100vw"
+          loading="eager"
+          width={1024}
+          height={576}
+          alt=""
+          {...(typeof image === 'object' && image !== null ? image : {})}
+        />
+      )}
+    </div>
+  )}
 
   <!-- Optional BG slot (e.g., overlays, gradients) -->
   <div class="pointer-events-none absolute inset-0 z-[4]" aria-hidden="true">
-    <slot name="bg">
-      {bg ? <Fragment set:html={bg} /> : null}
-    </slot>
+    <slot name="bg">{bg ? <Fragment set:html={bg} /> : null}</slot>
   </div>
 
   <!-- Hero Content -->
-  <div
-    class="relative z-10 mx-auto flex min-h-screen w-full max-w-full flex-col justify-center px-4 pt-20 sm:max-w-3xl sm:px-6 md:max-w-5xl"
-  >
+  <div class="relative z-10 mx-auto flex min-h-screen w-full max-w-full flex-col justify-center px-4 pt-20 sm:max-w-3xl sm:px-6 md:max-w-5xl">
     <div class="flex flex-grow flex-col items-center justify-center">
       <div class="w-full text-center">
-        {
-          tagline && (
-            <p
-              class={`text-base font-bold uppercase tracking-wide ${gradientBg ? 'text-accent' : 'text-secondary'}`}
-              set:html={tagline}
-            />
-          )
-        }
-        {
-          title && (
-            <h1
-              class={`mb-4 whitespace-normal break-words font-heading font-bold leading-tight tracking-tighter text-foreground ${
-                gradientBg ? 'text-5xl md:text-7xl' : 'text-xl sm:text-3xl md:text-5xl lg:text-6xl'
-              }`}
-              set:html={title}
-            />
-          )
-        }
+        {tagline && (
+          <p
+            class={`text-base font-bold uppercase tracking-wide ${gradientBg ? 'text-accent' : 'text-secondary'}`}
+            set:html={tagline}
+          />
+        )}
+        {title && (
+          <h1
+            class={`mb-4 whitespace-normal break-words font-heading font-bold leading-tight tracking-tighter text-foreground ${
+              gradientBg ? 'text-5xl md:text-7xl' : 'text-4xl sm:text-5xl lg:text-6xl'
+            }`}
+            set:html={title}
+          />
+        )}
         <div class="mx-auto max-w-3xl">
-          {
-            subtitle && (
-              <p
-                class={`text-foreground/80 mb-6 leading-relaxed ${gradientBg ? 'text-xl md:text-2xl' : 'text-xl'}`}
-                set:html={subtitle}
-              />
-            )
-          }
-          {
-            actions && (
-              <div class="m-auto mb-8 flex max-w-xs flex-col flex-nowrap gap-4 sm:max-w-md sm:flex-row sm:justify-center">
-                {Array.isArray(actions) ? (
-                  actions.map(action => (
-                    <div class="flex w-full sm:w-auto">
-                      <Button {...(action || {})} class="w-full sm:mb-0" />
-                    </div>
-                  ))
-                ) : (
-                  <Fragment set:html={actions} />
-                )}
-              </div>
-            )
-          }
+          {subtitle && (
+            <p
+              class={`text-foreground/80 mb-6 leading-relaxed ${gradientBg ? 'text-xl md:text-2xl' : 'text-lg sm:text-xl'}`}
+              set:html={subtitle}
+            />
+          )}
+          {actions && (
+            <div class="m-auto mb-8 flex max-w-xs flex-col flex-nowrap gap-4 sm:max-w-md sm:flex-row sm:justify-center">
+              {Array.isArray(actions) ? (
+                actions.map(action => (
+                  <div class="flex w-full sm:w-auto">
+                    <Button {...(action || {})} class="w-full sm:mb-0" />
+                  </div>
+                ))
+              ) : (
+                <Fragment set:html={actions} />
+              )}
+            </div>
+          )}
         </div>
         {content && <Fragment set:html={content} />}
       </div>
@@ -133,13 +117,11 @@ const {
   </div>
 
   <!-- Scroll Down Indicator -->
-  {
-    showScrollIndicator && (
-      <div class="absolute bottom-8 left-1/2 z-20 -translate-x-1/2 transform animate-pulse">
-        <svg class={`h-6 w-6 text-foreground`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-        </svg>
-      </div>
-    )
-  }
+  {showScrollIndicator && (
+    <div class="absolute bottom-8 left-1/2 z-20 -translate-x-1/2 transform animate-pulse">
+      <svg class={`h-6 w-6 text-foreground`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+      </svg>
+    </div>
+  )}
 </section>

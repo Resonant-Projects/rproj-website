@@ -1,11 +1,13 @@
 import { getCldImageUrl, getCldOgImageUrl } from 'astro-cloudinary/helpers';
 import { v2 as cloudinary } from 'cloudinary';
+import { PUBLIC_CLOUDINARY_API_KEY, PUBLIC_CLOUDINARY_CLOUD_NAME } from 'astro:env/client';
+import { CLOUDINARY_API_SECRET as CLOUDINARY_API_SECRET_ENV } from 'astro:env/server';
 import { escapeHtml } from '~/utils/html-escape';
 
 // Environment variables with validation
-const CLOUDINARY_CLOUD_NAME = import.meta.env.PUBLIC_CLOUDINARY_CLOUD_NAME;
-const CLOUDINARY_API_KEY = import.meta.env.PUBLIC_CLOUDINARY_API_KEY;
-const CLOUDINARY_API_SECRET = import.meta.env.CLOUDINARY_API_SECRET;
+const CLOUDINARY_CLOUD_NAME = PUBLIC_CLOUDINARY_CLOUD_NAME;
+const CLOUDINARY_API_KEY = PUBLIC_CLOUDINARY_API_KEY;
+const CLOUDINARY_API_SECRET = CLOUDINARY_API_SECRET_ENV;
 const hasCloudinaryCloudName = Boolean(CLOUDINARY_CLOUD_NAME);
 const hasCloudinaryServerCredentials = Boolean(CLOUDINARY_CLOUD_NAME && CLOUDINARY_API_KEY && CLOUDINARY_API_SECRET);
 

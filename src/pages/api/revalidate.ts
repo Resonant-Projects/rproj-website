@@ -1,11 +1,12 @@
 import type { APIRoute } from 'astro';
+import { ISR_BYPASS_TOKEN } from 'astro:env/server';
 
 export const prerender = false;
 
 const PATHS_TO_REVALIDATE = ['/writing', '/blog', '/rss.xml', '/'] as const;
 
 export const POST: APIRoute = async ({ request }) => {
-  const token = process.env.ISR_BYPASS_TOKEN;
+  const token = ISR_BYPASS_TOKEN;
   if (!token) {
     return new Response(JSON.stringify({ ok: false, error: 'ISR_BYPASS_TOKEN is not configured' }), {
       status: 501,

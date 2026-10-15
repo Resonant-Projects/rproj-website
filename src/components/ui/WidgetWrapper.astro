@@ -14,11 +14,9 @@ const { id, isDark = false, containerClass = '', bg, as = 'section' } = Astro.pr
 const WrapperTag = as;
 ---
 
-<WrapperTag class="not-prose relative scroll-mt-[72px]" {...id ? { id } : {}}>
+<WrapperTag class="not-prose relative scroll-mt-[72px]" {...(id ? { id } : {})}>
   <div class="-z-1 pointer-events-none absolute inset-0" aria-hidden="true">
-    <slot name="bg">
-      {bg ? <Fragment set:html={bg} /> : <Background isDark={isDark} />}
-    </slot>
+    <slot name="bg">{bg ? <Fragment set:html={bg} /> : <Background isDark={isDark} />}</slot>
   </div>
   <div
     class:list={[

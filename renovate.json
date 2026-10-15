@@ -1,0 +1,64 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:best-practices", ":dependencyDashboard", ":enableVulnerabilityAlerts", ":semanticCommits"],
+  "ignorePresets": [":pinDevDependencies"],
+  "timezone": "America/New_York",
+  "schedule": ["before 6am on monday"],
+  "dependencyDashboard": true,
+  "dependencyDashboardAutoclose": false,
+  "dependencyDashboardLabels": ["dependencies"],
+  "dependencyDashboardOSVVulnerabilitySummary": "all",
+  "dependencyDashboardReportAbandonment": true,
+  "osvVulnerabilityAlerts": true,
+  "labels": ["dependencies"],
+  "assignees": ["keithce"],
+  "reviewers": ["keithce"],
+  "automerge": false,
+  "github-actions": {
+    "enabled": false
+  },
+  "packageRules": [
+    {
+      "description": "Require dashboard approval before opening breaking major upgrade PRs.",
+      "matchUpdateTypes": ["major"],
+      "dependencyDashboardApproval": true
+    },
+    {
+      "description": "Astro and its first-party integrations ship in lockstep and share peer ranges; move them together.",
+      "matchPackageNames": ["astro", "@astrojs/**"],
+      "groupName": "Astro"
+    },
+    {
+      "description": "typescript-eslint packages must share one version.",
+      "matchPackageNames": ["typescript-eslint", "@typescript-eslint/**"],
+      "groupName": "typescript-eslint"
+    },
+    {
+      "description": "React runtime and types move together.",
+      "matchPackageNames": ["react", "react-dom", "@types/react", "@types/react-dom"],
+      "groupName": "React"
+    },
+    {
+      "description": "Tailwind core, Vite plugin and plugins share a release line.",
+      "matchPackageNames": ["tailwindcss", "@tailwindcss/**"],
+      "groupName": "Tailwind CSS"
+    },
+    {
+      "description": "Vercel SDKs.",
+      "matchPackageNames": ["@vercel/**", "botid", "vercel"],
+      "groupName": "Vercel"
+    },
+    {
+      "description": "Batch routine minor/patch updates of the remaining dev tooling into one PR.",
+      "matchDepTypes": ["devDependencies"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "matchPackageNames": ["!astro", "!@astrojs/**"],
+      "groupName": "dev dependencies (non-major)"
+    }
+  ],
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["before 6am on monday"],
+    "automerge": false
+  }
+}

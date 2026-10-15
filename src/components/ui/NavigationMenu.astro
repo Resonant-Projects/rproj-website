@@ -29,46 +29,44 @@ const currentFor = (href?: string) => (href === currentPath ? 'page' : undefined
      disclosure pattern: aria-expanded is their only state, and Escape is handled
      globally by Layout.astro. -->
 <ul class:list={['nav-list', `nav-list--${orientation}`, className]}>
-  {
-    links.map((link, index) =>
-      link.links?.length ? (
-        <li class="nav-item nav-item--dropdown">
-          <button
-            type="button"
-            class="nav-link nav-link--dropdown"
-            aria-expanded="false"
-            aria-controls={`nav-dropdown-menu-${index}`}
-            data-current={link.links.some(subLink => subLink.href === currentPath) || undefined}
-          >
-            {link.text}
-            {showChevrons && <Icon name="tabler:chevron-down" class="nav-chevron" aria-hidden="true" />}
-          </button>
-          <ul class="dropdown-menu" id={`nav-dropdown-menu-${index}`}>
-            {link.links.map(subLink => (
-              <li>
-                <a
-                  href={subLink.href}
-                  class="dropdown-link"
-                  aria-current={currentFor(subLink.href)}
-                  aria-label={subLink.ariaLabel}
-                >
-                  {subLink.icon && <Icon name={subLink.icon} class="nav-icon" aria-hidden="true" />}
-                  {subLink.text}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </li>
-      ) : (
-        <li class="nav-item">
-          <a href={link.href} class="nav-link" aria-current={currentFor(link.href)} aria-label={link.ariaLabel}>
-            {link.icon && <Icon name={link.icon} class="nav-icon" aria-hidden="true" />}
-            {link.text}
-          </a>
-        </li>
-      )
+  {links.map((link, index) =>
+    link.links?.length ? (
+      <li class="nav-item nav-item--dropdown">
+        <button
+          type="button"
+          class="nav-link nav-link--dropdown"
+          aria-expanded="false"
+          aria-controls={`nav-dropdown-menu-${index}`}
+          data-current={link.links.some(subLink => subLink.href === currentPath) || undefined}
+        >
+          {link.text}
+          {showChevrons && <Icon name="tabler:chevron-down" class="nav-chevron" aria-hidden="true" />}
+        </button>
+        <ul class="dropdown-menu" id={`nav-dropdown-menu-${index}`}>
+          {link.links.map(subLink => (
+            <li>
+              <a
+                href={subLink.href}
+                class="dropdown-link"
+                aria-current={currentFor(subLink.href)}
+                aria-label={subLink.ariaLabel}
+              >
+                {subLink.icon && <Icon name={subLink.icon} class="nav-icon" aria-hidden="true" />}
+                {subLink.text}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </li>
+    ) : (
+      <li class="nav-item">
+        <a href={link.href} class="nav-link" aria-current={currentFor(link.href)} aria-label={link.ariaLabel}>
+          {link.icon && <Icon name={link.icon} class="nav-icon" aria-hidden="true" />}
+          {link.text}
+        </a>
+      </li>
     )
-  }
+  )}
 </ul>
 
 <style>

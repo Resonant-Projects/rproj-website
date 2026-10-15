@@ -70,6 +70,12 @@
       "platformAutomerge": true,
       "minimumReleaseAge": "3 days",
       "schedule": ["at any time"]
+    },
+    {
+      "description": "Give grouped 0.x patches their own branch (e.g. renovate/patch-astro-0.x) so one excluded 0.x patch cannot hold an eligible group patch branch to manual merge. Ungrouped deps ignore groupSlug.",
+      "matchUpdateTypes": ["patch"],
+      "matchCurrentVersion": "/^0\\./",
+      "groupSlug": "{{{groupName}}}-0.x"
     }
   ],
   "lockFileMaintenance": {

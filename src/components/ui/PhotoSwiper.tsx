@@ -186,7 +186,7 @@ export default function PhotoSwiper({ images, className = '' }: Props) {
           align-items:center;
           overflow:hidden;
           background:transparent;
-          outline: none;
+          outline-color: transparent;
           border-radius: 8px;
           transition: box-shadow 0.2s ease;
         }
@@ -204,10 +204,7 @@ export default function PhotoSwiper({ images, className = '' }: Props) {
           align-items:center;
           z-index:1000;
           cursor:zoom-out;
-          outline: none;
-        }
-        .modal:focus {
-          outline: none;
+          outline-color: transparent;
         }
         .modal-content{
           max-width:90%;

@@ -32,8 +32,12 @@ src/components/
 
 **Tailwind CSS v4** with Vite plugin (`@tailwindcss/vite`):
 
-- CSS-first configuration approach
+- CSS-first configuration approach, no `tailwind.config.js`
 - `tailwind-variants` for component variant styling
+- `src/assets/styles/starwind.css`: Tailwind import, plugins, `@theme` mapping, brand scale in oklch
+- `src/assets/styles/theme.css`: color tokens, light on `:root`, dark overrides on `.dark` (works on `<html>` and on sections)
+- `src/assets/styles/tailwind.css`: the few rules utilities cannot express (focus ring, skip links, form field, mobile menu)
+- Focus: one global `:focus-visible` ring; never `outline-none`, use `outline-hidden` when a ring replaces it
 
 ## Image Optimization
 

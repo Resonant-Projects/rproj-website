@@ -248,7 +248,6 @@ function trackInternalLink(linkText, destination, source) {
 1. **`Breadcrumbs.astro`**: Responsive breadcrumb navigation
 2. **`RelatedPages.astro`**: Flexible related content component
 3. **`ContextualLinks.astro`**: Inline contextual linking
-4. **`InternalLinkHelper.astro`**: SEO-optimized link wrapper
 
 ### Utility Functions
 

@@ -22,6 +22,6 @@ module.exports = {
   plugins: [require.resolve('prettier-plugin-astro'), require.resolve('prettier-plugin-tailwindcss')],
 
   // Tailwind CSS class sorting
-  tailwindConfig: './tailwind.config.js',
+  tailwindStylesheet: './src/assets/styles/starwind.css',
   tailwindFunctions: ['clsx', 'cn', 'cva'],
 };

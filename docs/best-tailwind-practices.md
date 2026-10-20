@@ -14,41 +14,28 @@ Tailwind v4, with its new Lightning CSS engine, is a performance beast. The key
 is to harness its power while keeping our class lists manageable and our design
 system consistent.
 
-### 1.1. The Single Source of Truth: tailwind.config.ts
+### 1.1. The Single Source of Truth: CSS, not a config file
 
-Your tailwind.config.ts is the heart of the design system.
+This project uses Tailwind v4's CSS-first configuration. There is no
+`tailwind.config.js`.
 
-Unified Configuration: Forget postcss.config.js. Tailwind v4 handles it all.
-Your config should be the only place for defining CSS-related settings. Leverage
-TypeScript: Use the typed Config object from 'tailwindcss' for autocompletion
-and type safety. Theme Extension: Always place customizations inside
-theme.extend. This preserves Tailwind's sensible defaults while allowing you to
-add your brand's colors, fonts, and spacing.
+- **Theme and tokens:** `src/assets/styles/starwind.css` imports Tailwind,
+  registers plugins with `@plugin`, and maps design tokens to utilities with
+  `@theme inline` (for example `--color-primary` gives `bg-primary`).
+- **Token values:** `src/assets/styles/theme.css` holds the light tokens on
+  `:root` and the dark overrides on `.dark` (the html toggle and dark section
+  bands both use the class). Brand colors are oklch, defined in `starwind.css`.
+- **Site components and accessibility rules:** `src/assets/styles/tailwind.css`
+  references Tailwind with `@reference` and adds only rules that utilities
+  cannot express.
+- **Prettier class sorting** reads `tailwindStylesheet` in `.prettierrc.cjs`.
 
-```ts
-// tailwind.config.ts
-import type { Config } from 'tailwindcss';
-
-export default {
-  content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
-  theme: {
-    extend: {
-      // Add your custom design tokens here
-      colors: {
-        brand: {
-          primary: '#0052FF', // Example primary color
-          secondary: '#FFC107',
-        },
-      },
-      fontFamily: {
-        // Ensure you load these fonts in your layout
-        sans: ['Inter', 'sans-serif'],
-        serif: ['Source Serif Pro', 'serif'],
-      },
-    },
-  },
-  plugins: [],
-} satisfies Config;
+```css
+/* starwind.css */
+@import 'tailwindcss';
+@theme inline {
+  --color-primary: var(--color-primary);
+}
 ```
 
 ### 1.2. Utility-First, with Scoped @apply for Components
@@ -102,8 +89,7 @@ within your CSS. astro
   is inherently faster for both full and incremental builds. This means less
   concern about performance overhead from the CSS itself.
 - **Embrace Automatic Content Detection:** V4 automatically detects your
-  template files, eliminating the need for manual `content` configuration in
-  `tailwind.config.js`. Ensure your project structure allows this automatic
+  template files, eliminating the need for manual `content` configuration. Ensure your project structure allows this automatic
   detection to work efficiently.
 - **Utilize Unified Toolchain Benefits:** With Lightning CSS integrated,
   Tailwind v4 handles CSS minification, `@import` bundling, and vendor

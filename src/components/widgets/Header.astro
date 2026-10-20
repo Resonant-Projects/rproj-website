@@ -58,7 +58,7 @@ if (currentPath.startsWith('/services/')) {
 <header
   class:list={[
     { sticky: isSticky, relative: !isSticky, dark: isDark },
-    'top-0 z-40 mx-auto w-full flex-none border-b border-transparent transition-all duration-300 ease-in-out',
+    'top-0 z-40 mx-auto w-full flex-none border-b border-transparent transition duration-300 ease-in-out',
   ]}
   {...(isSticky ? { 'data-aw-sticky-header': true } : {})}
   {...(id ? { id } : {})}

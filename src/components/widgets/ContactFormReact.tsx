@@ -136,7 +136,7 @@ export function ContactFormReact({ title, subtitle, inputs, textarea, button, de
   if (state.data?.success && !state.data?.redirect) {
     return (
       <div className="mx-auto flex w-full max-w-xl flex-col rounded-lg border border-border bg-card p-4 shadow-md sm:p-6 lg:p-8">
-        <div className="border-success/30 bg-success/10 text-success rounded border px-4 py-3">
+        <div className="rounded border border-success/30 bg-success/10 px-4 py-3 text-success">
           <div className="flex items-center gap-2">
             <span className="text-xl">✅</span>
             <span>{state.data.message}</span>
@@ -152,13 +152,13 @@ export function ContactFormReact({ title, subtitle, inputs, textarea, button, de
       {(title || subtitle) && (
         <div className="mb-6 text-center">
           {title && <h2 className="text-2xl font-bold text-foreground">{title}</h2>}
-          {subtitle && <p className="text-muted-foreground mt-2">{subtitle}</p>}
+          {subtitle && <p className="mt-2 text-muted-foreground">{subtitle}</p>}
         </div>
       )}
 
       {/* Error Display */}
       {state.error && (
-        <div className="border-error/30 bg-error/10 text-error mb-4 rounded-md border px-4 py-2 text-sm" role="alert">
+        <div className="mb-4 rounded-md border border-error/30 bg-error/10 px-4 py-2 text-sm text-error" role="alert">
           <div className="flex items-center gap-2">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -205,7 +205,7 @@ export function ContactFormReact({ title, subtitle, inputs, textarea, button, de
                 {input.label}
                 {input.required && (
                   <>
-                    <span className="text-error ml-1" aria-hidden="true">
+                    <span className="ml-1 text-error" aria-hidden="true">
                       *
                     </span>
                     <span className="sr-only">Required</span>
@@ -224,7 +224,7 @@ export function ContactFormReact({ title, subtitle, inputs, textarea, button, de
                 aria-describedby={`${input.name}-error ${input.name}-help`}
                 defaultValue={input.defaultValue || ''}
                 disabled={isPending}
-                className="input-field text-md bg-muted/50 block w-full rounded-lg border border-border px-4 py-3 text-foreground transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary disabled:cursor-not-allowed disabled:opacity-50"
+                className="input-field disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {input.options?.map(option => (
                   <option key={option.value} value={option.value}>
@@ -244,12 +244,12 @@ export function ContactFormReact({ title, subtitle, inputs, textarea, button, de
                 aria-invalid={hasFieldError(state, input.name) ? 'true' : 'false'}
                 aria-describedby={`${input.name}-error ${input.name}-help`}
                 disabled={isPending}
-                className="input-field text-md bg-muted/50 placeholder:text-muted-foreground block w-full rounded-lg border border-border px-4 py-3 text-foreground transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary disabled:cursor-not-allowed disabled:opacity-50"
+                className="input-field disabled:cursor-not-allowed disabled:opacity-50"
               />
             )}
 
             {state.data?.errors?.[input.name] && (
-              <div id={`${input.name}-error`} className="text-error mt-1 text-sm" role="alert" aria-live="assertive">
+              <div id={`${input.name}-error`} className="mt-1 text-sm text-error" role="alert" aria-live="assertive">
                 {state.data.errors[input.name]}
               </div>
             )}
@@ -269,7 +269,7 @@ export function ContactFormReact({ title, subtitle, inputs, textarea, button, de
                   {textarea.label}
                   {textarea.required && (
                     <>
-                      <span className="text-error ml-1" aria-hidden="true">
+                      <span className="ml-1 text-error" aria-hidden="true">
                         *
                       </span>
                       <span className="sr-only">Required</span>
@@ -286,12 +286,12 @@ export function ContactFormReact({ title, subtitle, inputs, textarea, button, de
                   aria-invalid={hasFieldError(state, textareaId) ? 'true' : 'false'}
                   aria-describedby={`${textareaId}-error ${textareaId}-help`}
                   disabled={isPending}
-                  className="input-field text-md bg-muted/50 placeholder:text-muted-foreground block w-full resize-y rounded-lg border border-border px-4 py-3 text-foreground transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary disabled:cursor-not-allowed disabled:opacity-50"
+                  className="input-field resize-y disabled:cursor-not-allowed disabled:opacity-50"
                 />
                 {state.data?.errors?.[textareaId] && (
                   <div
                     id={`${textareaId}-error`}
-                    className="text-error mt-1 text-sm"
+                    className="mt-1 text-sm text-error"
                     role="alert"
                     aria-live="assertive"
                   >
@@ -311,7 +311,7 @@ export function ContactFormReact({ title, subtitle, inputs, textarea, button, de
             type="submit"
             disabled={isPending}
             aria-describedby="submit-status"
-            className="btn btn-primary text-primary-foreground hover:bg-primary/90 w-full rounded-lg bg-primary px-6 py-3 font-semibold shadow-md transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+            className="btn btn-primary w-full rounded-lg bg-primary px-6 py-3 font-semibold text-primary-foreground shadow-md transition hover:bg-primary/90 focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:outline-hidden disabled:cursor-not-allowed disabled:opacity-50"
           >
             {isPending ? (
               <span className="flex items-center justify-center gap-2">
@@ -342,7 +342,7 @@ export function ContactFormReact({ title, subtitle, inputs, textarea, button, de
         {/* Description */}
         {description && (
           <div className="mt-3 text-center">
-            <p id="form-description" className="text-muted-foreground text-sm">
+            <p id="form-description" className="text-sm text-muted-foreground">
               {description}
             </p>
           </div>

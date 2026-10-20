@@ -22,19 +22,19 @@ const {
 ---
 
 <section
-  class="not-prose relative flex min-h-screen w-full items-center justify-center overflow-hidden"
+  class="not-prose relative flex min-h-screen w-full items-center justify-center overflow-clip"
   {...(id ? { id } : {})}
 >
   <!-- Gradient Background (when gradientBg is true) -->
   {gradientBg && (
-    <div class="pointer-events-none absolute inset-0 z-0 h-full w-full overflow-hidden" aria-hidden="true">
+    <div class="pointer-events-none absolute inset-0 z-0 h-full w-full overflow-clip" aria-hidden="true">
       <div class="h-full w-full bg-gradient-to-br from-accent via-muted to-background dark:from-background dark:via-secondary dark:to-card" />
     </div>
   )}
 
   <!-- Background Image Layer -->
   {image && (
-    <div class="pointer-events-none absolute inset-0 z-[1] h-full w-full overflow-hidden" aria-hidden="true">
+    <div class="pointer-events-none absolute inset-0 z-[1] h-full w-full overflow-clip" aria-hidden="true">
       {typeof image === 'string' ? (
         <img
           src={image}

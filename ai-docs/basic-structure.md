@@ -15,7 +15,6 @@ deployment.
   settings, and adapter configuration
 - **`package.json`** - Project dependencies and scripts
 - **`tsconfig.json`** - TypeScript compiler configuration
-- **`tailwind.config.js`** - Tailwind CSS customization and theme configuration
 
 ### Build & Deployment
 

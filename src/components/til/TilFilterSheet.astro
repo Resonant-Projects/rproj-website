@@ -60,7 +60,7 @@ const searchQuery = urlParams.get(SEARCH_PARAM);
             {tags.map(tag => (
               <a
                 href={createFilterUrl(tag.slug, searchQuery || undefined)}
-                class={`rounded-full px-4 py-2.5 text-sm font-medium transition-all duration-200 ${
+                class={`rounded-full px-4 py-2.5 text-sm font-medium transition duration-200 ${
                   selectedTag === tag.slug
                     ? 'hover:bg-primary/90 bg-primary text-white shadow-md'
                     : 'hover:border-primary/50 border border-border bg-background text-foreground shadow-sm hover:bg-muted'

@@ -6,7 +6,6 @@ export { default as Brands } from './Brands.astro';
 export { default as CallToAction } from './CallToAction.astro';
 export { default as CategoryHero } from './CategoryHero.astro';
 export { default as Contact } from './Contact.astro';
-export { default as ContactForm } from './ContactForm.astro';
 export { default as Content } from './Content.astro';
 export { default as FAQs } from './FAQs.astro';
 export { default as Features } from './Features.astro';

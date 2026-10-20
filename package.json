@@ -181,7 +181,7 @@
     "vfile-reporter": "^8.1.1"
   },
   "simple-git-hooks": {
-    "pre-commit": "node scripts/check-file-tokens.mjs"
+    "pre-commit": "test ! -f scripts/check-file-tokens.mjs || node scripts/check-file-tokens.mjs"
   },
   "trustedDependencies": [
     "@tailwindcss/oxide",

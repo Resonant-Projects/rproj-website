@@ -193,7 +193,10 @@ function collectCandidates(all) {
   const common = ['diff', '--cached', '--no-renames', '-z', '--diff-filter=ACMRT'];
   const range = all ? [emptyTree] : [];
   const files = parseRaw(git([...common, '--raw', '--no-abbrev', ...range]));
-  const binary = parseBinary(git([...common, '--numstat', ...range]));
+  // Judge binary from the staged blob alone: --numstat against HEAD marks a path binary when
+  // either side is, so a binary file replaced by large text would slip through. Comparing the
+  // whole index with the empty tree looks only at the staged side (and is fast).
+  const binary = parseBinary(git([...common, '--numstat', emptyTree]));
   return { files, binary };
 }
 

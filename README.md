@@ -110,6 +110,15 @@ Questions, collaborations, or want to request a service?
 There are no formal contribution guidelines yet.  
 If you'd like to help or collaborate, just reach out to Keith via email!
 
+### File size limit (pre-commit hook)
+
+A pre-commit hook blocks committing any file over **5,000 estimated tokens** (bytes ÷ 4, so ≈20,000 bytes). Large files are hard for people and AI agents to read and edit safely, so split them by responsibility instead.
+
+- Hooks install automatically on `bun install` (via `simple-git-hooks`). To (re)install manually: `bunx simple-git-hooks`.
+- Only staged files are checked. Lockfiles, generated code, binaries, images, fonts, minified files, and vendored code are ignored — see the ignore list at the top of `scripts/check-file-tokens.mjs`.
+- See which tracked files already exceed the limit: `bun run check:tokens`.
+- Emergency bypass: `git commit --no-verify`. If a file is genuinely generated, add it to the ignore list instead.
+
 ---
 
 _Resonant Projects .ART: Helping you finish and share your creative work with the world!_ 🌍✨

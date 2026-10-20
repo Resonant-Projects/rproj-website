@@ -182,7 +182,8 @@ function collectCandidates(all) {
   // Diffing against the empty tree makes git report every indexed file, so it
   // tells us which ones it treats as binary — and works in a repo without HEAD.
   const emptyTree = git(['hash-object', '-t', 'tree', '/dev/null']).trim();
-  const common = ['diff', '--cached', '--no-renames', '-z', '--diff-filter=ACMR'];
+  // T (type change) catches a tracked symlink replaced by a regular file, which ACMR would skip.
+  const common = ['diff', '--cached', '--no-renames', '-z', '--diff-filter=ACMRT'];
   const range = all ? [emptyTree] : [];
   const files = parseRaw(git([...common, '--raw', ...range]));
   const binary = parseBinary(git([...common, '--numstat', ...range]));

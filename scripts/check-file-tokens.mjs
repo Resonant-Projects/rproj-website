@@ -14,6 +14,7 @@
  */
 import { spawnSync } from 'node:child_process';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 export const MAX_TOKENS = 5000;
 export const BYTES_PER_TOKEN = 4;
@@ -170,18 +171,23 @@ function git(args, input) {
   return res.stdout;
 }
 
-/** Returns { files: string[], prefix: string } where prefix resolves blobs (":" = index, "HEAD:" = commit). */
+/**
+ * Returns the candidate paths plus the set git considers binary. Both modes read
+ * the index: the pre-commit mode looks only at staged changes, `--all` at every
+ * tracked file. Blobs are later resolved as `:path` (index), so the inventory,
+ * binary detection and size lookup always describe the same content.
+ */
 function collectCandidates(all) {
-  if (all) {
-    const files = git(['ls-files', '-z']).split('\0').filter(Boolean);
-    // Diff HEAD against the empty tree so git tells us which blobs it treats as binary.
-    const emptyTree = git(['hash-object', '-t', 'tree', '/dev/null']).trim();
-    const numstat = git(['diff', '--numstat', '--no-renames', '-z', emptyTree, 'HEAD']);
-    return { files, binary: parseBinary(numstat), prefix: 'HEAD:' };
-  }
-  const files = git(['diff', '--cached', '--name-only', '--diff-filter=ACMR', '-z']).split('\0').filter(Boolean);
-  const numstat = git(['diff', '--cached', '--numstat', '--no-renames', '-z']);
-  return { files, binary: parseBinary(numstat), prefix: ':' };
+  // Diffing against the empty tree makes git report every indexed file, so it
+  // tells us which ones it treats as binary — and works in a repo without HEAD.
+  const emptyTree = git(['hash-object', '-t', 'tree', '/dev/null']).trim();
+  const files = all
+    ? git(['ls-files', '-z']).split('\0').filter(Boolean)
+    : git(['diff', '--cached', '--name-only', '--diff-filter=ACMR', '-z']).split('\0').filter(Boolean);
+  const numstat = all
+    ? git(['diff', '--cached', '--numstat', '--no-renames', '-z', emptyTree])
+    : git(['diff', '--cached', '--numstat', '--no-renames', '-z']);
+  return { files, binary: parseBinary(numstat) };
 }
 
 /** git reports `-\t-\tpath` for files it considers binary. */
@@ -194,22 +200,30 @@ function parseBinary(numstat) {
   return binary;
 }
 
-function blobSizes(files, prefix) {
-  if (files.length === 0) return new Map();
-  const out = git(['cat-file', '--batch-check=%(objectsize)'], files.map(f => `${prefix}${f}\n`).join(''));
-  const lines = out.trimEnd().split('\n');
+/** Staged blob size per path (`git cat-file -s :path`), batched for speed. */
+function blobSizes(files) {
   const sizes = new Map();
-  files.forEach((file, i) => {
-    const n = Number(lines[i]);
-    if (Number.isFinite(n)) sizes.set(file, n);
-  });
+  // `--batch-check` reads newline-delimited requests, so a path containing a
+  // newline must be queried on its own.
+  const batchable = files.filter(f => !f.includes('\n'));
+  if (batchable.length > 0) {
+    const out = git(['cat-file', '--batch-check=%(objectsize)'], batchable.map(f => `:${f}\n`).join(''));
+    const lines = out.trimEnd().split('\n');
+    batchable.forEach((file, i) => sizes.set(file, Number(lines[i])));
+  }
+  for (const file of files) {
+    if (file.includes('\n')) sizes.set(file, Number(git(['cat-file', '-s', `:${file}`]).trim()));
+  }
+  for (const [file, n] of sizes) {
+    if (!Number.isFinite(n)) throw new Error(`Could not read staged blob size for ${JSON.stringify(file)}`);
+  }
   return sizes;
 }
 
 export function findOversized({ all = false } = {}) {
-  const { files, binary, prefix } = collectCandidates(all);
+  const { files, binary } = collectCandidates(all);
   const candidates = files.filter(f => !binary.has(f) && !isIgnored(f));
-  const sizes = blobSizes(candidates, prefix);
+  const sizes = blobSizes(candidates);
   return candidates
     .map(file => ({ file, bytes: sizes.get(file) ?? 0, tokens: Math.ceil((sizes.get(file) ?? 0) / BYTES_PER_TOKEN) }))
     .filter(e => e.bytes > MAX_BYTES)
@@ -260,6 +274,6 @@ function main() {
   process.exitCode = 1;
 }
 
-if (process.argv[1] && path.resolve(process.argv[1]) === new URL(import.meta.url).pathname) {
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   main();
 }

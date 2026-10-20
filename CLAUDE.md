@@ -13,6 +13,10 @@ bun run check    # Lint + format check
 bun run fix      # Auto-fix issues
 ```
 
+## File Size Limit
+
+A pre-commit hook (`scripts/check-file-tokens.mjs`) rejects any staged file over 5,000 estimated tokens (bytes ÷ 4 ≈ 20,000 bytes). Keep files under that limit by splitting them by responsibility; move types, constants, and helpers into their own files. Lockfiles, generated code, binaries, and vendored code are exempt (ignore list at the top of the script). `bun run check:tokens` lists tracked files currently over the limit.
+
 ## Path Alias
 
 All imports use `~` prefix: `~/components/`, `~/utils/`

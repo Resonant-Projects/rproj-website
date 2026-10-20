@@ -1,7 +1,8 @@
 /*
-  Design tokens. Each color token holds its light and dark value in one light-dark() pair, so the
-  `.dark` class only switches `color-scheme` (see `html` in starwind.css). The brand scale
-  (--color-brand-*) is defined once, in oklch, in starwind.css.
+  Design tokens. Light values live on :root; `.dark` overrides them. `.dark` works on <html>
+  (the theme toggle) and on any section (WidgetWrapper's isDark band). Plain custom properties
+  rather than light-dark() keep Safari 16.4-17.4 working, which Tailwind 4 still supports.
+  The brand scale (--color-brand-*) is defined once, in oklch, in starwind.css.
 */
 :root {
   /* Font Variables - Editorial Typography System */
@@ -14,37 +15,37 @@
   --radius: 0.5rem;
 
   /* Surface and text */
-  --color-background: light-dark(var(--color-brand-50), var(--color-brand-900));
-  --color-foreground: light-dark(var(--color-brand-900), var(--color-brand-100));
-  --color-card: light-dark(var(--color-brand-50), var(--color-brand-900));
-  --color-card-foreground: light-dark(var(--color-brand-900), var(--color-brand-100));
-  --color-popover: light-dark(var(--color-brand-50), var(--color-brand-900));
-  --color-popover-foreground: light-dark(var(--color-brand-900), var(--color-brand-100));
+  --color-background: var(--color-brand-50);
+  --color-foreground: var(--color-brand-900);
+  --color-card: var(--color-brand-50);
+  --color-card-foreground: var(--color-brand-900);
+  --color-popover: var(--color-brand-50);
+  --color-popover-foreground: var(--color-brand-900);
 
   /* Brand roles */
-  --color-primary: light-dark(var(--color-brand-600), var(--color-brand-200));
-  --color-primary-foreground: light-dark(var(--color-brand-50), var(--color-brand-950));
-  --color-secondary: light-dark(var(--color-brand-500), var(--color-brand-600));
-  --color-secondary-foreground: light-dark(var(--color-brand-50), var(--color-brand-100));
-  --color-muted: light-dark(var(--color-brand-200), var(--color-brand-700));
-  --color-muted-foreground: light-dark(var(--color-brand-700), var(--color-brand-300));
-  --color-accent: light-dark(var(--color-brand-500), var(--color-brand-300));
-  --color-accent-foreground: light-dark(var(--color-brand-50), var(--color-brand-800));
+  --color-primary: var(--color-brand-600);
+  --color-primary-foreground: var(--color-brand-50);
+  --color-secondary: var(--color-brand-500);
+  --color-secondary-foreground: var(--color-brand-50);
+  --color-muted: var(--color-brand-200);
+  --color-muted-foreground: var(--color-brand-700);
+  --color-accent: var(--color-brand-500);
+  --color-accent-foreground: var(--color-brand-50);
 
   /* Lines and focus */
-  --color-border: light-dark(var(--color-brand-200), var(--color-brand-800));
-  --color-input: light-dark(var(--color-brand-200), var(--color-brand-800));
-  --color-outline: light-dark(var(--color-brand-500), var(--color-brand-200));
-  --color-ring: light-dark(var(--color-brand-600), var(--color-brand-300));
+  --color-border: var(--color-brand-200);
+  --color-input: var(--color-brand-200);
+  --color-outline: var(--color-brand-500);
+  --color-ring: var(--color-brand-600);
 
   /* Status colors */
-  --color-info: light-dark(oklch(68.47% 0.1479 237.32), oklch(75.35% 0.139 232.66));
+  --color-info: oklch(68.47% 0.1479 237.32);
   --color-info-foreground: oklch(39.12% 0.0845 240.88);
-  --color-success: light-dark(oklch(72.27% 0.192 149.58), oklch(80.03% 0.1821 151.71));
+  --color-success: oklch(72.27% 0.192 149.58);
   --color-success-foreground: oklch(39.25% 0.0896 152.54);
-  --color-warning: light-dark(oklch(76.86% 0.1647 70.08), oklch(83.69% 0.1644 84.43));
+  --color-warning: oklch(76.86% 0.1647 70.08);
   --color-warning-foreground: oklch(47.32% 0.1247 46.2);
-  --color-error: light-dark(oklch(57.71% 0.2152 27.33), oklch(63.68% 0.2078 25.33));
+  --color-error: oklch(57.71% 0.2152 27.33);
   --color-error-foreground: oklch(100% 0 none);
 
   /* Legacy AstroWind variables (for backward compatibility) */
@@ -55,8 +56,8 @@
   --aw-color-secondary: var(--color-secondary);
   --aw-color-accent: var(--color-accent);
   --aw-color-text-heading: var(--color-foreground);
-  --aw-color-text-default: light-dark(var(--color-brand-800), var(--color-brand-100));
-  --aw-color-text-muted: light-dark(var(--color-brand-600), var(--color-brand-400));
+  --aw-color-text-default: var(--color-brand-800);
+  --aw-color-text-muted: var(--color-brand-600);
   --aw-color-text-page: var(--color-brand-800);
   --aw-color-bg-page: var(--color-background);
   --aw-color-bg-page-dark: var(--color-brand-900);
@@ -66,6 +67,38 @@
     reader's browser font setting because both ends are relative to it.
   */
   font-size: clamp(100%, 0.75rem + 0.5208vw, 125%);
+}
+
+.dark {
+  --color-background: var(--color-brand-900);
+  --color-foreground: var(--color-brand-100);
+  --color-card: var(--color-brand-900);
+  --color-card-foreground: var(--color-brand-100);
+  --color-popover: var(--color-brand-900);
+  --color-popover-foreground: var(--color-brand-100);
+
+  --color-primary: var(--color-brand-200);
+  --color-primary-foreground: var(--color-brand-950);
+  --color-secondary: var(--color-brand-600);
+  --color-secondary-foreground: var(--color-brand-100);
+  --color-muted: var(--color-brand-700);
+  --color-muted-foreground: var(--color-brand-300);
+  --color-accent: var(--color-brand-300);
+  --color-accent-foreground: var(--color-brand-800);
+
+  --color-border: var(--color-brand-800);
+  --color-input: var(--color-brand-800);
+  --color-outline: var(--color-brand-200);
+  --color-ring: var(--color-brand-300);
+
+  --color-info: oklch(75.35% 0.139 232.66);
+  --color-success: oklch(80.03% 0.1821 151.71);
+  --color-warning: oklch(83.69% 0.1644 84.43);
+  --color-error: oklch(63.68% 0.2078 25.33);
+
+  --aw-color-text-default: var(--color-brand-100);
+  --aw-color-text-muted: var(--color-brand-400);
+  --aw-color-bg-page: var(--color-background);
 }
 
 ::selection {
@@ -85,8 +118,13 @@
 /* High contrast mode support */
 @media (prefers-contrast: high) {
   :root {
-    --color-border: light-dark(oklch(22.72% 0.0596 333.03), oklch(93.9% 0.0117 334.09));
-    --color-outline: light-dark(oklch(22.72% 0.0596 333.03), oklch(93.9% 0.0117 334.09));
+    --color-border: var(--color-brand-900);
+    --color-outline: var(--color-brand-900);
+  }
+
+  .dark {
+    --color-border: var(--color-brand-100);
+    --color-outline: var(--color-brand-100);
   }
 }
 

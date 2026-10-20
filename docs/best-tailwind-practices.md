@@ -22,9 +22,9 @@ This project uses Tailwind v4's CSS-first configuration. There is no
 - **Theme and tokens:** `src/assets/styles/starwind.css` imports Tailwind,
   registers plugins with `@plugin`, and maps design tokens to utilities with
   `@theme inline` (for example `--color-primary` gives `bg-primary`).
-- **Token values:** `src/assets/styles/theme.css` holds every color once, as a
-  `light-dark()` pair. The `.dark` class switches `color-scheme`; it does not
-  redefine tokens.
+- **Token values:** `src/assets/styles/theme.css` holds the light tokens on
+  `:root` and the dark overrides on `.dark` (the html toggle and dark section
+  bands both use the class). Brand colors are oklch, defined in `starwind.css`.
 - **Site components and accessibility rules:** `src/assets/styles/tailwind.css`
   references Tailwind with `@reference` and adds only rules that utilities
   cannot express.

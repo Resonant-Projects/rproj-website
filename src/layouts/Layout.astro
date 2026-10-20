@@ -73,8 +73,9 @@ const { language, textDirection } = I18N;
       // Keyboard helpers. Listeners sit on document, so they survive View Transitions swaps; the flag
       // stops a re-run of this inline script from adding them twice.
       // - Skip links: move focus to the target, not only the scroll position.
-      // - Escape: closes the open disclosure (nav dropdowns, mobile menu), which NavigationMenu and the
-      //   mobile menu CSS in tailwind.css rely on.
+      // - Escape: closes the open header disclosure (nav dropdowns, mobile menu), which NavigationMenu
+      //   and the mobile menu CSS in tailwind.css rely on. Scoped to #header so it never flips the
+      //   aria-expanded of accordions or dialogs that manage their own state.
       if (!window.__rpKeyboardHelpers) {
         window.__rpKeyboardHelpers = true;
 
@@ -93,7 +94,7 @@ const { language, textDirection } = I18N;
 
         document.addEventListener('keydown', e => {
           if (e.key !== 'Escape') return;
-          const open = document.querySelector('[aria-expanded="true"]');
+          const open = document.querySelector('#header [aria-expanded="true"]');
           if (open) {
             open.setAttribute('aria-expanded', 'false');
             open.focus();

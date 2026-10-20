@@ -174,45 +174,66 @@ function git(args, input) {
 /**
  * Returns the candidate paths plus the set git considers binary. Both modes read
  * the index: the pre-commit mode looks only at staged changes, `--all` at every
- * tracked file. Blobs are later resolved as `:path` (index), so the inventory,
- * binary detection and size lookup always describe the same content.
+ * tracked file. Blobs are later resolved as `:0:path` (index stage 0), so the
+ * inventory, binary detection and size lookup always describe the same content.
  */
 function collectCandidates(all) {
   // Diffing against the empty tree makes git report every indexed file, so it
   // tells us which ones it treats as binary — and works in a repo without HEAD.
   const emptyTree = git(['hash-object', '-t', 'tree', '/dev/null']).trim();
-  const files = all
-    ? git(['ls-files', '-z']).split('\0').filter(Boolean)
-    : git(['diff', '--cached', '--name-only', '--diff-filter=ACMR', '-z']).split('\0').filter(Boolean);
-  const numstat = all
-    ? git(['diff', '--cached', '--numstat', '--no-renames', '-z', emptyTree])
-    : git(['diff', '--cached', '--numstat', '--no-renames', '-z']);
-  return { files, binary: parseBinary(numstat) };
+  const common = ['diff', '--cached', '--no-renames', '-z', '--diff-filter=ACMR'];
+  const range = all ? [emptyTree] : [];
+  const files = parseRaw(git([...common, '--raw', ...range]));
+  const binary = parseBinary(git([...common, '--numstat', ...range]));
+  return { files, binary };
 }
 
-/** git reports `-\t-\tpath` for files it considers binary. */
+const GITLINK_MODE = '160000';
+
+/**
+ * `--raw -z` emits `:oldmode newmode oldsha newsha status\0path\0` per entry.
+ * Submodule entries (gitlinks) point at commits in another object database and
+ * have no blob size, so they are dropped here.
+ */
+function parseRaw(raw) {
+  const parts = raw.split('\0');
+  const files = [];
+  for (let i = 0; i + 1 < parts.length; i += 2) {
+    const [, newMode] = parts[i].split(' ');
+    const file = parts[i + 1];
+    if (file && newMode !== GITLINK_MODE) files.push(file);
+  }
+  return files;
+}
+
+/** git reports `-\t-\tpath` for files it considers binary. Paths may contain tabs. */
 function parseBinary(numstat) {
   const binary = new Set();
   for (const line of numstat.split('\0')) {
-    const [added, deleted, file] = line.split('\t');
+    const first = line.indexOf('\t');
+    const second = line.indexOf('\t', first + 1);
+    if (first < 0 || second < 0) continue;
+    const added = line.slice(0, first);
+    const deleted = line.slice(first + 1, second);
+    const file = line.slice(second + 1);
     if (file && added === '-' && deleted === '-') binary.add(file);
   }
   return binary;
 }
 
-/** Staged blob size per path (`git cat-file -s :path`), batched for speed. */
+/** Staged blob size per path (`git cat-file -s :0:path`), batched for speed. */
 function blobSizes(files) {
   const sizes = new Map();
   // `--batch-check` reads newline-delimited requests, so a path containing a
   // newline must be queried on its own.
   const batchable = files.filter(f => !f.includes('\n'));
   if (batchable.length > 0) {
-    const out = git(['cat-file', '--batch-check=%(objectsize)'], batchable.map(f => `:${f}\n`).join(''));
+    const out = git(['cat-file', '--batch-check=%(objectsize)'], batchable.map(f => `:0:${f}\n`).join(''));
     const lines = out.trimEnd().split('\n');
     batchable.forEach((file, i) => sizes.set(file, Number(lines[i])));
   }
   for (const file of files) {
-    if (file.includes('\n')) sizes.set(file, Number(git(['cat-file', '-s', `:${file}`]).trim()));
+    if (file.includes('\n')) sizes.set(file, Number(git(['cat-file', '-s', `:0:${file}`]).trim()));
   }
   for (const [file, n] of sizes) {
     if (!Number.isFinite(n)) throw new Error(`Could not read staged blob size for ${JSON.stringify(file)}`);

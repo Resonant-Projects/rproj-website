@@ -164,19 +164,26 @@ export function isIgnored(file) {
   return GLOB_RES.some(re => re.test(file));
 }
 
+/**
+ * Git output is read as latin1, which maps every byte to one character, so file names that are
+ * not valid UTF-8 survive unchanged. Use toDisplay() to turn such a name into readable text.
+ */
 function git(args, input) {
-  const res = spawnSync('git', args, { encoding: 'utf8', input, maxBuffer: 64 * 1024 * 1024 });
+  const res = spawnSync('git', args, { encoding: 'latin1', input, maxBuffer: 64 * 1024 * 1024 });
   if (res.status !== 0) {
     throw new Error(`git ${args.join(' ')} failed:\n${res.stderr}`);
   }
   return res.stdout;
 }
 
+/** Decode a latin1-read git path as UTF-8 for matching and messages. */
+const toDisplay = rawPath => Buffer.from(rawPath, 'latin1').toString('utf8');
+
 /**
- * Returns the candidate paths plus the set git considers binary. Both modes read
- * the index: the pre-commit mode looks only at staged changes, `--all` at every
- * tracked file. Blobs are later resolved as `:0:path` (index stage 0), so the
- * inventory, binary detection and size lookup always describe the same content.
+ * Returns the candidate entries ({ file, blob }) plus the set git considers binary.
+ * Both modes read the index: the pre-commit mode looks only at staged changes,
+ * `--all` at every tracked file. Sizes are looked up by the staged blob's object
+ * id, so file names never have to be passed back to git.
  */
 function collectCandidates(all) {
   // Diffing against the empty tree makes git report every indexed file, so it
@@ -185,7 +192,7 @@ function collectCandidates(all) {
   // T (type change) catches a tracked symlink replaced by a regular file, which ACMR would skip.
   const common = ['diff', '--cached', '--no-renames', '-z', '--diff-filter=ACMRT'];
   const range = all ? [emptyTree] : [];
-  const files = parseRaw(git([...common, '--raw', ...range]));
+  const files = parseRaw(git([...common, '--raw', '--no-abbrev', ...range]));
   const binary = parseBinary(git([...common, '--numstat', ...range]));
   return { files, binary };
 }
@@ -194,16 +201,16 @@ const GITLINK_MODE = '160000';
 
 /**
  * `--raw -z` emits `:oldmode newmode oldsha newsha status\0path\0` per entry.
- * Submodule entries (gitlinks) point at commits in another object database and
- * have no blob size, so they are dropped here.
+ * `newsha` is the blob in the index. Submodule entries (gitlinks) point at commits
+ * in another object database and have no blob size, so they are dropped here.
  */
 function parseRaw(raw) {
   const parts = raw.split('\0');
   const files = [];
   for (let i = 0; i + 1 < parts.length; i += 2) {
-    const [, newMode] = parts[i].split(' ');
+    const [, newMode, , blob] = parts[i].split(' ');
     const file = parts[i + 1];
-    if (file && newMode !== GITLINK_MODE) files.push(file);
+    if (file && newMode !== GITLINK_MODE) files.push({ file, blob });
   }
   return files;
 }
@@ -223,32 +230,30 @@ function parseBinary(numstat) {
   return binary;
 }
 
-/** Staged blob size per path (`git cat-file -s :0:path`), batched for speed. */
-function blobSizes(files) {
+/** Size of each staged blob, by object id, in one `git cat-file --batch-check` call. */
+function blobSizes(blobs) {
   const sizes = new Map();
-  // `--batch-check` reads newline-delimited requests, so a path containing a
-  // newline must be queried on its own.
-  const batchable = files.filter(f => !f.includes('\n'));
-  if (batchable.length > 0) {
-    const out = git(['cat-file', '--batch-check=%(objectsize)'], batchable.map(f => `:0:${f}\n`).join(''));
-    const lines = out.trimEnd().split('\n');
-    batchable.forEach((file, i) => sizes.set(file, Number(lines[i])));
+  if (blobs.length === 0) return sizes;
+  const out = git(['cat-file', '--batch-check=%(objectname) %(objectsize)'], blobs.map(b => `${b}\n`).join(''));
+  for (const line of out.trimEnd().split('\n')) {
+    const [blob, size] = line.split(' ');
+    sizes.set(blob, Number(size));
   }
-  for (const file of files) {
-    if (file.includes('\n')) sizes.set(file, Number(git(['cat-file', '-s', `:0:${file}`]).trim()));
-  }
-  for (const [file, n] of sizes) {
-    if (!Number.isFinite(n)) throw new Error(`Could not read staged blob size for ${JSON.stringify(file)}`);
+  for (const blob of blobs) {
+    if (!Number.isFinite(sizes.get(blob))) throw new Error(`Could not read staged blob size for ${blob}`);
   }
   return sizes;
 }
 
 export function findOversized({ all = false } = {}) {
   const { files, binary } = collectCandidates(all);
-  const candidates = files.filter(f => !binary.has(f) && !isIgnored(f));
-  const sizes = blobSizes(candidates);
+  const candidates = files.filter(({ file }) => !binary.has(file) && !isIgnored(toDisplay(file)));
+  const sizes = blobSizes(candidates.map(({ blob }) => blob));
   return candidates
-    .map(file => ({ file, bytes: sizes.get(file) ?? 0, tokens: Math.ceil((sizes.get(file) ?? 0) / BYTES_PER_TOKEN) }))
+    .map(({ file, blob }) => {
+      const bytes = sizes.get(blob);
+      return { file: toDisplay(file), bytes, tokens: Math.ceil(bytes / BYTES_PER_TOKEN) };
+    })
     .filter(e => e.bytes > MAX_BYTES)
     .sort((a, b) => b.bytes - a.bytes);
 }

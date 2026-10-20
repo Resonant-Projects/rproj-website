@@ -38,7 +38,7 @@
     "check": "bun run check:astro && bun run lint && bun run format",
     "check:astro": "astro check",
     "check:tokens": "node scripts/check-file-tokens.mjs --all",
-    "prepare": "simple-git-hooks",
+    "prepare": "simple-git-hooks || echo 'simple-git-hooks is not installed (production install?); git hooks not set up'",
     "fix": "bun run lint:fix && bun run format:fix",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",

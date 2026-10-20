@@ -1,3 +1,8 @@
+/*
+  Design tokens. Each color token holds its light and dark value in one light-dark() pair, so the
+  `.dark` class only switches `color-scheme` (see `html` in starwind.css). The brand scale
+  (--color-brand-*) is defined once, in oklch, in starwind.css.
+*/
 :root {
   /* Font Variables - Editorial Typography System */
   --font-family-primary: var(--font-source-sans-3);
@@ -8,37 +13,41 @@
   /* Design System Variables */
   --radius: 0.5rem;
 
-  /* Light Theme Colors - Professional violet palette with neutral gray-violet tones */
-  --color-background: var(--color-brand-50, #f5f4f7);
-  --color-foreground: var(--color-brand-900, #1c101e);
-  --color-card: var(--color-brand-50, #f5f4f7);
-  --color-card-foreground: var(--color-brand-900, #1c101e);
-  --color-popover: var(--color-brand-50, #f5f4f7);
-  --color-popover-foreground: var(--color-brand-900, #1c101e);
-  --color-primary: var(--color-brand-600, #5a2054);
-  --color-primary-foreground: var(--color-brand-50, #f5f4f7);
-  --color-secondary: var(--color-brand-500, #6e2765);
-  --color-secondary-foreground: var(--color-brand-50, #f5f4f7);
-  --color-muted: var(--color-brand-200, #cdc8d6);
-  --color-muted-foreground: var(--color-brand-700, #451844);
-  --color-accent: var(--color-brand-500, #6e2765);
-  --color-accent-foreground: var(--color-brand-50, #f5f4f7);
-  --color-border: var(--color-brand-200, #cdc8d6);
-  --color-input: var(--color-brand-200, #cdc8d6);
-  --color-outline: var(--color-brand-500, #6e2765);
-  --color-ring: var(--color-brand-600, #5a2054);
+  /* Surface and text */
+  --color-background: light-dark(var(--color-brand-50), var(--color-brand-900));
+  --color-foreground: light-dark(var(--color-brand-900), var(--color-brand-100));
+  --color-card: light-dark(var(--color-brand-50), var(--color-brand-900));
+  --color-card-foreground: light-dark(var(--color-brand-900), var(--color-brand-100));
+  --color-popover: light-dark(var(--color-brand-50), var(--color-brand-900));
+  --color-popover-foreground: light-dark(var(--color-brand-900), var(--color-brand-100));
 
-  /* Status Colors - Enhanced for better contrast */
-  --color-info: #0ea5e9;
-  --color-info-foreground: #0c4a6e;
-  --color-success: #22c55e;
-  --color-success-foreground: #14532d;
-  --color-warning: #f59e0b;
-  --color-warning-foreground: #92400e;
-  --color-error: #dc2626;
-  --color-error-foreground: #ffffff;
+  /* Brand roles */
+  --color-primary: light-dark(var(--color-brand-600), var(--color-brand-200));
+  --color-primary-foreground: light-dark(var(--color-brand-50), var(--color-brand-950));
+  --color-secondary: light-dark(var(--color-brand-500), var(--color-brand-600));
+  --color-secondary-foreground: light-dark(var(--color-brand-50), var(--color-brand-100));
+  --color-muted: light-dark(var(--color-brand-200), var(--color-brand-700));
+  --color-muted-foreground: light-dark(var(--color-brand-700), var(--color-brand-300));
+  --color-accent: light-dark(var(--color-brand-500), var(--color-brand-300));
+  --color-accent-foreground: light-dark(var(--color-brand-50), var(--color-brand-800));
 
-  /* Legacy AstroWind Variables (for backward compatibility) - Updated to use brand colors */
+  /* Lines and focus */
+  --color-border: light-dark(var(--color-brand-200), var(--color-brand-800));
+  --color-input: light-dark(var(--color-brand-200), var(--color-brand-800));
+  --color-outline: light-dark(var(--color-brand-500), var(--color-brand-200));
+  --color-ring: light-dark(var(--color-brand-600), var(--color-brand-300));
+
+  /* Status colors */
+  --color-info: light-dark(oklch(68.47% 0.1479 237.32), oklch(75.35% 0.139 232.66));
+  --color-info-foreground: oklch(39.12% 0.0845 240.88);
+  --color-success: light-dark(oklch(72.27% 0.192 149.58), oklch(80.03% 0.1821 151.71));
+  --color-success-foreground: oklch(39.25% 0.0896 152.54);
+  --color-warning: light-dark(oklch(76.86% 0.1647 70.08), oklch(83.69% 0.1644 84.43));
+  --color-warning-foreground: oklch(47.32% 0.1247 46.2);
+  --color-error: light-dark(oklch(57.71% 0.2152 27.33), oklch(63.68% 0.2078 25.33));
+  --color-error-foreground: oklch(100% 0 none);
+
+  /* Legacy AstroWind variables (for backward compatibility) */
   --aw-font-sans: var(--font-family-primary);
   --aw-font-serif: var(--font-family-serif);
   --aw-font-heading: var(--font-family-heading);
@@ -46,96 +55,22 @@
   --aw-color-secondary: var(--color-secondary);
   --aw-color-accent: var(--color-accent);
   --aw-color-text-heading: var(--color-foreground);
-  --aw-color-text-default: var(--color-brand-800, #2e1430);
-  --aw-color-text-muted: var(--color-brand-600, #5a2054);
-  --aw-color-text-page: var(--color-brand-800, #2e1430);
+  --aw-color-text-default: light-dark(var(--color-brand-800), var(--color-brand-100));
+  --aw-color-text-muted: light-dark(var(--color-brand-600), var(--color-brand-400));
+  --aw-color-text-page: var(--color-brand-800);
   --aw-color-bg-page: var(--color-background);
-  --aw-color-bg-page-dark: var(--color-brand-900, #1c101e);
+  --aw-color-bg-page-dark: var(--color-brand-900);
+
+  /*
+    Root text size: 16px up to a 768px screen, growing to 20px at 1536px. It scales with the
+    reader's browser font setting because both ends are relative to it.
+  */
+  font-size: clamp(100%, 0.75rem + 0.5208vw, 125%);
 }
 
-:root ::selection {
+::selection {
   background-color: var(--color-accent);
   color: var(--color-accent-foreground);
-}
-
-.dark {
-  /* Dark Theme Colors - Professional violet palette with proper contrast */
-  --color-background: var(--color-brand-900, #1c101e);
-  --color-foreground: var(--color-brand-100, #e8e6ec);
-  --color-card: var(--color-brand-900, #1c101e);
-  --color-card-foreground: var(--color-brand-100, #e8e6ec);
-  --color-popover: var(--color-brand-900, #1c101e);
-  --color-popover-foreground: var(--color-brand-100, #e8e6ec);
-  --color-primary: var(--color-brand-200, #cdc8d6);
-  --color-primary-foreground: var(--color-brand-950, #110a14);
-  --color-secondary: var(--color-brand-600, #5a2054);
-  --color-secondary-foreground: var(--color-brand-100, #e8e6ec);
-  --color-muted: var(--color-brand-700, #451844);
-  --color-muted-foreground: var(--color-brand-300, #a89bb3);
-  --color-accent: var(--color-brand-300, #a89bb3);
-  --color-accent-foreground: var(--color-brand-800, #2e1430);
-  --color-border: var(--color-brand-800, #2e1430);
-  --color-input: var(--color-brand-800, #2e1430);
-  --color-outline: var(--color-brand-200, #cdc8d6);
-  --color-ring: var(--color-brand-300, #a89bb3);
-
-  /* Status Colors (Dark) - Enhanced for better contrast */
-  --color-info: #38bdf8;
-  --color-info-foreground: #0c4a6e;
-  --color-success: #4ade80;
-  --color-success-foreground: #14532d;
-  --color-warning: #fbbf24;
-  --color-warning-foreground: #92400e;
-  --color-error: #ef4444;
-  --color-error-foreground: #ffffff;
-
-  /* Legacy AstroWind Variables (Dark Theme) - Updated to use brand colors */
-  --aw-color-text-heading: var(--color-foreground);
-  --aw-color-text-default: var(--color-brand-100, #e8e6ec);
-  --aw-color-text-muted: var(--color-brand-400, #8a6e8c);
-  --aw-color-bg-page: var(--color-background);
-}
-
-.dark ::selection {
-  background-color: var(--color-accent);
-  color: var(--color-accent-foreground);
-}
-
-/* CSS Custom Property Validation - Ensures brand colors are available */
-@supports not (color: var(--color-brand-50)) {
-  :root {
-    /* Fallback brand color palette if not loaded - Professional violet with neutral grays */
-    --color-brand-50: #f5f4f7;
-    --color-brand-100: #e8e6ec;
-    --color-brand-200: #cdc8d6;
-    --color-brand-300: #a89bb3;
-    --color-brand-400: #8a6e8c;
-    --color-brand-500: #6e2765;
-    --color-brand-600: #5a2054;
-    --color-brand-700: #451844;
-    --color-brand-800: #2e1430;
-    --color-brand-900: #1c101e;
-    --color-brand-950: #110a14;
-  }
-}
-
-/* Responsive Typography Scale */
-@media (max-width: 768px) {
-  :root {
-    font-size: 16px;
-  }
-}
-
-@media (min-width: 1024px) {
-  :root {
-    font-size: 18px;
-  }
-}
-
-@media (min-width: 1536px) {
-  :root {
-    font-size: 20px;
-  }
 }
 
 /* Enhanced accessibility and contrast improvements */
@@ -150,13 +85,8 @@
 /* High contrast mode support */
 @media (prefers-contrast: high) {
   :root {
-    --color-border: var(--color-brand-900, #2c1028);
-    --color-outline: var(--color-brand-900, #2c1028);
-  }
-
-  .dark {
-    --color-border: var(--color-brand-100, #f0e8ee);
-    --color-outline: var(--color-brand-100, #f0e8ee);
+    --color-border: light-dark(oklch(22.72% 0.0596 333.03), oklch(93.9% 0.0117 334.09));
+    --color-outline: light-dark(oklch(22.72% 0.0596 333.03), oklch(93.9% 0.0117 334.09));
   }
 }
 

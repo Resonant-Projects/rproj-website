@@ -65,8 +65,8 @@ export const ResonantWelcomeEmail = ({ steps }: ResonantWelcomeEmailProps) => {
             className="mx-auto my-20"
             style={{ borderRadius: '12px' }}
           />
-          <Container className="p-45 rounded-lg bg-white shadow-md">
-            <Heading className="my-0 text-center text-2xl font-bold leading-8 text-primary">
+          <Container className="rounded-lg bg-white p-45 shadow-md">
+            <Heading className="my-0 text-center text-2xl leading-8 font-bold text-primary">
               Welcome to Resonant Projects.art
             </Heading>
 
@@ -83,7 +83,7 @@ export const ResonantWelcomeEmail = ({ steps }: ResonantWelcomeEmailProps) => {
               </Row>
             </Section>
 
-            <ul className="text-text mb-8 mt-4 list-inside list-disc">
+            <ul className="text-text mt-4 mb-8 list-inside list-disc">
               {steps?.map(({ id, description }) => (
                 <li className="mb-20" key={id}>
                   {description}

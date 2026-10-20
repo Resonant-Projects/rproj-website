@@ -30,6 +30,6 @@
       "~/scripts/*": ["./src/scripts/*"]
     }
   },
-  "include": ["./src/**/*", "astro.config.ts", "tailwind.config.js", "eslint.config.js"],
+  "include": ["./src/**/*", "astro.config.ts", "eslint.config.js"],
   "exclude": ["node_modules", "dist", ".astro", "vendor", "react-email-starter"]
 }

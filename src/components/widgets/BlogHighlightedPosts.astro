@@ -43,7 +43,7 @@ const posts = APP_BLOG.isEnabled ? await findPostsByIds(postIds) : [];
           />
           {APP_BLOG.list.isEnabled && linkText && linkUrl && (
             <a
-              class="text-muted-foreground mb-6 block transition duration-200 ease-in hover:text-primary lg:mb-0"
+              class="text-muted-foreground mb-6 block transition duration-200 ease-out hover:text-primary lg:mb-0"
               href={linkUrl}
             >
               {linkText} »

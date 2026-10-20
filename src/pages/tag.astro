@@ -29,7 +29,7 @@ const metadata = {
     {allTags.length > 0 ? (
       <div class="-up grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
         {allTags.map(tag => (
-          <article class="group relative overflow-hidden rounded-lg border p-4 shadow-sm transition-all hover:shadow-md">
+          <article class="group relative overflow-clip rounded-lg border p-4 shadow-sm transition hover:shadow-md">
             <div class="flex h-full flex-col">
               <h3 class="mb-2 text-lg font-medium text-foreground group-hover:text-primary">
                 <a href={`${getBlogTagPermalink()}/${tag.slug}`} class="stretched-link focus-ring text-gradient">

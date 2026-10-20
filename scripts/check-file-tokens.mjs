@@ -149,7 +149,8 @@ function globToRegExp(glob) {
       re += c.replace(/[.+^${}()|[\]\\]/g, '\\$&');
     }
   }
-  return new RegExp(`^${re}$`);
+  // `s` flag: `.*` from `**` must also span newlines embedded in a path.
+  return new RegExp(`^${re}$`, 's');
 }
 
 const GLOB_RES = IGNORE_GLOBS.map(globToRegExp);

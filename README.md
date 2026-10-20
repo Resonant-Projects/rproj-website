@@ -114,7 +114,7 @@ If you'd like to help or collaborate, just reach out to Keith via email!
 
 A pre-commit hook blocks committing any file over **5,000 estimated tokens** (bytes ÷ 4, so ≈20,000 bytes). Large files are hard for people and AI agents to read and edit safely, so split them by responsibility instead.
 
-- Hooks install automatically on `bun install` (via `simple-git-hooks`). To (re)install manually: `bun run prepare` (it fails loudly if the hook cannot be written).
+- Hooks install automatically on `bun install` (via `simple-git-hooks`). To (re)install manually: `bun run prepare` (it fails loudly if the hook cannot be written). Your other git hooks are left in place.
 - Only staged files are checked. Lockfiles, generated code, binaries, images, fonts, minified files, and vendored code are ignored — see the ignore list at the top of `scripts/check-file-tokens.mjs`.
 - See which tracked files already exceed the limit: `bun run check:tokens`.
 - Emergency bypass: `git commit --no-verify`. If a file is genuinely generated, add it to the ignore list instead.

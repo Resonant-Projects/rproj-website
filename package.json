@@ -76,7 +76,7 @@
   "dependencies": {
     "@astrojs/rss": "4.0.19",
     "@astrojs/sitemap": "3.7.4",
-    "@astrojs/vercel": "11.0.15",
+    "@astrojs/vercel": "11.0.16",
     "@astrolib/analytics": "^0.6.1",
     "@astrolib/seo": "1.0.0-beta.8",
     "@calcom/embed-react": "^1.5.3",
@@ -92,7 +92,7 @@
     "@tailwindcss/vite": "^4.3.3",
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",
-    "astro": "7.4.0",
+    "astro": "7.4.1",
     "astro-cloudinary": "^1.4.0",
     "astro-embed": "0.14.0",
     "astro-icon": "^1.2.0",

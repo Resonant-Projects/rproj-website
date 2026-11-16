@@ -10,7 +10,9 @@ on:
 
 jobs:
   build-and-lint:
-    runs-on: [self-hosted, linux, x64, incus, garm, ephemeral]
+    # Astro's compiler-rs 0.5.3 Linux binary requires AVX2. Generic GARM
+    # guests expose x86-64-v2 and SIGILL during `astro sync`; Mac Pro has AVX2.
+    runs-on: [self-hosted, linux, x64, incus, garm, ephemeral, macpro-e2e]
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7

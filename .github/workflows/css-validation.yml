@@ -24,7 +24,8 @@ on:
 
 jobs:
   css-validation:
-    runs-on: [self-hosted, linux, x64, incus, garm, ephemeral]
+    # Astro's compiler-rs 0.5.3 Linux binary requires the Mac Pro pool's AVX2.
+    runs-on: [self-hosted, linux, x64, incus, garm, ephemeral, macpro-e2e]
 
     steps:
       - uses: actions/checkout@v7

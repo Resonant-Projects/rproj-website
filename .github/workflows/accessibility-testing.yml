@@ -19,7 +19,8 @@ env:
 jobs:
   build:
     name: Build
-    runs-on: [self-hosted, linux, x64, incus, garm, ephemeral]
+    # Astro's compiler-rs 0.5.3 Linux binary requires the Mac Pro pool's AVX2.
+    runs-on: [self-hosted, linux, x64, incus, garm, ephemeral, macpro-e2e]
     timeout-minutes: 15
     if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork == false
     steps:
@@ -45,7 +46,8 @@ jobs:
   accessibility-tests:
     name: Accessibility Tests
     needs: build
-    runs-on: [self-hosted, linux, x64, incus, garm, ephemeral]
+    # The Astro dev server loads the same native compiler as the build.
+    runs-on: [self-hosted, linux, x64, incus, garm, ephemeral, macpro-e2e]
     timeout-minutes: 30
     if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork == false
 

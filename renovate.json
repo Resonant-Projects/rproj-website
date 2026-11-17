@@ -1,11 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:best-practices",
-    ":dependencyDashboard",
-    ":enableVulnerabilityAlerts",
-    ":semanticCommits"
-  ],
+  "extends": ["config:best-practices", ":dependencyDashboard", ":enableVulnerabilityAlerts", ":semanticCommits"],
   "ignorePresets": [":pinDevDependencies"],
   "timezone": "America/New_York",
   "schedule": ["before 6am on monday"],
@@ -48,12 +43,7 @@
     },
     {
       "description": "React runtime and types move together.",
-      "matchPackageNames": [
-        "react",
-        "react-dom",
-        "@types/react",
-        "@types/react-dom"
-      ],
+      "matchPackageNames": ["react", "react-dom", "@types/react", "@types/react-dom"],
       "groupName": "React"
     },
     {

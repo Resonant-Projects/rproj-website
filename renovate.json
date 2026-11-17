@@ -78,6 +78,12 @@
       "matchUpdateTypes": ["patch"],
       "matchCurrentVersion": "/^0\\./",
       "groupSlug": "{{{groupName}}}-0.x"
+    },
+    {
+      "description": "Playwright follows the homelab browser pool, which serves one minor (keithce/homelab-infra runners/browser-pool/playwright-fleet.json). Raise allowedVersions only together with the pool.",
+      "matchPackageNames": ["@playwright/test", "playwright", "playwright-core"],
+      "groupName": "playwright",
+      "allowedVersions": "<1.66.0"
     }
   ],
   "lockFileMaintenance": {
